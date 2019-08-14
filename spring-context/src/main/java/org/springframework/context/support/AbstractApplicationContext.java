@@ -516,16 +516,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+            //对beanFactory做各种功能填充
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+                //子类覆盖方法做额外的处理，可参考子类XmlWebApplicationContext的处理
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+                /*
+                激活注册的BeanFactoryPostProcessor;
+                BeanFactoryPostProcessor的典型应用:PropertyPlaceHolderConfiguer
+                 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+                //注册BeanPostProcessor
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -647,11 +654,30 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
 		beanFactory.setBeanClassLoader(getClassLoader());
+		/*
+		注册语言解析器对SPEL进行解析；
+		bean在初始化的时候会有属性填充的一步，这时就会从beanFactory中拿到这个语言解析器进行解析；
+		应用语言解析器的调用主要是在解析依赖注入bean的时候以及在完成bean的初始化和属性获取后进行属性填充的时候
+		 */
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+		/*
+		增加属性注册编辑器，比如bean的属性为Date类型，配置文件中配置的是字符串，就需要用到属性注册编辑器来将字符串转换为Date类型；
+		ResourceEditorRegistrar类的registerCustomEditors（）方法就是注册了一系列的常用类型的属性编辑器；
+		在bean的初始化后会调用ResourceEditorRegistrar类的registerCustomEditors（）方法进行批量的通用属性编辑器注册，注册
+		后，在属性填充的环节便可以直接让spring使用这些属性编辑器进行属性的解析了
+		 */
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+        /*
+        添加ApplicationContextAwareProcessor处理器，这里主要是实现这些Aware接口的bean在被初始化后可以取得一些对应的资源
+         */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		/*
+		当spring将ApplicationContextAwareProcessor注册后，那么在ApplicationContextAwareProcessor的invokeAwareInterfaces方法
+		间接调用的Aware类已经不是普通的bean了，如ResourceLoaderAware、ApplicationContextAware等，那么当然需要在spring做bean的
+		依赖注入的时候忽略他们，在ignoreDependencyInterface的作用正是在此
+		 */
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -661,6 +687,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// BeanFactory interface not registered as resolvable type in a plain factory.
 		// MessageSource registered (and found for autowiring) as a bean.
+        /*
+        设置了几个自动装配的特殊规则；
+        当注册了依赖解析后，例如注册了对BeanFactory.class的解析依赖后，当bean的属性注入的时候，一旦检测到属性为BeanFactory类型便会
+        将beanFactory的实例注入进入
+         */
 		beanFactory.registerResolvableDependency(BeanFactory.class, beanFactory);
 		beanFactory.registerResolvableDependency(ResourceLoader.class, this);
 		beanFactory.registerResolvableDependency(ApplicationEventPublisher.class, this);
