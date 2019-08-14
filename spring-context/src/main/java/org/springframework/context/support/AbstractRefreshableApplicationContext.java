@@ -119,13 +119,19 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
 		if (hasBeanFactory()) {
+            //销毁所有beans，默认实现是销毁所有缓存的单例
 			destroyBeans();
+            //将beanFactory和serializationId设置为null
 			closeBeanFactory();
 		}
 		try {
+			//创建新的beanFactory(创建的是DefaultListableBeanFactory)
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+            //然后重新设置在closeBeanFactory()置为null的serialzationId
 			beanFactory.setSerializationId(getId());
+            //自定义beanFactory，设置是否允许覆盖、是否循环引用标识
 			customizeBeanFactory(beanFactory);
+			//根据XML文件的配置，将配置转换成beanDefinition,并且注册到beanFactory中
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;

@@ -508,10 +508,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
-			// Prepare this context for refreshing.
+			//准备刷新的上下文
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory.
+            // 这步比较重要(解析)，告诉子类去刷新bean工厂，这步完成后配置文件就解析成一个个bean定义，
+            // 注册到BeanFactory（但是未被初始化，仅将信息写到了beanDefination的map中）
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -573,6 +574,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Prepare this context for refreshing, setting its startup date and
 	 * active flag as well as performing any initialization of property sources.
+     *
+     * 准备刷新的上下文,这里可以对系统属性及环境变量的初始化以及验证
 	 */
 	protected void prepareRefresh() {
 		this.startupDate = System.currentTimeMillis();
@@ -584,10 +587,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment
+        /**
+         * 初始化一些属性设置;子类自定义个性化的属性设置方法
+         * 该方法正符合spring的开放式结构设计，给用户最大扩展spring的能力。用户可以根据自身的需要重写initPropertySources()方法，
+         * 并在方法中进行个性化的属性处理及设置
+         *
+         * 比如说在我们的子类中重写initPropertySources()方法，要求系统中必须有"VAR"这个环境变量
+         protected void initPropertySources(){
+            getEnvironment().setRequiredProperties("VAR");
+         }
+         此时程序走到getEnvironment().validateRequiredProperties();代码的时候，如果系统没有检测到对应VAR的环境变量，那么将抛出异常
+         */
+
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable
 		// see ConfigurablePropertyResolver#setRequiredProperties
+        // 校验配置文件中的属性的合法性
 		getEnvironment().validateRequiredProperties();
 
 		// Allow for the collection of early ApplicationEvents,
@@ -609,9 +625,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
+     *
+     * 初始化beanFactory，注册Bean
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+        //刷新上下文环境，关闭旧的beanFactory，并创建新的
 		refreshBeanFactory();
+        //返回刚创建的beanFactory
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Bean factory for " + getDisplayName() + ": " + beanFactory);
