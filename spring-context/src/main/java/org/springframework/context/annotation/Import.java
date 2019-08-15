@@ -48,6 +48,13 @@ import java.lang.annotation.Target;
  * @see ImportSelector
  * @see ImportResource
  */
+
+/*
+    Import的作用:
+    1.用来导入@Configuration注解的配置类、声明@Bean注解的bean方法、
+    2.导入ImportSelector的实现类
+    3.导入ImportBeanDefinitionRegistrar的实现类。
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
