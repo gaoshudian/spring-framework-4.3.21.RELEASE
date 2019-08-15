@@ -107,6 +107,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 		this.running = false;
 	}
 
+	//启动所有实现了Lifecycle接口的bean,调用其start()方法
 	@Override
 	public void onRefresh() {
 		startBeans(true);
