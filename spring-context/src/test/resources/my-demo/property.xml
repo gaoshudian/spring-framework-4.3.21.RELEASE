@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="property" class="my_demo.property.Property">
+		<property name="dateValue" value="2013-12-12"></property>
+	</bean>
+
+    <bean id="customEditorConfigurer"  class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="propertyEditorRegistrars">
+            <list>
+                <bean class="my_demo.property.DatePropertyEditor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="testListener" class="my_demo.event.PrintListener"/>
+    <bean id="testListene2" class="my_demo.event.PrintListener2"/>
+
+</beans>

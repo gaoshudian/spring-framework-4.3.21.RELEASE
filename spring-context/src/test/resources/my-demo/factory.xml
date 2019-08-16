@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- 通过工厂方法的方式来配置 bean
+     1. 通过静态工厂方法: 一个类中有一个静态方法, 可以返回一个类的实例
+         class属性:指定静态工厂方法的全类名
+         factory-method:指向静态工厂方法的名字
+         constructor-arg:如果工厂方法需要传入参数,则使用constructor-arg来配置参数
+    -->
+    <bean id="car" class="my_demo.factory.StaticCarFactory" factory-method="getCar">
+        <constructor-arg value="audi"></constructor-arg>
+    </bean>
+
+
+    <!--2.实例工厂方法: 将对象的创建过程封装到另外一个对象实例的方法里，先需要创建工厂对象, 再调用工厂的非静态方法返回实例
+            factory-bean:指定拥有工厂方法的bean
+            factory-method:指向工厂方法的名字
+            constructor-arg:如果工厂方法需要传入参数,则使用constructor-arg来配置参数
+    -->
+    <bean id="carFactory" class="my_demo.factory.InstanceCarFactory"></bean>
+    <bean id="car2" factory-bean="carFactory" factory-method="getCar">
+        <constructor-arg value="baoma"></constructor-arg>
+    </bean>
+
+    <!--
+        配置通过 FactroyBean 的方式来创建 bean 的实例
+        class:指向FactoryBean的全类名
+        property:配置FactoryBean的属性
+     -->
+    <bean id="user" class="my_demo.factory.UserBean"></bean>
+
+</beans>

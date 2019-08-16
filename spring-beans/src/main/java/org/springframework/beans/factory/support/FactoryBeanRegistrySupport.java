@@ -97,9 +97,11 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 */
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
 		if (factory.isSingleton() && containsSingleton(beanName)) {
+			//spring中有大量的同步锁，锁住的对象都是 this.singletonObjects， 主要是因为在单例模式中必须要保证全局唯一
 			synchronized (getSingletonMutex()) {
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
+				    //从 FactoryBean 获取对象，其实内部就是调用 FactoryBean.getObject()
 					object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
@@ -109,12 +111,15 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 					}
 					else {
 						if (object != null && shouldPostProcess) {
+                            //若该 bean 处于创建中（isSingletonCurrentlyInCreation），则返回非处理对象，而不是存储它
 							if (isSingletonCurrentlyInCreation(beanName)) {
-								// Temporarily return non-post-processed object, not storing it yet..
 								return object;
 							}
+							//创建之前的处理。默认实现将该 bean 标志为当前创建的,即添加到this.singletonsCurrentlyInCreation中
 							beforeSingletonCreation(beanName);
 							try {
+							    //对从 FactoryBean 获取的 bean 实例对象进行后置处理，默认实现是按照原样直接返回,
+                                //具体实现是在 AbstractAutowireCapableBeanFactory 中实现的，当然子类也可以重写它，比如应用后置处理
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {

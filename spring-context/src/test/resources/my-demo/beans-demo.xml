@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- 自动装配: 只声明 bean, 而把bean之间的关系交给IOC容器来完成
+            byType: 根据类型进行自动装配. 但要求 IOC 容器中只有一个类型对应的 bean, 若有多个则无法完成自动装配.
+            byName: 若属性名和某一个 bean 的 id 名一致, 即可完成自动装配. 若没有 id 一致的, 则无法完成自动装配
+            在使用 XML 配置时, 自动装配用的不多. 但在基于 注解 的配置时, 自动装配使用的较多
+            -->
+    <bean id="dao" class="my_demo.helloworld.ref.Dao">
+        <property name="dataSource" value="C3P0"></property>
+    </bean>
+    <bean id="service" class="my_demo.helloworld.ref.Service" autowire="byName"></bean>
+    <bean id="action" class="my_demo.helloworld.ref.Action" autowire="byName"></bean>
+
+
+    <!-- bean的作用域:
+    默认情况下 bean 是单例的!
+    但有的时候, bean 就不能是单例的. 例如: Struts2 的 Action 就不是单例的! 可以通过 scope 属性来指定 bean 的作用域
+        prototype: 原型的. 每次调用 getBean 方法都会返回一个新的 bean. 且在第一次调用 getBean 方法时才创建实例
+        singleton: 单例的. 每次调用 getBean 方法都会返回同一个 bean. 且在 IOC 容器初始化时即创建 bean 的实例
+    -->
+    <bean id="dao2" class="my_demo.helloworld.ref.Dao" scope="prototype"></bean>
+
+
+    <!-- 导入外部的资源文件 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+
+        <property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+    </bean>
+
+
+    <!-- 测试 SpEL: 可以为属性进行动态的赋值(了解)
+         1.通过bean的id对bean进行引用
+         2.调用方法以及引用对象中的属性
+         3.计算表达式的值
+         4.正则表达式匹配
+     -->
+    <!-- 字面量的表示 -->
+    <bean id="spel" class="my_demo.demo.SPELCar">
+        <property name="maxSpeed" value="#{5+6}" />
+        <property name="price" value="#{89.7}" />
+        <property name="company" value="#{'公司'}" />
+    </bean>
+
+    <!-- 引用bean属性和方法 -->
+    <bean id="spel2" class="my_demo.demo.SPELCar">
+        <property name="company" value="#{spel.company}"></property>
+        <property name="brand" value="#{spel.toString()}"></property>
+    </bean>
+
+    <!--bean的生命周期:
+        1.通过构造器或工厂方法创建 Bean 实例
+        2.为 Bean 的属性设置值和对其他 Bean 的引用
+        3.调用 Bean 的初始化方法
+        4.Bean 可以使用了
+        5.当容器关闭时, 调用 Bean 的销毁方法
+    -->
+    <bean id="beanCycle" class="my_demo.demo.BeanCycle" init-method="init" destroy-method="destroy">
+        <property name="name" value="生命周期"></property>
+    </bean>
+
+    <!-- 配置 bean 后置处理器:
+        1.不需要配置 id 属性, IOC 容器会识别到他是一个 bean 后置处理器, 并调用其方法
+        2.Bean 后置处理器允许在调用初始化方法前后对 Bean 进行额外的处理
+        3.Bean 后置处理器对 IOC 容器里的所有 Bean 实例逐一处理, 而非单一实例.
+          其典型应用是: 检查 Bean 属性的正确性或根据特定的标准更改 Bean 的属性
+    -->
+    <bean class="my_demo.demo.MyBeanPostProcessor"></bean>
+
+    <bean class="my_demo.demo.MyBeanFactoryPostProcessor"></bean>
+
+</beans>
