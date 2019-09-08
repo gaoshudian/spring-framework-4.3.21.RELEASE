@@ -1,13 +1,18 @@
 package my_demo.factory;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class FactoryTest {
 
-    ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:my-demo/factory.xml");
+    ApplicationContext ac = null;
 
+    @Before
+    public void before(){
+        ac = new ClassPathXmlApplicationContext("classpath:my-demo/factory.xml");
+    }
     //静态工厂方法配置bean
     @Test
     public void test1(){

@@ -119,9 +119,11 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 					}
 				});
 			}
+            //如果该 bean 没有配置 lookup-method、replaced-method 标签或者 @Lookup 注解，则直接通过反射的方式实例化 bean
 			return BeanUtils.instantiateClass(ctor, args);
 		}
 		else {
+		    //如果存在需要覆盖的方法或者动态替换的方法则需要使用 CGLIB 进行动态代理，因为可以在创建代理的同时将动态方法织入类
 			return instantiateWithMethodInjection(bd, beanName, owner, ctor, args);
 		}
 	}
@@ -159,6 +161,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			Method priorInvokedFactoryMethod = currentlyInvokedFactoryMethod.get();
 			try {
 				currentlyInvokedFactoryMethod.set(factoryMethod);
+				// 执行工厂方法，并返回实例
 				return factoryMethod.invoke(factoryBean, args);
 			}
 			finally {

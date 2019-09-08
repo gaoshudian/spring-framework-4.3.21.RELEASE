@@ -4,18 +4,22 @@ package my_demo.helloworld;
 import my_demo.helloworld.ref.Action;
 import my_demo.helloworld.ref.Dao;
 import my_demo.helloworld.ref.Service;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class HelloWorldTest {
 
-    ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:my-demo/beans-helloworld.xml");
+    ApplicationContext ctx = null;
 
+    @Before
+    public void before(){
+        ctx = new ClassPathXmlApplicationContext("classpath:my-demo/beans-helloworld.xml");
+    }
 	@Test
 	public void helloworld(){
-//        helloWorld helloWorld = (helloWorld) ctx.getBean("helloWorld");
-        HelloWorld helloWorld = (HelloWorld) ctx.getBean("helloWorld2");
+        HelloWorld helloWorld = (HelloWorld) ctx.getBean("helloWorld");
         helloWorld.hello();
     }
 

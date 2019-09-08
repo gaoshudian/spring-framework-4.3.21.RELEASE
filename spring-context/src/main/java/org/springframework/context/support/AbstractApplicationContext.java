@@ -711,7 +711,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			beanFactory.setTempClassLoader(new ContextTypeMatchClassLoader(beanFactory.getBeanClassLoader()));
 		}
 
-		// Register default environment beans.
+		// 注册默认的环境相关的bean(environment,systemProperties,systemEnvironment)
 		if (!beanFactory.containsLocalBean(ENVIRONMENT_BEAN_NAME)) {
 			beanFactory.registerSingleton(ENVIRONMENT_BEAN_NAME, getEnvironment());
 		}
@@ -922,7 +922,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Stop using the temporary ClassLoader for type matching.
 		beanFactory.setTempClassLoader(null);
 
-		// Allow for caching all bean definition metadata, not expecting further changes.
+		//冻结所有的bean定义，说明注册的bean定义将不能被修改或进行任何进一步的处理
 		beanFactory.freezeConfiguration();
 
         //初始化所有剩下的单例bean(非延迟加载的)

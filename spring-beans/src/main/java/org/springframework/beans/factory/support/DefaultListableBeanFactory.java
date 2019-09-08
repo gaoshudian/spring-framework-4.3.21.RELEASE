@@ -83,17 +83,17 @@ import org.springframework.util.StringUtils;
  * Spring's default implementation of the {@link ConfigurableListableBeanFactory}
  * and {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory
  * based on bean definition metadata, extensible through post-processors.
- *
+ * <p>
  * <p>Typical usage is registering all bean definitions first (possibly read
  * from a bean definition file), before accessing beans. Bean lookup by name
  * is therefore an inexpensive operation in a local bean definition table,
  * operating on pre-resolved bean definition metadata objects.
- *
+ * <p>
  * <p>Note that readers for specific bean definition formats are typically
  * implemented separately rather than as bean factory subclasses:
  * see for example {@link PropertiesBeanDefinitionReader} and
  * {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
- *
+ * <p>
  * <p>For an alternative implementation of the
  * {@link org.springframework.beans.factory.ListableBeanFactory} interface,
  * have a look at {@link StaticListableBeanFactory}, which manages existing
@@ -446,7 +446,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             //不是别名
             if (!isAlias(beanName)) {
                 try {
-                    //根据beanName获取RootBeanDefinition
+                    //根据beanName获取RootBeanDefinition,这里对于父子bean的情况，需要将父bean的配置信息合并到子类的beanDefinition中
                     RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
                     //RootBeanDefinition中的Bean不是抽象类、非延迟初始化
                     if (!mbd.isAbstract()
@@ -749,6 +749,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return (this.configurationFrozen || super.isBeanEligibleForMetadataCaching(beanName));
     }
 
+    //初始化非延时加载的单例bean
     @Override
     public void preInstantiateSingletons() throws BeansException {
         if (logger.isDebugEnabled()) {
