@@ -1068,6 +1068,7 @@ public abstract class AnnotationUtils {
 	}
 
 	/**
+	 * 检索给定注解的所有属性，放入map(AnnotationAttributes)中
 	 * Retrieve the given annotation's attributes as an {@link AnnotationAttributes} map.
 	 * <p>This method provides fully recursive annotation reading capabilities on par with
 	 * the reflection-based {@link org.springframework.core.type.StandardAnnotationMetadata}.
@@ -1243,7 +1244,7 @@ public abstract class AnnotationUtils {
 	}
 
 	/**
-	 * Post-process the supplied {@link AnnotationAttributes}.
+	 * 对 {@link AnnotationAttributes} 的后处理
 	 * <p>Specifically, this method enforces <em>attribute alias</em> semantics
 	 * for annotation attributes that are annotated with {@link AliasFor @AliasFor}
 	 * and replaces default value placeholders with their original default values.

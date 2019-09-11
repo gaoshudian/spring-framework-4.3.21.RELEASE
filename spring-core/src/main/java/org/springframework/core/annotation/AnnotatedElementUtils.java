@@ -331,8 +331,10 @@ public class AnnotatedElementUtils {
 			AnnotatedElement element, Class<? extends Annotation> annotationType) {
 
 		Assert.notNull(annotationType, "'annotationType' must not be null");
+		//找到该元素（element）的注解类型为annotationType的注解的所有属性，存入map（AnnotationAttributes）中
 		AnnotationAttributes attributes = searchWithGetSemantics(element, annotationType, null,
 				new MergedAnnotationAttributesProcessor());
+		//将默认值占位符(DefaultValueHolder)替换为其原始默认值
 		AnnotationUtils.postProcessAnnotationAttributes(element, attributes, false, false);
 		return attributes;
 	}

@@ -394,6 +394,9 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	}
 
 
+	/*
+	 * 找到bean的所有需要自动注入的字段，包括被3个注解修饰的字段(@Autowire,@Value,@Inject),封装成InjectionMetadata对象
+	 */
 	private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, PropertyValues pvs) {
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
