@@ -536,7 +536,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
         // 解决单例模式的循环依赖,是否需要提早曝光
-        // 单例模式 & 运行循环依赖&当前单例 bean 是否正在被创建
+        // 单例模式 & 允许循环依赖&当前单例 bean 是否正在被创建
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences && isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
 			if (logger.isDebugEnabled()) {

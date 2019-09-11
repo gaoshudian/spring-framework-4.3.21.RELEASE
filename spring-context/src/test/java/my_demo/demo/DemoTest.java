@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 public class DemoTest {
 
-    ApplicationContext ctx = new ClassPathXmlApplicationContext("beans-demo.xml");
+    ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:my-demo/beans-demo.xml");
 
     //测试自动装配:autowire
     @Test
