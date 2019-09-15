@@ -40,8 +40,8 @@ public class HelloWorldTest {
 
     @Test
     public void test1(){
-        Service service2 = (Service) ctx.getBean("service2");
-        System.out.println(service2);
+        Service service = (Service) ctx.getBean("service");
+        System.out.println(service);
 
         Action action = (Action) ctx.getBean("action");
         System.out.println(action);
@@ -67,6 +67,14 @@ public class HelloWorldTest {
         //测试引用外部声明的list
         User user2 = (User) ctx.getBean("user2");
         System.out.println(user2);
+    }
+
+    @Test
+    public void test4(){
+        //测试特殊方式装配list和map属性
+        ListInjectTest listInjectTest = (ListInjectTest) ctx.getBean("injectTest");
+        System.out.println(listInjectTest);
+
     }
 
     @Test

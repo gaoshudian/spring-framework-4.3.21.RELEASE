@@ -198,6 +198,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 			throw new IllegalArgumentException("Source to convert from must be an instance of [" +
 					sourceType + "]; instead it was a [" + source.getClass().getName() + "]");
 		}
+		//根据 sourceType 和 targetType 调用 getConverter() 获取 GenericConverter 对象 converter;最终获取到的对象是(GenericConversionService.ConverterAdapter)
 		GenericConverter converter = getConverter(sourceType, targetType);
 		if (converter != null) {
 			Object result = ConversionUtils.invokeConverter(converter, source, sourceType, targetType);
@@ -248,16 +249,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 		return null;
 	}
 
-	/**
-	 * Hook method to lookup the converter for a given sourceType/targetType pair.
-	 * First queries this ConversionService's converter cache.
-	 * On a cache miss, then performs an exhaustive search for a matching converter.
-	 * If no converter matches, returns the default converter.
-	 * @param sourceType the source type to convert from
-	 * @param targetType the target type to convert to
-	 * @return the generic converter that will perform the conversion,
-	 * or {@code null} if no suitable converter was found
-	 * @see #getDefaultConverter(TypeDescriptor, TypeDescriptor)
+	/*
+	   根据传入的sourceType/targetType对 寻找出对应的converter对象
 	 */
 	protected GenericConverter getConverter(TypeDescriptor sourceType, TypeDescriptor targetType) {
 		ConverterCacheKey key = new ConverterCacheKey(sourceType, targetType);
@@ -502,8 +495,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 		private final Set<GenericConverter> globalConverters = new LinkedHashSet<GenericConverter>();
 
-		private final Map<ConvertiblePair, ConvertersForPair> converters =
-				new LinkedHashMap<ConvertiblePair, ConvertersForPair>(36);
+		private final Map<ConvertiblePair, ConvertersForPair> converters = new LinkedHashMap<ConvertiblePair, ConvertersForPair>(36);
 
 		public void add(GenericConverter converter) {
 			Set<ConvertiblePair> convertibleTypes = converter.getConvertibleTypes();
@@ -533,16 +525,11 @@ public class GenericConversionService implements ConfigurableConversionService {
 			this.converters.remove(new ConvertiblePair(sourceType, targetType));
 		}
 
-		/**
-		 * Find a {@link GenericConverter} given a source and target type.
-		 * <p>This method will attempt to match all possible converters by working
-		 * through the class and interface hierarchy of the types.
-		 * @param sourceType the source type
-		 * @param targetType the target type
-		 * @return a matching {@link GenericConverter}, or {@code null} if none found
+		/*
+		  根据传入的sourceType/targetType对 寻找出对应的converter对象
 		 */
 		public GenericConverter find(TypeDescriptor sourceType, TypeDescriptor targetType) {
-			// Search the full type hierarchy
+            //找到sourceType.getType()完整类层级，包括自身以及父类，父接口
 			List<Class<?>> sourceCandidates = getClassHierarchy(sourceType.getType());
 			List<Class<?>> targetCandidates = getClassHierarchy(targetType.getType());
 			for (Class<?> sourceCandidate : sourceCandidates) {
@@ -557,6 +544,7 @@ public class GenericConversionService implements ConfigurableConversionService {
 			return null;
 		}
 
+		//寻找注册的converter
 		private GenericConverter getRegisteredConverter(TypeDescriptor sourceType,
 				TypeDescriptor targetType, ConvertiblePair convertiblePair) {
 
@@ -651,8 +639,10 @@ public class GenericConversionService implements ConfigurableConversionService {
 	}
 
 
-	/**
-	 * Manages converters registered with a specific {@link ConvertiblePair}.
+	/*
+	 用于管理维护使用特定GenericConverter.ConvertiblePair 注册的转换器，即这个类要和GenericConverter.ConvertiblePair配合使用，
+	 主要是在下面这个map维护这两个类的对象，配对使用
+	 private final Map<ConvertiblePair, ConvertersForPair> converters = new LinkedHashMap<ConvertiblePair, ConvertersForPair>(36);
 	 */
 	private static class ConvertersForPair {
 

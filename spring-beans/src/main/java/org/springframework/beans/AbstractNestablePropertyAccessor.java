@@ -258,6 +258,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		nestedPa.setPropertyValue(tokens, new PropertyValue(propertyName, value));
 	}
 
+	//设置bean实例的属性值
 	@Override
 	public void setPropertyValue(PropertyValue pv) throws BeansException {
 		PropertyTokenHolder tokens = (PropertyTokenHolder) pv.resolvedTokens;
@@ -932,10 +933,24 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		}
 	}
 
-	/**
-	 * Parse the given property name into the corresponding property name tokens.
-	 * @param propertyName the property name to parse
-	 * @return representation of the parsed property tokens
+	/*
+	   解析属性名称到相应的PropertyTokenHolder；
+	   如以下配置:
+	   <property name="user" value="Tom"></property>
+	   此时:propertyName是user,返回的PropertyTokenHolder:
+	   canonicalName:user,
+	   actualName:user
+	   keys:null
+
+	   如以下配置:
+	   <bean id="injectTest" class="my_demo.helloworld.ListInjectTest" >
+		 <property name="list[0]" value="gao"></property>
+	   </bean>
+
+	   此时:propertyName是list[0],返回的PropertyTokenHolder:
+	   canonicalName:list[0],
+	   actualName:list
+	   keys:数组["0"]
 	 */
 	private PropertyTokenHolder getPropertyNameTokens(String propertyName) {
 		PropertyTokenHolder tokens = new PropertyTokenHolder();

@@ -14,7 +14,6 @@
         <property name="dataSource" value="C3P0"></property>
     </bean>
     <bean id="service" class="my_demo.helloworld.ref.Service" autowire="byName"></bean>
-    <bean id="action" class="my_demo.helloworld.ref.Action" autowire="byName"></bean>
 
 
     <!-- bean的作用域:
@@ -27,18 +26,18 @@
 
 
     <!-- 导入外部的资源文件 -->
-    <context:property-placeholder location="classpath:db.properties"/>
+    <!--<context:property-placeholder location="classpath:db.properties"/>-->
 
     <!-- 配置数据源 -->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="user" value="${jdbc.user}"></property>
-        <property name="password" value="${jdbc.password}"></property>
-        <property name="driverClass" value="${jdbc.driverClass}"></property>
-        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+        <!--<property name="user" value="${jdbc.user}"></property>-->
+        <!--<property name="password" value="${jdbc.password}"></property>-->
+        <!--<property name="driverClass" value="${jdbc.driverClass}"></property>-->
+        <!--<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>-->
 
-        <property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>
-        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
-    </bean>
+        <!--<property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>-->
+        <!--<property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>-->
+    <!--</bean>-->
 
 
     <!-- 测试 SpEL: 可以为属性进行动态的赋值(了解)
@@ -60,6 +59,9 @@
         <property name="brand" value="#{spel.toString()}"></property>
     </bean>
 
+    <bean id="myAware" class="my_demo.demo.MyAware">
+        <property name="user" value="Tom"></property>
+    </bean>
     <!--bean的生命周期:
         1.通过构造器或工厂方法创建 Bean 实例
         2.为 Bean 的属性设置值和对其他 Bean 的引用

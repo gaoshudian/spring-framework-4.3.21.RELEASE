@@ -10,7 +10,7 @@ public class Main {
 
 	@Test
 	public void helloworld(){
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("property.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("my-demo/property.xml");
         Property helloWorld = (Property) ctx.getBean("property");
         System.out.println(helloWorld);
     }

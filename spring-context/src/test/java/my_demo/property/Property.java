@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Property {
 
+    private Float price;
+
     private Date dateValue;
 
     public Date getDateValue() {
@@ -12,5 +14,13 @@ public class Property {
 
     public void setDateValue(Date dateValue) {
         this.dateValue = dateValue;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }

@@ -5,7 +5,8 @@
 
 
 	<bean id="property" class="my_demo.property.Property">
-		<property name="dateValue" value="2013-12-12"></property>
+        <property name="price" value="1.5"></property>
+        <property name="dateValue" value="2013-12-12"></property>
 	</bean>
 
     <bean id="customEditorConfigurer"  class="org.springframework.beans.factory.config.CustomEditorConfigurer">

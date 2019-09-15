@@ -1045,11 +1045,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         return (isSingletonCurrentlyInCreation(beanName) || isPrototypeCurrentlyInCreation(beanName));
     }
 
-    /**
-     * Return whether the specified prototype bean is currently in creation
-     * (within the current thread).
-     *
-     * @param beanName the name of the bean
+    /*
+     判断传入的prototype类型的bean是否正在创建中;
+
+     spring这里设计的真他妈好，isPrototypeCurrentlyInCreation、beforePrototypeCreation、afterPrototypeCreation
+     这三个方法结合起来完美的防止了prototype类型bean的循环依赖问题
      */
     protected boolean isPrototypeCurrentlyInCreation(String beanName) {
         Object curVal = this.prototypesCurrentlyInCreation.get();
@@ -1070,6 +1070,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         if (curVal == null) {
             this.prototypesCurrentlyInCreation.set(beanName);
         } else if (curVal instanceof String) {
+            /*
+                当prototype类型的bean中一个属性是引用另外一个prototype类型的bean时会进入到这种情况,如:
+                <bean id="prototypeTest" class="my_demo.prototype.PrototypeTest" scope="prototype">
+                    <property name="prototypeTest2" ref="prototypeTest2"></property>
+                </bean>
+
+                <bean id="prototypeTest2" class="my_demo.prototype.PrototypeTest2" scope="prototype">
+                </bean>
+             */
             Set<String> beanNameSet = new HashSet<String>(2);
             beanNameSet.add((String) curVal);
             beanNameSet.add(beanName);

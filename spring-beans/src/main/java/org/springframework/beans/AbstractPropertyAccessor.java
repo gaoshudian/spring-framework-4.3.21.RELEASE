@@ -80,6 +80,9 @@ public abstract class AbstractPropertyAccessor extends TypeConverterSupport impl
 		setPropertyValues(pvs, ignoreUnknown, false);
 	}
 
+	/*
+	设置属性值，其实就是设置BeanWrapperImpl对象的wrappedObject对象的属性值
+	 */
 	@Override
 	public void setPropertyValues(PropertyValues pvs, boolean ignoreUnknown, boolean ignoreInvalid)
 			throws BeansException {

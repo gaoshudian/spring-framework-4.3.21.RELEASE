@@ -39,7 +39,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Internal helper class for converting property values to target types.
+ * spring自带的工具类用于转换属性为响应的类型
  *
  * <p>Works on a given {@link PropertyEditorRegistrySupport} instance.
  * Used as a delegate by {@link BeanWrapperImpl} and {@link SimpleTypeConverter}.
@@ -165,7 +165,7 @@ class TypeConverterDelegate {
 
 		ConversionFailedException conversionAttemptEx = null;
 
-		// No custom editor but custom ConversionService specified?
+		//没有自定义属性编辑器但是有自定义conversionService
 		ConversionService conversionService = this.propertyEditorRegistry.getConversionService();
 		if (editor == null && conversionService != null && newValue != null && typeDescriptor != null) {
 			TypeDescriptor sourceTypeDesc = TypeDescriptor.forObject(newValue);
@@ -186,6 +186,7 @@ class TypeConverterDelegate {
 		if (editor != null || (requiredType != null && !ClassUtils.isAssignableValue(requiredType, convertedValue))) {
 			if (typeDescriptor != null && requiredType != null && Collection.class.isAssignableFrom(requiredType) &&
 					convertedValue instanceof String) {
+
 				TypeDescriptor elementTypeDesc = typeDescriptor.getElementTypeDescriptor();
 				if (elementTypeDesc != null) {
 					Class<?> elementType = elementTypeDesc.getType();
@@ -195,8 +196,10 @@ class TypeConverterDelegate {
 				}
 			}
 			if (editor == null) {
+			    //找到默认的属性编辑器，spring默认提供了很多默认的属性编辑器
 				editor = findDefaultEditor(requiredType);
 			}
+			//使用自定义转换器转换属性值
 			convertedValue = doConvertValue(oldValue, convertedValue, requiredType, editor);
 		}
 

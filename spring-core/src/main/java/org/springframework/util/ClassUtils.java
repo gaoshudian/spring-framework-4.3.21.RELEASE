@@ -490,6 +490,9 @@ public abstract class ClassUtils {
 	 * @param value the value that should be assigned to the type
 	 * @return if the type is assignable from the value
 	 */
+	/*
+	 判断传入的value是否可以转换为type类型
+	 */
 	public static boolean isAssignableValue(Class<?> type, Object value) {
 		Assert.notNull(type, "Type must not be null");
 		return (value != null ? isAssignable(type, value.getClass()) : !type.isPrimitive());

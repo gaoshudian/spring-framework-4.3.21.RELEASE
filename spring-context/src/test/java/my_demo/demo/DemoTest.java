@@ -2,6 +2,7 @@ package my_demo.demo;
 
 import my_demo.helloworld.ref.Action;
 import my_demo.helloworld.ref.Dao;
+import my_demo.helloworld.ref.Service;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -16,8 +17,8 @@ public class DemoTest {
     //测试自动装配:autowire
     @Test
 	public void test1(){
-        Action action = ctx.getBean(Action.class);
-        action.execute();
+        Service service = ctx.getBean(Service.class);
+        service.save();
     }
 
     //测试bean的作用域
@@ -52,6 +53,13 @@ public class DemoTest {
         SPELCar spel2 = (SPELCar) ctx.getBean("spel2");
         System.out.println(spel2);
 
+    }
+
+    //测试aware接口
+    @Test
+    public void test6(){
+        MyAware myAware = (MyAware) ctx.getBean("myAware");
+        myAware.hello();
     }
 
     //测试bean的生命周期

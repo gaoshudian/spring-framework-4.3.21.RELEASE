@@ -101,8 +101,8 @@ class BeanDefinitionValueResolver {
 	 * @return the resolved object
 	 */
 	public Object resolveValueIfNecessary(Object argName, Object value) {
-		// We must check each value to see whether it requires a runtime reference
-		// to another bean to be resolved.
+
+		//处理某个bean的属性依赖另外一个bean的情况,如:<property name="dao" ref="dao"></property>
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
 			return resolveReference(argName, ref);
@@ -331,8 +331,8 @@ class BeanDefinitionValueResolver {
 		return actualInnerBeanName;
 	}
 
-	/**
-	 * Resolve a reference to another bean in the factory.
+	/*
+	 解决引用工厂中另外一个bean的情况,如:<property name="dao" ref="dao"></property>
 	 */
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {

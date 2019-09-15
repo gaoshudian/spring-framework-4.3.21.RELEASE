@@ -95,6 +95,15 @@
 		</property>
 	</bean>
 
+	<!--以下面方式装配集合属性-->
+	<bean id="injectTest" class="my_demo.helloworld.ListInjectTest" >
+		<property name="list[0]" value="gao"></property>
+		<property name="list[1]" value="gao1"></property>
+
+		<property name="map[key1]" value="value1"></property>
+		<property name="map[key2]" value="value2"></property>
+	</bean>
+
 
 
 	<!-- 装配properties属性 -->

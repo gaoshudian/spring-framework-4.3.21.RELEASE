@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- 自定义转换器 -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="my_demo.converter.StringToDateConverter">
+                    <property name="datePattern" value="yyyy-MM-dd"></property>
+                </bean>
+                <bean class="my_demo.converter.StringToObjectConverter">
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="convertClass" class="my_demo.converter.ConvertClass">
+        <property name="date" value="2018-12-12"></property>
+        <property name="stringObject" value="gaoshudian"></property>
+    </bean>
+
+
+</beans>

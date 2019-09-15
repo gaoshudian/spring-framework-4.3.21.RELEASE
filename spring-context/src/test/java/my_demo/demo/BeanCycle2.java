@@ -5,9 +5,9 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * Created by gao on 2018/6/11.
  */
-public class BeanCycle implements InitializingBean {
+public class BeanCycle2 implements InitializingBean {
 
-    public BeanCycle() {
+    public BeanCycle2() {
         System.out.println("构造方法");
     }
 
@@ -33,6 +33,6 @@ public class BeanCycle implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("走了afterPropertiesSet方法");
+
     }
 }

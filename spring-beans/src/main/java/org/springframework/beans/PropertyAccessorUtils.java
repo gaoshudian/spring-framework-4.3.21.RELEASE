@@ -38,6 +38,7 @@ public abstract class PropertyAccessorUtils {
 	}
 
 	/**
+	 * 是否传入的propertyPath是一个索引（如:"list[0]"）的或者内嵌的(如:"a.b")属性
 	 * Check whether the given property path indicates an indexed or nested property.
 	 * @param propertyPath the property path to check
 	 * @return whether the path indicates an indexed or nested property
