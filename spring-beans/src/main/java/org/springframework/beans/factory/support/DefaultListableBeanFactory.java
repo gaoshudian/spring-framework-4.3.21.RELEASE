@@ -1305,6 +1305,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             }
         }
         for (String candidate : candidateNames) {
+            /*
+             注意这里的isAutowireCandidate方法，同一个bean属性依赖根据类型找到多个bean的时候，如果其中的某个bean设置autowireCandidate
+             为false,则容器在查找自动装配对象时，将不考虑该bean，即它不会被考虑作为其它bean自动装配的候选者，这个功能就是通过
+             isAutowireCandidate方法来实现的；
+
+             如ScopedProxyUtils#createScopedProxy有这样一行代码:targetDefinition.setAutowireCandidate(false);
+             */
             if (!isSelfReference(beanName, candidate) && isAutowireCandidate(candidate, descriptor)) {
                 //这个方法会提取"candidate"对应的bean实例，并封装到result中，key=匹配的beanName，value=匹配的bean实例
                 addCandidateEntry(result, candidate, descriptor, requiredType);

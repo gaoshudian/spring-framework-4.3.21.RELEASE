@@ -76,7 +76,8 @@ public abstract class ScopedProxyUtils {
 			proxyDefinition.copyQualifiersFrom((AbstractBeanDefinition) targetDefinition);
 		}
 
-		// The target bean should be ignored in favor of the scoped proxy.
+		// 容器在查找自动装配对象时，将不考虑该bean，即它不会被考虑作为其它bean自动装配的候选者，
+        // 但是该bean本身还是可以使用自动装配来注入其它bean的;特别是对于scoped代理
 		targetDefinition.setAutowireCandidate(false);
 		targetDefinition.setPrimary(false);
 
