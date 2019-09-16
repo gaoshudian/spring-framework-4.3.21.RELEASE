@@ -5,15 +5,15 @@
 
 
     <!-- 测试bean的作用域是singleton -->
-    <!--<bean id="a" class="my_demo.circularReference.A">-->
-        <!--<property name="b" ref="b"></property>-->
-        <!--<property name="username" value="jack"></property>-->
-        <!--&lt;!&ndash;<constructor-arg name="b" ref="b"></constructor-arg>&ndash;&gt;-->
-    <!--</bean>-->
-    <!--<bean id="b" class="my_demo.circularReference.B">-->
-        <!--<property name="a" ref="a"></property>-->
-        <!--&lt;!&ndash;<constructor-arg name="a" ref="a"></constructor-arg>&ndash;&gt;-->
-    <!--</bean>-->
+    <bean id="a" class="my_demo.circularReference.A">
+        <property name="b" ref="b"></property>
+        <property name="username" value="jack"></property>
+        <!--<constructor-arg name="b" ref="b"></constructor-arg>-->
+    </bean>
+    <bean id="b" class="my_demo.circularReference.B">
+        <property name="a" ref="a"></property>
+        <!--<constructor-arg name="a" ref="a"></constructor-arg>-->
+    </bean>
 
 
     <!-- 测试bean的作用域是prototype -->

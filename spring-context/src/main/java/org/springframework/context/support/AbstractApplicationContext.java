@@ -672,7 +672,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		 */
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
-		// Configure the bean factory with context callbacks.
         /*
         添加ApplicationContextAwareProcessor处理器，这里主要是实现这些Aware接口的bean在被初始化后可以取得一些对应的资源
          */
@@ -680,7 +679,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		/*
 		当spring将ApplicationContextAwareProcessor注册后，那么在ApplicationContextAwareProcessor的invokeAwareInterfaces方法
 		间接调用的Aware类已经不是普通的bean了，如ResourceLoaderAware、ApplicationContextAware等，那么当然需要在spring做bean的
-		依赖注入的时候忽略他们，在ignoreDependencyInterface的作用正是在此
+		依赖注入的时候忽略他们，在ignoreDependencyInterface的作用正是在此;
+
+		这里调用ignoreDependencyInterface方法后，所有实现这些接口的类中属性的setter方法的参数类型是这些接口时，不会自动装配这个属性，
+		而是统一由框架设置依赖；
+		比如:ApplicationContextAwareProcessor中的postProcessBeforeInitialization（）方法就是在bean初始化之前调用，这个方法里面的
+		invokeAwareInterfaces方法会统一处理这些属性的依赖注入；
+
+		具体spring是怎样实现忽略这些属性的依赖注入请参考ignoreDependencyInterface方法和ignoreDependencyType方法的注释
 		 */
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);

@@ -240,23 +240,33 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		this.allowRawInjectionDespiteWrapping = allowRawInjectionDespiteWrapping;
 	}
 
-	/**
-	 * Ignore the given dependency type for autowiring:
-	 * for example, String. Default is none.
+	/*
+        自动装配时要忽略的属性依赖注入，这里说的自动装配指的是这样的:
+         <bean id="service" class="my_demo.helloworld.ref.Service" autowire="byType"></bean>
+         @Autowire注解修饰的属性不属于自动装配;
+
+         这种要在自动装配时忽略的属性放进ignoredDependencyTypes中后，在哪里实现忽略的功能呢?
+         在doCreateBean#populateBean#autowireByType#unsatisfiedNonSimpleProperties方法中有这样一行代码:
+         if (pd.getWriteMethod() != null && !isExcludedFromDependencyCheck(pd) && !pvs.contains(pd.getName()) &&
+                !BeanUtils.isSimpleProperty(pd.getPropertyType())) {
+            result.add(pd.getName());
+         }
+
+         其中isExcludedFromDependencyCheck方法中就会判断ignoredDependencyTypes中是否有要忽略的属性，如下:
+         protected boolean isExcludedFromDependencyCheck(PropertyDescriptor pd) {
+            return (AutowireUtils.isExcludedFromDependencyCheck(pd) ||
+                    this.ignoredDependencyTypes.contains(pd.getPropertyType()) ||
+                    AutowireUtils.isSetterDefinedInInterface(pd, this.ignoredDependencyInterfaces));
+         }
 	 */
 	public void ignoreDependencyType(Class<?> type) {
 		this.ignoredDependencyTypes.add(type);
 	}
 
-	/**
-	 * Ignore the given dependency interface for autowiring.
-	 * <p>This will typically be used by application contexts to register
-	 * dependencies that are resolved in other ways, like BeanFactory through
-	 * BeanFactoryAware or ApplicationContext through ApplicationContextAware.
-	 * <p>By default, only the BeanFactoryAware interface is ignored.
-	 * For further types to ignore, invoke this method for each type.
-	 * @see org.springframework.beans.factory.BeanFactoryAware
-	 * @see org.springframework.context.ApplicationContextAware
+	/*
+	 自动装配时要忽略的属性依赖注入，这里忽略类中的属性的依赖注入时需要满足:
+	 这个属性的setter方法在ifc这个接口中存在；具体实现参考上面ignoreDependencyType方法的注释
+	 典型应用:ApplicationContextAware,BeanFactoryAware
 	 */
 	public void ignoreDependencyInterface(Class<?> ifc) {
 		this.ignoredDependencyInterfaces.add(ifc);
@@ -1498,6 +1508,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
+     * 判断传入的bean属性在依赖检测时是否要被排除
 	 * Determine whether the given bean property is excluded from dependency checks.
 	 * <p>This implementation excludes properties defined by CGLIB and
 	 * properties whose type matches an ignored dependency type or which
