@@ -71,21 +71,20 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 	public static final String DEFAULT_CONFIG_LOCATION_SUFFIX = ".xml";
 
 
-	/**
-	 * Loads the bean definitions via an XmlBeanDefinitionReader.
-	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
-	 * @see #initBeanDefinitionReader
-	 * @see #loadBeanDefinitions
+	/*
+	 通过XmlBeanDefinitionReader加载bean definitions
 	 */
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
-		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
+		// 创建XmlBeanDefinitionReader
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
 		beanDefinitionReader.setEnvironment(getEnvironment());
 		beanDefinitionReader.setResourceLoader(this);
+		//设置EntityResolver，EntityResolver 的作用就是项目本身就可以提供一个如何寻找XSD文件的声明方法；
+        //即:由程序来实现寻找XSD声明的过程,比如我们将DTD放在项目的某处，在实现时直接将此文档读取并返回给SAX即可,这样就避免了通过网络来寻找DTD的声明
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,

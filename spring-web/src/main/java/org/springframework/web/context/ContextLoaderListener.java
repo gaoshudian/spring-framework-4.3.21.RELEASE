@@ -100,6 +100,7 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 
 
 	/**
+	 * 初始化spring上下文，项目启动时会调用这个方法
 	 * Initialize the root web application context.
 	 */
 	@Override

@@ -34,12 +34,12 @@ import org.springframework.tests.sample.beans.TestBean;
 import static org.junit.Assert.*;
 
 /**
- * @author Rob Harrop
- * @author Juergen Hoeller
- * @author Mark Fisher
- * @author Sam Brannen
- * @see SessionScopeTests
- */
+ * 名称: RequestScopeTests.java
+ * 描述: 测试scope为"request"的bean实例的加载
+ *
+ * @author gaoshudian
+ * @date   2019/9/17 10:06 AM
+*/
 public class RequestScopeTests {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
@@ -59,7 +59,7 @@ public class RequestScopeTests {
 		RequestContextHolder.setRequestAttributes(null);
 	}
 
-
+    //测试获取request作用域的bean
 	@Test
 	public void getFromScope() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest();

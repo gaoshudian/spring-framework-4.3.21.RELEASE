@@ -38,11 +38,12 @@ import org.springframework.util.SerializationTestUtils;
 import static org.junit.Assert.*;
 
 /**
- * @author Rob Harrop
- * @author Juergen Hoeller
- * @author Sam Brannen
- * @see RequestScopeTests
- */
+ * 名称: SessionScopeTests.java
+ * 描述: 测试scope为"session"的bean实例的加载
+ *
+ * @author gaoshudian
+ * @date   2019/9/17 10:37 AM
+*/
 public class SessionScopeTests {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
@@ -61,6 +62,7 @@ public class SessionScopeTests {
 	}
 
 
+	//测试获取session作用域的bean
 	@Test
 	public void getFromScope() throws Exception {
 		AtomicInteger count = new AtomicInteger();

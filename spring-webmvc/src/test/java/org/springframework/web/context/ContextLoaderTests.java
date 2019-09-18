@@ -22,6 +22,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import my_demo.helloworld.HelloWorld;
 import org.junit.Test;
 
 import org.springframework.beans.BeansException;
@@ -49,16 +50,41 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 /**
- * Tests for {@link ContextLoader} and {@link ContextLoaderListener}.
+ * 名称: ContextLoaderTests.java
+ * 描述: 对ContextLoader和ContextLoaderListener的测试
  *
- * @author Juergen Hoeller
- * @author Sam Brannen
- * @author Chris Beams
- * @since 12.08.2003
- * @see org.springframework.web.context.support.Spr8510Tests
- */
+ * @author gaoshudian
+ * @date   2019/9/17 10:48 AM
+*/
 public class ContextLoaderTests {
 
+
+    //---------------------------------------------------------------------
+    // 自己新加的测试方法
+    //---------------------------------------------------------------------
+    @Test
+    public void helloworld() {
+        MockServletContext sc = new MockServletContext("");
+        sc.addInitParameter(ContextLoader.CONFIG_LOCATION_PARAM, "/org/springframework/web/context/WEB-INF/beans-helloworld.xml");
+        ServletContextListener listener = new ContextLoaderListener();
+        ServletContextEvent event = new ServletContextEvent(sc);
+        listener.contextInitialized(event);
+        WebApplicationContext context = (WebApplicationContext) sc.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        assertTrue("Correct WebApplicationContext exposed in ServletContext", context instanceof XmlWebApplicationContext);
+        assertTrue(WebApplicationContextUtils.getRequiredWebApplicationContext(sc) instanceof XmlWebApplicationContext);
+
+        HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
+        helloWorld.hello();
+
+        listener.contextDestroyed(event);
+        assertNull(sc.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE));
+        assertNull(WebApplicationContextUtils.getWebApplicationContext(sc));
+    }
+
+
+    //---------------------------------------------------------------------
+    // 下面是spring自带的测试方法
+    //---------------------------------------------------------------------
 	@Test
 	public void testContextLoaderListenerWithDefaultContext() {
 		MockServletContext sc = new MockServletContext("");

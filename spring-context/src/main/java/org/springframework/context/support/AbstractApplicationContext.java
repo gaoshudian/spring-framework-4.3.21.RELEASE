@@ -520,37 +520,31 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareBeanFactory(beanFactory);
 
 			try {
-				// Allows post-processing of the bean factory in context subclasses.
-                //子类覆盖方法做额外的处理，可参考子类XmlWebApplicationContext的处理
+                //子类覆盖方法做额外的处理，可参考子类XmlWebApplicationContext的处理,XmlWebApplicationContext里在这一步
+                //会将web应用相关的scopes注册进beanFactory中,包括:("request", "session", "globalSession", "application")
 				postProcessBeanFactory(beanFactory);
 
-				// Invoke factory processors registered as beans in the context.
                 /*
                 激活注册的BeanFactoryPostProcessor;
                 BeanFactoryPostProcessor的典型应用:PropertyPlaceHolderConfiguer
                  */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation.
-                //注册BeanPostProcessor
+                //注册BeanPostProcessor,介入到bean创建过程
 				registerBeanPostProcessors(beanFactory);
 
-				// Initialize message source for this context.
 				// 该方法的主要作用就是提取配置中定义的messageSource进行初始化，如果用户没有设置资源文件，则spring默认提供了DelegatingMessageSource
 				initMessageSource();
 
-				// Initialize event multicaster for this context.
                 //初始化上下文事件广播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
 
-				// Check for listener beans and register them.
                 //注册所有的监听器
 				registerListeners();
 
-				// Instantiate all remaining (non-lazy-init) singletons.
                 //初始化所有的非延迟加载的单例bean
 				finishBeanFactoryInitialization(beanFactory);
 
@@ -631,13 +625,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// For subclasses: do nothing by default.
 	}
 
-	/**
-	 * Tell the subclass to refresh the internal bean factory.
-	 * @return the fresh BeanFactory instance
-	 * @see #refreshBeanFactory()
-	 * @see #getBeanFactory()
-     *
-     * 初始化beanFactory，注册Bean
+	/*
+	 初始化beanFactory，注册Bean
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
         //刷新上下文环境，关闭旧的beanFactory，并创建新的

@@ -317,9 +317,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * Initialize the default lazy-init, autowire, dependency check settings,
-	 * init-method, destroy-method and merge settings. Support nested 'beans'
-	 * element use cases by falling back to the given parent in case the
+     * 初始化默认的lazy-init, autowire, dependency check 配置，init-method, destroy-method and merge配置
+     * Support nested 'beans' element use cases by falling back to the given parent in case the
 	 * defaults are not explicitly set locally.
 	 * @see #populateDefaults(DocumentDefaultsDefinition, DocumentDefaultsDefinition, org.w3c.dom.Element)
 	 * @see #getDefaults()
@@ -330,8 +329,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * Populate the given DocumentDefaultsDefinition instance with the default lazy-init,
-	 * autowire, dependency check settings, init-method, destroy-method and merge settings.
+     * 填充DocumentDefaultsDefinition对象属性，包括默认的lazy-init,autowire, dependency check设置, 以及init-method, destroy-method and merge属性
+     *
 	 * Support nested 'beans' element use cases by falling back to <literal>parentDefaults</literal>
 	 * in case the defaults are not explicitly set locally.
 	 * @param defaults the defaults to populate
@@ -339,13 +338,16 @@ public class BeanDefinitionParserDelegate {
 	 * @param root the root element of the current bean definition document (or nested beans element)
 	 */
 	protected void populateDefaults(DocumentDefaultsDefinition defaults, DocumentDefaultsDefinition parentDefaults, Element root) {
-		String lazyInit = root.getAttribute(DEFAULT_LAZY_INIT_ATTRIBUTE);
+
+        //default-lazy-init属性
+	    String lazyInit = root.getAttribute(DEFAULT_LAZY_INIT_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(lazyInit)) {
 			// Potentially inherited from outer <beans> sections, otherwise falling back to false.
 			lazyInit = (parentDefaults != null ? parentDefaults.getLazyInit() : FALSE_VALUE);
 		}
 		defaults.setLazyInit(lazyInit);
 
+        //default-merge属性
 		String merge = root.getAttribute(DEFAULT_MERGE_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(merge)) {
 			// Potentially inherited from outer <beans> sections, otherwise falling back to false.
@@ -353,6 +355,7 @@ public class BeanDefinitionParserDelegate {
 		}
 		defaults.setMerge(merge);
 
+		//default-autowire属性
 		String autowire = root.getAttribute(DEFAULT_AUTOWIRE_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(autowire)) {
 			// Potentially inherited from outer <beans> sections, otherwise falling back to 'no'.
@@ -428,11 +431,12 @@ public class BeanDefinitionParserDelegate {
 		return parseBeanDefinitionElement(ele, null);
 	}
 
-	/**
-	 * Parses the supplied {@code <bean>} element. May return {@code null}
-	 * if there were errors during parse. Errors are reported to the
-	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
-	 */
+    /**
+     * 解析元素为BeanDefinitionHolder对象，解析过程中如果报错则返回null
+     * @param ele
+     * @param containingBean
+     * @return
+     */
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, BeanDefinition containingBean) {
 		String id = ele.getAttribute(ID_ATTRIBUTE);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);

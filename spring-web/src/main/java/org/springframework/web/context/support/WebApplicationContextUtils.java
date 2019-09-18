@@ -205,13 +205,10 @@ public abstract class WebApplicationContextUtils {
 		registerEnvironmentBeans(bf, sc, null);
 	}
 
-	/**
-	 * Register web-specific environment beans ("contextParameters", "contextAttributes")
-	 * with the given BeanFactory, as used by the WebApplicationContext.
-	 * @param bf the BeanFactory to configure
-	 * @param servletContext the ServletContext that we're running within
-	 * @param servletConfig the ServletConfig of the containing Portlet
-	 */
+    /**
+     * 通过传递的beanFactory注册几个web环境相关的单例bean,如:
+     * servletContext、servletConfig、contextParameters、contextAttributes
+     */
 	public static void registerEnvironmentBeans(
 			ConfigurableListableBeanFactory bf, ServletContext servletContext, ServletConfig servletConfig) {
 

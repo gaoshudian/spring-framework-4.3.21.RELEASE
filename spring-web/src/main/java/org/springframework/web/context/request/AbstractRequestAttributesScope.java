@@ -36,6 +36,10 @@ import org.springframework.beans.factory.config.Scope;
  */
 public abstract class AbstractRequestAttributesScope implements Scope {
 
+	/*
+	 从request或者session作用域中获取bean，第一次加载bean后通过request.setAttribute(name, value)或者
+	 session.setAttribute(name, value)将加载的bean示例缓存起来，下次直接从缓存中拿
+	 */
 	@Override
 	public Object get(String name, ObjectFactory<?> objectFactory) {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
