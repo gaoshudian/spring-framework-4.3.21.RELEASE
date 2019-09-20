@@ -79,14 +79,13 @@ public class PropertyPlaceholderConfigurerTests {
 	}
 
 
+    /**
+     * 测试用本地properties配置文件中的配置项替换属性占位符
+     */
 	@Test
 	public void localPropertiesViaResource() {
 		DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
-		bf.registerBeanDefinition("testBean",
-				genericBeanDefinition(TestBean.class)
-					.addPropertyValue("name", "${my.name}")
-					.getBeanDefinition());
-
+		bf.registerBeanDefinition("testBean", genericBeanDefinition(TestBean.class).addPropertyValue("name", "${my.name}").getBeanDefinition());
 		PropertyPlaceholderConfigurer pc = new PropertyPlaceholderConfigurer();
 		Resource resource = new ClassPathResource("PropertyPlaceholderConfigurerTests.properties", this.getClass());
 		pc.setLocation(resource);

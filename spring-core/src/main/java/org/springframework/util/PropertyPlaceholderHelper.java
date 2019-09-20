@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * 处理应用程序中包含占位符的字符串工具类
  * Utility class for working with Strings that have placeholder values in them. A placeholder takes the form
  * {@code ${name}}. Using {@code PropertyPlaceholderHelper} these placeholders can be substituted for
  * user-supplied values. <p> Values for substitution can be supplied using a {@link Properties} instance or
@@ -114,43 +115,45 @@ public class PropertyPlaceholderHelper {
 		});
 	}
 
-	/**
-	 * Replaces all placeholders of format {@code ${name}} with the value returned
-	 * from the supplied {@link PlaceholderResolver}.
-	 * @param value the value containing the placeholders to be replaced
-	 * @param placeholderResolver the {@code PlaceholderResolver} to use for replacement
-	 * @return the supplied value with placeholders replaced inline
-	 */
+    /**
+     * 用传入的placeholderResolver的resolvePlaceholder返回值来替换所有的占位符
+     */
 	public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {
 		Assert.notNull(value, "'value' must not be null");
 		return parseStringValue(value, placeholderResolver, new HashSet<String>());
 	}
 
-	protected String parseStringValue(
-			String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
+	protected String parseStringValue(String value, PlaceholderResolver placeholderResolver, Set<String> visitedPlaceholders) {
 
 		StringBuilder result = new StringBuilder(value);
-
+        //获取前缀 " ${ " 的索引位置
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
+            // 获取 后缀 "}" 的索引位置
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
+                // 截取 "${" 和 "}" 中间的内容，这也就是我们在配置文件中对应的值
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
 				String originalPlaceholder = placeholder;
 				if (!visitedPlaceholders.add(originalPlaceholder)) {
 					throw new IllegalArgumentException(
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
-				// Recursive invocation, parsing placeholders contained in the placeholder key.
+                //递归调用，解析占位符键中包含的占位符
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
-				// Now obtain the value for the fully resolved key...
+                //从Properties中获取placeholder对应的值propVal
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
+				//如果不存在
 				if (propVal == null && this.valueSeparator != null) {
+                    //获取 : 前面部分 actualPlaceholder
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
 					if (separatorIndex != -1) {
 						String actualPlaceholder = placeholder.substring(0, separatorIndex);
+						// 获取 : 后面部分 defaultValue
 						String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());
+						//从 Properties 中获取 actualPlaceholder 对应的值
 						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
+                        // 如果不存在 则返回 defaultValue
 						if (propVal == null) {
 							propVal = defaultValue;
 						}

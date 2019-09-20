@@ -264,24 +264,9 @@ public abstract class WebApplicationContextUtils {
 		initServletPropertySources(propertySources, servletContext, null);
 	}
 
-	/**
-	 * Replace {@code Servlet}-based {@link StubPropertySource stub property sources} with
-	 * actual instances populated with the given {@code servletContext} and
-	 * {@code servletConfig} objects.
-	 * <p>This method is idempotent with respect to the fact it may be called any number
-	 * of times but will perform replacement of stub property sources with their
-	 * corresponding actual property sources once and only once.
-	 * @param propertySources the {@link MutablePropertySources} to initialize (must not
-	 * be {@code null})
-	 * @param servletContext the current {@link ServletContext} (ignored if {@code null}
-	 * or if the {@link StandardServletEnvironment#SERVLET_CONTEXT_PROPERTY_SOURCE_NAME
-	 * servlet context property source} has already been initialized)
-	 * @param servletConfig the current {@link ServletConfig} (ignored if {@code null}
-	 * or if the {@link StandardServletEnvironment#SERVLET_CONFIG_PROPERTY_SOURCE_NAME
-	 * servlet config property source} has already been initialized)
-	 * @see org.springframework.core.env.PropertySource.StubPropertySource
-	 * @see org.springframework.core.env.ConfigurableEnvironment#getPropertySources()
-	 */
+    /**
+     * 用提供的servletContext和servletConfig对象替换 propertySources 中的key为"servletContextInitParams"和"servletConfigInitParams"的属性值
+     */
 	public static void initServletPropertySources(
 			MutablePropertySources propertySources, ServletContext servletContext, ServletConfig servletConfig) {
 

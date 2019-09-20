@@ -211,13 +211,12 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 
 
 	/**
-	 * Visit each bean definition in the given bean factory and attempt to replace ${...} property
-	 * placeholders with values from the given properties.
+	 * 访问给定bean工厂中的每个bean定义，并尝试用给定的properties中的值替换${…}属性占位符
 	 */
 	@Override
-	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
-			throws BeansException {
+	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) throws BeansException {
 
+        //构造一个 PlaceholderResolvingStringValueResolver 类型的 StringValueResolver 实例
 		StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver(props);
 		doProcessProperties(beanFactoryToProcess, valueResolver);
 	}
@@ -241,15 +240,19 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	}
 
 
+    /**
+     * StringValueResolver 为一个解析 String 类型值的策略接口，该接口提供了 resolveStringValue() 方法用于解析 String 值。
+     * PlaceholderResolvingStringValueResolver 为其一个解析策略
+     */
 	private class PlaceholderResolvingStringValueResolver implements StringValueResolver {
 
+	    //处理应用程序中包含占位符的字符串工具类
 		private final PropertyPlaceholderHelper helper;
 
 		private final PlaceholderResolver resolver;
 
 		public PlaceholderResolvingStringValueResolver(Properties props) {
-			this.helper = new PropertyPlaceholderHelper(
-					placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
+			this.helper = new PropertyPlaceholderHelper(placeholderPrefix, placeholderSuffix, valueSeparator, ignoreUnresolvablePlaceholders);
 			this.resolver = new PropertyPlaceholderConfigurerResolver(props);
 		}
 
@@ -264,6 +267,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	}
 
 
+    //PlaceholderResolver 是一个用于解析字符串中包含占位符的替换值的策略接口，该接口有一个 resolvePlaceholder() 方法，用于返回占位符的替换值
 	private class PropertyPlaceholderConfigurerResolver implements PlaceholderResolver {
 
 		private final Properties props;
