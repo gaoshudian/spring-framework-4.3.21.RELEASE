@@ -54,6 +54,7 @@ public class SpelExpression implements Expression {
 
 	private final String expression;
 
+	//抽象语法树节点
 	private final SpelNodeImpl ast;
 
 	private final SpelParserConfiguration configuration;

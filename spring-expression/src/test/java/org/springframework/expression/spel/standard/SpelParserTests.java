@@ -31,8 +31,17 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import static org.junit.Assert.*;
 
 /**
- * @author Andy Clement
- * @author Juergen Hoeller
+ * SPEL解析表达式步骤:
+ *
+ * 1.按照SpEL支持的语法结构，写出一个expressionStr
+ * 2.准备一个表达式解析器ExpressionParser，调用方法parseExpression()对它进行解析。这一步至少完成了如下三件事：
+ *   a.使用一个专门的断词器Tokenizer，将给定的表达式字符串拆分为Spring可以认可的数据格式
+ *   b.根据断词器处理的操作结果生成相应的语法结构
+ *   c.在这处理过程之中就需要进行表达式的对错检查（语法格式不对要精准报错出来）
+ * 3.将已经处理好后的表达式定义到一个专门的对象Expression里，等待结果
+ * 4.由于表达式内可能存在占位符变量${}，所以还不太适合马上直接getValue()（若不需要解析占位符那就直接getValue()也是可以拿到值的）。
+ *   所以在计算之前还得设置一个表达式上下文对象`EvaluationContext`（这一步步不是必须的）
+ * 5.替换好占位符内容后，利用表达式对象计算出最终的结果
  */
 public class SpelParserTests {
 

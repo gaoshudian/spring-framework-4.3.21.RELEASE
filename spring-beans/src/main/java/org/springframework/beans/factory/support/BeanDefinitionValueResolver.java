@@ -206,9 +206,7 @@ class BeanDefinitionValueResolver {
 	}
 
 	/**
-	 * Evaluate the given value as an expression, if necessary.
-	 * @param value the candidate value (may be an expression)
-	 * @return the resolved value
+     * 如果需要的话，将给定的值作为表达式求值
 	 */
 	protected Object evaluate(TypedStringValue value) {
 		Object result = doEvaluate(value.getValue());

@@ -50,8 +50,8 @@ public class DemoTest {
         SPELCar spel = (SPELCar) ctx.getBean("spel");
         System.out.println(spel);
         //引用bean的属性和方法
-        SPELCar spel2 = (SPELCar) ctx.getBean("spel2");
-        System.out.println(spel2);
+//        SPELCar spel2 = (SPELCar) ctx.getBean("spel2");
+//        System.out.println(spel2);
 
     }
 

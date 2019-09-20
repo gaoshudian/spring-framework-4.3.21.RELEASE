@@ -42,10 +42,12 @@ public class SpelParserConfiguration {
 
 	private final ClassLoader compilerClassLoader;
 
+	//碰到为null的，是否给自动new一个对象，比如new String()，new ArrayList()等等
 	private final boolean autoGrowNullReferences;
 
 	private final boolean autoGrowCollections;
 
+	//集合能够自动增长到的最大值
 	private final int maximumAutoGrowSize;
 
 

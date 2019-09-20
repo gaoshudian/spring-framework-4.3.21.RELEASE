@@ -1615,9 +1615,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				Object resolvedValue = valueResolver.resolveValueIfNecessary(pv, originalValue);
 				Object convertedValue = resolvedValue;
 
+				//属性类型转换，将字符串类型转换为bean属性需要的类型
 				boolean convertible = bw.isWritableProperty(propertyName) && !PropertyAccessorUtils.isNestedOrIndexedProperty(propertyName);
 				if (convertible) {
-				    //属性类型转换，将字符串类型转换为bean属性需要的类型
 					convertedValue = convertForProperty(resolvedValue, propertyName, bw, converter);
 				}
 				// Possibly store converted value in merged bean definition,

@@ -1418,6 +1418,7 @@ public class BeanDefinitionParserDelegate {
 		return decorateBeanDefinitionIfRequired(ele, definitionHolder, null);
 	}
 
+	//对bean进行进一步的装饰，主要是应用在bean的属性或者子标签有自定义元素的情况
 	public BeanDefinitionHolder decorateBeanDefinitionIfRequired(
 			Element ele, BeanDefinitionHolder definitionHolder, BeanDefinition containingBd) {
 

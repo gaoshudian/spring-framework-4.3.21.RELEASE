@@ -65,7 +65,7 @@ public abstract class TemplateAwareExpressionParser implements ExpressionParser 
 		if (context == null) {
 			context = NON_TEMPLATE_PARSER_CONTEXT;
 		}
-
+		//若指定了上下文，并且是模板，就走parseTemplate
 		if (context.isTemplate()) {
 			return parseTemplate(expressionString, context);
 		}
