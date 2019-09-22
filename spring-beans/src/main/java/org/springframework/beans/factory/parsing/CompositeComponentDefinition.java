@@ -36,6 +36,7 @@ public class CompositeComponentDefinition extends AbstractComponentDefinition {
 
 	private final Object source;
 
+	//ComponentDefinition该接口描述一组 BeanDefinition 和 BeanReferences的逻辑视图，如在某些配置上下文中所示
 	private final List<ComponentDefinition> nestedComponents = new LinkedList<ComponentDefinition>();
 
 

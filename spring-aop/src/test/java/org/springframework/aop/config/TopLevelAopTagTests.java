@@ -26,10 +26,7 @@ import static org.junit.Assert.*;
 import static org.springframework.tests.TestResourceUtils.*;
 
 /**
- * Tests that the &lt;aop:config/&gt; element can be used as a top level element.
- *
- * @author Rob Harrop
- * @author Chris Beams
+ * 测试<aop:config/>标签的解析
  */
 public final class TopLevelAopTagTests {
 

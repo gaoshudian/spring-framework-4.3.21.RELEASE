@@ -26,17 +26,28 @@ import org.springframework.tests.sample.beans.ITestBean;
 import static org.junit.Assert.*;
 
 /**
- * Test for ensuring the aspects aren't advised. See SPR-3893 for more details.
+ * 名称: AspectImplementingInterfaceTests.java
+ * 描述: 测试AOP,纯xml配置方式，切面以<aop:aspect/>标签实现
  *
- * @author Ramnivas Laddad
- * @author Chris Beams
- */
+ * <aop:config>
+ *     <aop:aspect ref="interfaceExtendingAspect">
+ *         <aop:pointcut id="anyOperation" expression="execution(* *(..))"/>
+ *         <aop:around pointcut-ref="anyOperation" method="increment"/>
+ *     </aop:aspect>
+ * </aop:config>
+ *
+ * <bean id="testBean" class="org.springframework.tests.sample.beans.TestBean"/>
+ * <bean id="interfaceExtendingAspect"
+ *       class="org.springframework.aop.aspectj.autoproxy.InterfaceExtendingAspect"/>
+ *
+ * @author gaoshudian
+ * @date   2019/9/22 10:25 PM
+*/
 public final class AspectImplementingInterfaceTests {
 
 	@Test
 	public void testProxyCreation() {
-		ClassPathXmlApplicationContext ctx =
-			new ClassPathXmlApplicationContext(getClass().getSimpleName() + "-context.xml", getClass());
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(getClass().getSimpleName() + "-context.xml", getClass());
 
 		ITestBean testBean = (ITestBean) ctx.getBean("testBean");
 		AnInterface interfaceExtendingAspect = (AnInterface) ctx.getBean("interfaceExtendingAspect");

@@ -2,7 +2,7 @@ package my_demo.converter;
 
 /**
  * 名称: StringObject.java
- * 描述: TODO
+ * 描述: 测试
  *
  * @author gaoshudian
  * @date 2019/9/14 9:03 PM
