@@ -5,15 +5,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
-    <aop:config>
+    <!--普通类 -->
+    <bean id="testBean" class="org.springframework.tests.sample.beans.TestBean"/>
+
+    <!-- 切面类 -->
+    <bean id="interfaceExtendingAspect" class="org.springframework.aop.aspectj.autoproxy.InterfaceExtendingAspect"/>
+
+    <!-- aop切面配置 -->
+    <aop:config expose-proxy="true">
         <aop:aspect ref="interfaceExtendingAspect">
             <aop:pointcut id="anyOperation" expression="execution(* *(..))"/>
             <aop:around pointcut-ref="anyOperation" method="increment"/>
         </aop:aspect>
     </aop:config>
 
-    <bean id="testBean" class="org.springframework.tests.sample.beans.TestBean"/>
 
-    <bean id="interfaceExtendingAspect"
-          class="org.springframework.aop.aspectj.autoproxy.InterfaceExtendingAspect"/>
+
 </beans>

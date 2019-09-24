@@ -54,13 +54,8 @@ public abstract class AutoProxyUtils {
 
 
 	/**
-	 * Determine whether the given bean should be proxied with its target
-	 * class rather than its interfaces. Checks the
-	 * {@link #PRESERVE_TARGET_CLASS_ATTRIBUTE "preserveTargetClass" attribute}
-	 * of the corresponding bean definition.
-	 * @param beanFactory the containing ConfigurableListableBeanFactory
-	 * @param beanName the name of the bean
-	 * @return whether the given bean should be proxied with its target class
+	 * bean definition 的 attributes 属性中是否有key为"org.springframework.aop.framework.autoproxy.AutoProxyUtils.preserveTargetClass"
+	 * 的属性，且 value 为 ture
 	 */
 	public static boolean shouldProxyTargetClass(ConfigurableListableBeanFactory beanFactory, String beanName) {
 		if (beanName != null && beanFactory.containsBeanDefinition(beanName)) {

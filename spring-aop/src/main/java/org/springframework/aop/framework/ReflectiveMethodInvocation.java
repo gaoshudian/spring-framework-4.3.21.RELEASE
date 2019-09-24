@@ -157,26 +157,24 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 			return invokeJoinpoint();
 		}
 
-		Object interceptorOrInterceptionAdvice =
-				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+		//获取下一个要执行的拦截器
+		Object interceptorOrInterceptionAdvice = this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
+
+		//动态匹配
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
-			// Evaluate dynamic method matcher here: static part will already have
-			// been evaluated and found to match.
-			InterceptorAndDynamicMethodMatcher dm =
-					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
+			// Evaluate dynamic method matcher here: static part will already have been evaluated and found to match.
+			InterceptorAndDynamicMethodMatcher dm = (InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
 			if (dm.methodMatcher.matches(this.method, this.targetClass, this.arguments)) {
 				return dm.interceptor.invoke(this);
 			}
 			else {
-				// Dynamic matching failed.
-				// Skip this interceptor and invoke the next in the chain.
+				//匹配失败则跳过这个拦截器执行下一个拦截器
 				return proceed();
 			}
 		}
 		else {
-			// It's an interceptor, so we just invoke it: The pointcut will have
-			// been evaluated statically before this object was constructed.
-			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
+            //如果是普通拦截器，直接调用它:切入点将在构造这个对象之前被静态地计算。
+            return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}
 

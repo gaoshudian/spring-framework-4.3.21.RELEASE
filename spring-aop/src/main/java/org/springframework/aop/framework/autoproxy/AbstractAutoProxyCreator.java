@@ -237,6 +237,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
+    /**
+     * bean实例化之前执行这个方法
+     */
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 		Object cacheKey = getCacheKey(beanClass, beanName);
@@ -296,6 +299,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (!this.earlyProxyReferences.contains(cacheKey)) {
+				//如果它适合被代理，则需要封装指定bean
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -335,20 +339,22 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (beanName != null && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		//无需增强
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
+		//给定的bean是否代表一个基础设施类，基础设施类不应代理，或者指定bean本身就是切面类，不需要被代理
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
 		}
 
-		// Create proxy if we have advice.
+		// 如果存在增强方法则创建代理
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+		//如果获取到了增强则需要针对增强创建代理
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
-			Object proxy = createProxy(
-					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			Object proxy = createProxy(bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
 			this.proxyTypes.put(cacheKey, proxy.getClass());
 			return proxy;
 		}
@@ -424,28 +430,34 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		return null;
 	}
 
-	/**
-	 * Create an AOP proxy for the given bean.
-	 * @param beanClass the class of the bean
-	 * @param beanName the name of the bean
-	 * @param specificInterceptors the set of interceptors that is
-	 * specific to this bean (may be empty, but not null)
-	 * @param targetSource the TargetSource for the proxy,
-	 * already pre-configured to access the bean
-	 * @return the AOP proxy for the bean
-	 * @see #buildAdvisors
-	 */
-	protected Object createProxy(
-			Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
+    /**
+     * 为传入的bean创建AOP代理
+     */
+	protected Object createProxy(Class<?> beanClass, String beanName, Object[] specificInterceptors, TargetSource targetSource) {
 
 		if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
 		ProxyFactory proxyFactory = new ProxyFactory();
-		proxyFactory.copyFrom(this);
+		proxyFactory.copyFrom(this);//获取当前类中相关属性
 
+        /*
+        下面这个if里面的核心逻辑:
+        当 xml 中没有配置 proxyTargetClass 属性，默认为 false
+        1.如果被代理 bean 对应的 bean definition ，它的 attributes 属性中，存在key为"org.springframework.aop.framework.autoproxy.AutoProxyUtils.preserveTargetClass"
+          值为 true 的键值对,那么设置 proxyTargetClass 为 ture
+        2.否则过滤所有接口，如果有合适的接口存在(即：接口不能为 Aware、InitializingBean 等容器的回调接口，也不能是内部语言接口），则proxyTargetClass 为 false;
+          如果没有合适的接口，proxyTargetClass 还是设置为 true
+         */
 		if (!proxyFactory.isProxyTargetClass()) {
+            /**
+             * 如果被代理 bean 对应的 bean definition 属性中，存在org.springframework.aop.framework.autoproxy.AutoProxyUtils.preserveTargetClass为 key，
+             * 且 值为 true 的 attributes,那么设置 proxyTargetClass 为 ture；
+             *
+             * 比如:<aop:scoped-proxy/>这个标签内部的实现中就会调用下面代码来设置这个key为true的attributes
+             * ScopedProxyUtils#createScopedProxy#targetDefinition.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
+             */
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
@@ -454,9 +466,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			}
 		}
 
+        // 对拦截器或者通知进行包装，包装成Advisor对象
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+        // 在代理工厂中添加 Advisor 通知链
 		proxyFactory.addAdvisors(advisors);
+		//设置要代理的类
 		proxyFactory.setTargetSource(targetSource);
+		//对代理工厂做一些定制化处理，子类如果没有实现，这里实现为空
 		customizeProxyFactory(proxyFactory);
 
 		proxyFactory.setFrozen(this.freezeProxy);
@@ -464,18 +480,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			proxyFactory.setPreFiltered(true);
 		}
 
+        // 通过代理工厂获取代理
 		return proxyFactory.getProxy(getProxyClassLoader());
 	}
 
-	/**
-	 * Determine whether the given bean should be proxied with its target class rather than its interfaces.
-	 * <p>Checks the {@link AutoProxyUtils#PRESERVE_TARGET_CLASS_ATTRIBUTE "preserveTargetClass" attribute}
-	 * of the corresponding bean definition.
-	 * @param beanClass the class of the bean
-	 * @param beanName the name of the bean
-	 * @return whether the given bean should be proxied with its target class
-	 * @see AutoProxyUtils#shouldProxyTargetClass
-	 */
+    /**
+     * 确定给定的bean是否应该使用其目标类而不是接口进行代理
+     * 检查对应 bean definition 的 preserveTargetClass 属性
+     */
 	protected boolean shouldProxyTargetClass(Class<?> beanClass, String beanName) {
 		return (this.beanFactory instanceof ConfigurableListableBeanFactory &&
 				AutoProxyUtils.shouldProxyTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName));
@@ -504,7 +516,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return the list of Advisors for the given bean
 	 */
 	protected Advisor[] buildAdvisors(String beanName, Object[] specificInterceptors) {
-		// Handle prototypes correctly...
+        //解析注册的所有interceptorName
 		Advisor[] commonInterceptors = resolveInterceptorNames();
 
 		List<Object> allInterceptors = new ArrayList<Object>();
@@ -528,6 +540,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
+            //拦截器进行封装转化为Advisor
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
 		}
 		return advisors;
@@ -538,8 +551,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @see #setInterceptorNames
 	 */
 	private Advisor[] resolveInterceptorNames() {
-		ConfigurableBeanFactory cbf = (this.beanFactory instanceof ConfigurableBeanFactory ?
-				(ConfigurableBeanFactory) this.beanFactory : null);
+		ConfigurableBeanFactory cbf = (this.beanFactory instanceof ConfigurableBeanFactory ? (ConfigurableBeanFactory) this.beanFactory : null);
 		List<Advisor> advisors = new ArrayList<Advisor>();
 		for (String beanName : this.interceptorNames) {
 			if (cbf == null || !cbf.isCurrentlyInCreation(beanName)) {

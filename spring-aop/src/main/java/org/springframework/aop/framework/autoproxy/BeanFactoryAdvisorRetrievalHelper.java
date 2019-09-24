@@ -68,14 +68,14 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		if (advisorNames == null) {
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
 			// uninitialized to let the auto-proxy creator apply to them!
-			advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
-					this.beanFactory, Advisor.class, true, false);
+			// 获取当前BeanFactory中所有实现了Advisor接口的bean的名称
+			advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(this.beanFactory, Advisor.class, true, false);
 			this.cachedAdvisorBeanNames = advisorNames;
 		}
 		if (advisorNames.length == 0) {
 			return new ArrayList<Advisor>();
 		}
-
+        // 对获取到的实现Advisor接口的bean的名称进行遍历
 		List<Advisor> advisors = new ArrayList<Advisor>();
 		for (String name : advisorNames) {
 			if (isEligibleBean(name)) {
@@ -86,6 +86,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 				}
 				else {
 					try {
+                        // 将当前bean添加到结果中
 						advisors.add(this.beanFactory.getBean(name, Advisor.class));
 					}
 					catch (BeanCreationException ex) {

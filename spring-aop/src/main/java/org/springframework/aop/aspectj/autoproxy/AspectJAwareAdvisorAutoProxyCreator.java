@@ -97,12 +97,17 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 		AspectJProxyUtils.makeAdvisorChainAspectJCapableIfNecessary(candidateAdvisors);
 	}
 
+    /**
+     * 当前bean是否应该跳过被代理，即当前类是否需要被代理
+     */
 	@Override
 	protected boolean shouldSkip(Class<?> beanClass, String beanName) {
 		// TODO: Consider optimization by caching the list of the aspect names
+		//找到所有的增强(切面)
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
 		for (Advisor advisor : candidateAdvisors) {
 			if (advisor instanceof AspectJPointcutAdvisor) {
+			    //如果发现当前bean是切面中声明的切面类，则返回true
 				if (((AbstractAspectJAdvice) advisor.getAdvice()).getAspectName().equals(beanName)) {
 					return true;
 				}

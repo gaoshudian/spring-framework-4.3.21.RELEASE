@@ -90,31 +90,36 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 	}
 
 
-	/**
-	 * Check the interfaces on the given bean class and apply them to the {@link ProxyFactory},
-	 * if appropriate.
-	 * <p>Calls {@link #isConfigurationCallbackInterface} and {@link #isInternalLanguageInterface}
-	 * to filter for reasonable proxy interfaces, falling back to a target-class proxy otherwise.
-	 * @param beanClass the class of the bean
-	 * @param proxyFactory the ProxyFactory for the bean
-	 */
+    /**
+     * 检查指定 bean class 上的接口，如果合适的话设置到 ProxyFactory 中;
+     * 调用 isConfigurationCallbackInterface 方法和 isInternalLanguageInterface 方法去过滤得到,否则回退到 target-class proxy
+     * @param beanClass
+     * @param proxyFactory
+     */
 	protected void evaluateProxyInterfaces(Class<?> beanClass, ProxyFactory proxyFactory) {
+        // 此方法拿到类上及其父类上，所有的接口，不会递归获取接口上的接口
 		Class<?>[] targetInterfaces = ClassUtils.getAllInterfacesForClass(beanClass, getProxyClassLoader());
 		boolean hasReasonableProxyInterface = false;
+        // 遍历所有的接口，并进行过滤
 		for (Class<?> ifc : targetInterfaces) {
-			if (!isConfigurationCallbackInterface(ifc) && !isInternalLanguageInterface(ifc) &&
-					ifc.getMethods().length > 0) {
+
+            /**
+             * 接口中不能有像 Aware、InitializingBean 等容器的回调接口;
+             * 接口的 ClassName 也不能是以 .cglib.proxy.Factory 结尾或者是 groovy.lang.GroovyObject这样的内部语言接口
+             */
+			if (!isConfigurationCallbackInterface(ifc) && !isInternalLanguageInterface(ifc) && ifc.getMethods().length > 0) {
 				hasReasonableProxyInterface = true;
 				break;
 			}
 		}
 		if (hasReasonableProxyInterface) {
-			// Must allow for introductions; can't just set interfaces to the target's interfaces only.
+            // 将代理接口一个个添加到 proxyFactory 中
 			for (Class<?> ifc : targetInterfaces) {
 				proxyFactory.addInterface(ifc);
 			}
 		}
 		else {
+            // 否者 proxyTargetClass 属性设置为 true
 			proxyFactory.setProxyTargetClass(true);
 		}
 	}
