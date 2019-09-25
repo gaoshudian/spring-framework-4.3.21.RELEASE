@@ -78,16 +78,16 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	/** We use a static Log to avoid serialization issues */
 	private static final Log logger = LogFactory.getLog(JdkDynamicAopProxy.class);
 
-	/** Config used to configure this proxy */
+	/** 代理类的相关配置，这个类继承自ProxyConfig，都是代理类的相关配置*/
 	private final AdvisedSupport advised;
 
 	/**
-	 * Is the {@link #equals} method defined on the proxied interfaces?
+	 * 用于判断目标对象实现的接口是否定义了equals方法
 	 */
 	private boolean equalsDefined;
 
 	/**
-	 * Is the {@link #hashCode} method defined on the proxied interfaces?
+	 * 用于判断目标对象实现的接口是否定义了hashCode方法
 	 */
 	private boolean hashCodeDefined;
 
@@ -112,21 +112,31 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		return getProxy(ClassUtils.getDefaultClassLoader());
 	}
 
+    /**
+     * 获取JDK动态代理，此类本身就实现了InvocationHandler接口
+     */
 	@Override
 	public Object getProxy(ClassLoader classLoader) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating JDK dynamic proxy: target source is " + this.advised.getTargetSource());
 		}
+		//确定给定AOP配置的完整代理接口集,
+        //代理类的接口一共是目标对象的接口+三个接口SpringProxy、Advised、DecoratingProxy
 		Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
+        /**
+         * 判断目标对象实现的接口是否定义了equals或hashCode方法
+         * 如果目标对象直接重写Object对象的equals或hashCode方法，此时Spring AOP则不会对它增强，equalsDefined=false或hashCodeDefined=false；
+         * 如果目标对象实现的接口定义了equals或hashCode方法，此时Spring AOP则会对它增强，equalsDefined=true或hashCodeDefined=true。
+         * 所以“通常情况”就是我们并不会在接口定义equals或hashCode方法，“不通常情况”就是在有的特殊情况下在接口定义equals或hashCode方法。
+         * 再换句话说，如果我们需要Spring AOP增强equals或hashCode方法则必须要在其目标对象的实现接口定义equals或hashCode方法
+         */
 		findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
 		return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
 	}
 
-	/**
-	 * Finds any {@link #equals} or {@link #hashCode} method that may be defined
-	 * on the supplied set of interfaces.
-	 * @param proxiedInterfaces the interfaces to introspect
-	 */
+    /**
+     * 判断接口是否定义了equals或hashCode方法
+     */
 	private void findDefinedEqualsAndHashCodeMethods(Class<?>[] proxiedInterfaces) {
 		for (Class<?> proxiedInterface : proxiedInterfaces) {
 			Method[] methods = proxiedInterface.getDeclaredMethods();

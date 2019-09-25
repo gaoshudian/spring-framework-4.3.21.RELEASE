@@ -101,7 +101,7 @@ public abstract class AopProxyUtils {
 	}
 
 	/**
-	 * Determine the complete set of interfaces to proxy for the given AOP configuration.
+	 * 确定给定AOP配置的完整代理接口集.
 	 * <p>This will always add the {@link Advised} interface unless the AdvisedSupport's
 	 * {@link AdvisedSupport#setOpaque "opaque"} flag is on. Always adds the
 	 * {@link org.springframework.aop.SpringProxy} marker interface.
@@ -114,7 +114,7 @@ public abstract class AopProxyUtils {
 	 * @see DecoratingProxy
 	 */
 	static Class<?>[] completeProxiedInterfaces(AdvisedSupport advised, boolean decoratingProxy) {
-		Class<?>[] specifiedInterfaces = advised.getProxiedInterfaces();
+		Class<?>[] specifiedInterfaces = advised.getProxiedInterfaces();//获取目标对象实现的接口
 		if (specifiedInterfaces.length == 0) {
 			// No user-specified interfaces: check whether target class is an interface.
 			Class<?> targetClass = advised.getTargetClass();
@@ -128,8 +128,14 @@ public abstract class AopProxyUtils {
 				specifiedInterfaces = advised.getProxiedInterfaces();
 			}
 		}
+		/**
+         * 是否新增SpringProxy,在AdvisedSupport#isInterfaceProxied方法中会判断目标对象实现的接口中是否有接口与接口SpringProxy相同或是超接口。
+         * 如果没有实现则在代理对象中需要新增SpringProxy，如果实现了则不必新增。
+         */
 		boolean addSpringProxy = !advised.isInterfaceProxied(SpringProxy.class);
+		//是否新增Advised，原理同上
 		boolean addAdvised = !advised.isOpaque() && !advised.isInterfaceProxied(Advised.class);
+		//是否新增DecoratingProxy接口,原理同上
 		boolean addDecoratingProxy = (decoratingProxy && !advised.isInterfaceProxied(DecoratingProxy.class));
 		int nonUserIfcCount = 0;
 		if (addSpringProxy) {
@@ -141,6 +147,7 @@ public abstract class AopProxyUtils {
 		if (addDecoratingProxy) {
 			nonUserIfcCount++;
 		}
+        //代理类的接口一共是目标对象的接口+上面三个接口SpringProxy、Advised、DecoratingProxy
 		Class<?>[] proxiedInterfaces = new Class<?>[specifiedInterfaces.length + nonUserIfcCount];
 		System.arraycopy(specifiedInterfaces, 0, proxiedInterfaces, 0, specifiedInterfaces.length);
 		int index = specifiedInterfaces.length;
