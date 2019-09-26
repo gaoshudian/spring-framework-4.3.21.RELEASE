@@ -683,7 +683,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 
 	/**
-	 * MethodMatcher that excludes the specified advice method.
+	 * 方法匹配器，它排除指定的通知方法
 	 * @see AbstractAspectJAdvice#buildSafePointcut()
 	 */
 	private static class AdviceExcludingMethodMatcher extends StaticMethodMatcher {

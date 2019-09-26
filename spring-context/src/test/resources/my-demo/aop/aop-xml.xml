@@ -18,16 +18,16 @@
 		<!-- 配置切点表达式 -->
 		<aop:pointcut  id="pointcut" expression="execution(* my_demo.aop.aop_xml.ArithmeticCalculator.*(int, int))"/>
 		<!-- 配置切面及通知 -->
-		<aop:aspect ref="loggingAspect" order="2">
+		<aop:aspect ref="loggingAspect">
 			<aop:before method="beforeMethod" pointcut-ref="pointcut"/>
-			<aop:after method="afterMethod" pointcut-ref="pointcut"/>
-			<aop:after-throwing method="afterThrowing" pointcut-ref="pointcut" throwing="e"/>
-			<aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="result"/>
+			<!--<aop:after method="afterMethod" pointcut-ref="pointcut"/>-->
+			<!--<aop:after-throwing method="afterThrowing" pointcut-ref="pointcut" throwing="e"/>-->
+			<!--<aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="result"/>-->
 			<!--<aop:around method="aroundMethod" pointcut-demo="pointcut"/>-->
 		</aop:aspect>
-		<aop:aspect ref="vlidationAspect" order="1">
-			<aop:before method="validateArgs" pointcut-ref="pointcut"/>
-		</aop:aspect>
+		<!--<aop:aspect ref="vlidationAspect" order="1">-->
+			<!--<aop:before method="validateArgs" pointcut-ref="pointcut"/>-->
+		<!--</aop:aspect>-->
 	</aop:config>
 
 

@@ -210,6 +210,9 @@ public abstract class AopUtils {
      */
 	public static boolean canApply(Pointcut pc, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(pc, "Pointcut must not be null");
+
+        // 获取当前Advisor的CalssFilter，并且调用其matches()方法判断当前切点表达式是否与目标bean匹配，
+        // 切点表达式例如:"execution(* my_demo.aop.aop_xml.ArithmeticCalculator.*(int, int))"
 		if (!pc.getClassFilter().matches(targetClass)) {
 			return false;
 		}
@@ -220,16 +223,21 @@ public abstract class AopUtils {
 			return true;
 		}
 
+        //TODO 这里为何要将MethodMatcher强转为IntroductionAwareMethodMatcher类型？
 		IntroductionAwareMethodMatcher introductionAwareMethodMatcher = null;
 		if (methodMatcher instanceof IntroductionAwareMethodMatcher) {
 			introductionAwareMethodMatcher = (IntroductionAwareMethodMatcher) methodMatcher;
 		}
 
+        // 获取目标类的所有接口
 		Set<Class<?>> classes = new LinkedHashSet<Class<?>>(ClassUtils.getAllInterfacesForClassAsSet(targetClass));
 		classes.add(targetClass);
 		for (Class<?> clazz : classes) {
+            // 获取目标接口的所有方法
 			Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
 			for (Method method : methods) {
+                // 如果当前MethodMatcher也是IntroductionAwareMethodMatcher类型，则使用该类型的方法进行匹配，从而达到提升效率的目的；
+                // 否则使用MethodMatcher.matches()方法进行匹配
 				if ((introductionAwareMethodMatcher != null && introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions)) ||
                         methodMatcher.matches(method, targetClass)) {
 					return true;
@@ -271,23 +279,31 @@ public abstract class AopUtils {
 
 	/**
 	 * 寻找所有增强中适用于bean的增强
+     * 方法里面主要将IntroductionAdvisor和普通的Advisor分开进行处理，并且最终都是通过canApply()方法进行过滤
 	 */
 	public static List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> clazz) {
 		if (candidateAdvisors.isEmpty()) {
 			return candidateAdvisors;
 		}
+
+        // 判断当前Advisor是否为IntroductionAdvisor，如果是，则按照IntroductionAdvisor的方式进行
+        // 过滤，这里主要的过滤逻辑在canApply()方法中
 		List<Advisor> eligibleAdvisors = new LinkedList<Advisor>();
 		for (Advisor candidate : candidateAdvisors) {
+            // 判断是否为IntroductionAdvisor，并且判断是否可以应用到当前类上
 			if (candidate instanceof IntroductionAdvisor && canApply(candidate, clazz)) {
 				eligibleAdvisors.add(candidate);
 			}
 		}
+
+        // 如果当前Advisor不是IntroductionAdvisor类型，则通过canApply()方法判断当前Advisor是否可以应用到当前bean
 		boolean hasIntroductions = !eligibleAdvisors.isEmpty();
 		for (Advisor candidate : candidateAdvisors) {
 			if (candidate instanceof IntroductionAdvisor) {
 				// already processed
 				continue;
 			}
+            // 判断是否可以应用到当前bean类型
 			if (canApply(candidate, clazz, hasIntroductions)) {
 				eligibleAdvisors.add(candidate);
 			}
