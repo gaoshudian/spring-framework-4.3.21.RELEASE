@@ -37,8 +37,7 @@ import static org.junit.Assert.*;
  * </aop:config>
  *
  * <bean id="testBean" class="org.springframework.tests.sample.beans.TestBean"/>
- * <bean id="interfaceExtendingAspect"
- *       class="org.springframework.aop.aspectj.autoproxy.InterfaceExtendingAspect"/>
+ * <bean id="interfaceExtendingAspect" class="org.springframework.aop.aspectj.autoproxy.InterfaceExtendingAspect"/>
  *
  * @author gaoshudian
  * @date   2019/9/22 10:25 PM
@@ -54,6 +53,8 @@ public final class AspectImplementingInterfaceTests {
 
 		assertTrue(testBean instanceof Advised);
 		assertFalse(interfaceExtendingAspect instanceof Advised);
+
+		testBean.getAge();
 	}
 
 }

@@ -172,21 +172,24 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 		try {
 			if (!this.equalsDefined && AopUtils.isEqualsMethod(method)) {
-				// The target does not implement the equals(Object) method itself.
+                //如果方法是equals()方法，并且目标对象没有定义equals方法的话，就会直接调用而不会增强
 				return equals(args[0]);
 			}
 			else if (!this.hashCodeDefined && AopUtils.isHashCodeMethod(method)) {
-				// The target does not implement the hashCode() method itself.
+                //如果方法是hashCode()方法，并且目标对象没有定义equals方法的话，就会直接调用而不会增强
 				return hashCode();
 			}
 			else if (method.getDeclaringClass() == DecoratingProxy.class) {
 				// There is only getDecoratedClass() declared -> dispatch to proxy config.
 				return AopProxyUtils.ultimateTargetClass(this.advised);
 			}
+            /**
+             * Spring AOP不会增强直接实现Advised接口的目标对象，再重复一次，也就是说如果目标对象实现的Advised接口，则不会对其应用切面进行方法的增强
+             */
 			else if (!this.advised.opaque && method.getDeclaringClass().isInterface() &&
 					method.getDeclaringClass().isAssignableFrom(Advised.class)) {
-				// Service invocations on ProxyConfig with the proxy config...
-				return AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
+                //这个方法是一个对Java通过反射调用方法的封装
+                return AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
 			}
 
 			Object retVal;
@@ -199,9 +202,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				oldProxy = AopContext.setCurrentProxy(proxy);
 				setProxyContext = true;
 			}
-
-			// May be null. Get as late as possible to minimize the time we "own" the target,
-			// in case it comes from a pool.
+            //通过目标源获取目标对象
 			target = targetSource.getTarget();
 			if (target != null) {
 				targetClass = target.getClass();

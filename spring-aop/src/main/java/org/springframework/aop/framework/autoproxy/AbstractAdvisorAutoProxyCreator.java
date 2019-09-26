@@ -100,15 +100,13 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 		return this.advisorRetrievalHelper.findAdvisorBeans();
 	}
 
-	/**
-	 * Search the given candidate Advisors to find all Advisors that
-	 * can apply to the specified bean.
-	 * @param candidateAdvisors the candidate Advisors
-	 * @param beanClass the target's bean class
-	 * @param beanName the target's bean name
-	 * @return the List of applicable Advisors
-	 * @see ProxyCreationContext#getCurrentProxiedBeanName()
-	 */
+    /**
+     * 从candidateAdvisors中筛选出所有可以对目标bean进行增强的切面
+     * @param candidateAdvisors
+     * @param beanClass
+     * @param beanName
+     * @return
+     */
 	protected List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> beanClass, String beanName) {
 
 		ProxyCreationContext.setCurrentProxiedBeanName(beanName);

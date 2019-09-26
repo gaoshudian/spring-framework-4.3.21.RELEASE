@@ -205,16 +205,9 @@ public abstract class AopUtils {
 		return canApply(pc, targetClass, false);
 	}
 
-	/**
-	 * Can the given pointcut apply at all on the given class?
-	 * <p>This is an important test as it can be used to optimize
-	 * out a pointcut for a class.
-	 * @param pc the static or dynamic pointcut to check
-	 * @param targetClass the class to test
-	 * @param hasIntroductions whether or not the advisor chain
-	 * for this bean includes any introductions
-	 * @return whether the pointcut can apply on any method
-	 */
+    /**
+     * 切点和目标类是否匹配
+     */
 	public static boolean canApply(Pointcut pc, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(pc, "Pointcut must not be null");
 		if (!pc.getClassFilter().matches(targetClass)) {
@@ -237,9 +230,8 @@ public abstract class AopUtils {
 		for (Class<?> clazz : classes) {
 			Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
 			for (Method method : methods) {
-				if ((introductionAwareMethodMatcher != null &&
-						introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions)) ||
-						methodMatcher.matches(method, targetClass)) {
+				if ((introductionAwareMethodMatcher != null && introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions)) ||
+                        methodMatcher.matches(method, targetClass)) {
 					return true;
 				}
 			}
@@ -260,16 +252,9 @@ public abstract class AopUtils {
 		return canApply(advisor, targetClass, false);
 	}
 
-	/**
-	 * Can the given advisor apply at all on the given class?
-	 * <p>This is an important test as it can be used to optimize out a advisor for a class.
-	 * This version also takes into account introductions (for IntroductionAwareMethodMatchers).
-	 * @param advisor the advisor to check
-	 * @param targetClass class we're testing
-	 * @param hasIntroductions whether or not the advisor chain for this bean includes
-	 * any introductions
-	 * @return whether the pointcut can apply on any method
-	 */
+    /**
+     * 给定的advisor是否可以应用于给定的类上
+     */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass, boolean hasIntroductions) {
 		if (advisor instanceof IntroductionAdvisor) {
 			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
@@ -285,12 +270,7 @@ public abstract class AopUtils {
 	}
 
 	/**
-	 * Determine the sublist of the {@code candidateAdvisors} list
-	 * that is applicable to the given class.
-	 * @param candidateAdvisors the Advisors to evaluate
-	 * @param clazz the target class
-	 * @return sublist of Advisors that can apply to an object of the given class
-	 * (may be the incoming List as-is)
+	 * 寻找所有增强中适用于bean的增强
 	 */
 	public static List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> clazz) {
 		if (candidateAdvisors.isEmpty()) {
