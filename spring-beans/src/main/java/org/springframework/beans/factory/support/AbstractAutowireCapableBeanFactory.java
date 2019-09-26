@@ -480,6 +480,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			//给BeanPostProcessors一个机会返回代理来替代真正的实例
             //AOP 的功能就是基于这个地方(关于 Bean 的增强处理在aop部分应重点关注)
+            //todo 待研究(和aop结合起来)
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -560,6 +561,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                     /**
                      * 对bean再一次依赖引用，主要应用SmartInstantiationAwareBeanPostProcessor
                      * 其中我们熟知的AOP就是在这里将advice动态织入bean中，若没有则直接返回bean，不做任何处理
+					 * todo 待研究
                      */
 					return getEarlyBeanReference(beanName, mbd, bean);
 				}
