@@ -155,11 +155,20 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 	}
 
 
-	/**
-	 * Implementation of {@code InvocationHandler.invoke}.
-	 * <p>Callers will see exactly the exception thrown by the target,
-	 * unless a hook method throws an exception.
-	 */
+    /**
+     * 拦截目标方法执行
+     *
+     * 1.spring不对equal方法进行AOP拦截。如果被代理的目标对象要执行equal方法，则执行JdkDynamicAopProxy（即代理对象）的equal方法。
+     * spring不对hashCode方法进行AOP拦截。如果被代理的目标对象要执行hashCode方法，则执行JdkDynamicAopProxy（即代理对象）的hashCode方法。
+     * 如果被代理的目标对象实现了Advised接口，直接用反射执行目标对象的方法。不做增强处理。
+     *
+     * 2.根据是否配置了exposeProxy属性来决定是否要通过此属性暴露代理
+     *
+     * 3.得到该方法的拦截链，创建一个方法调用器，并将拦截器链传入其中， 执行拦截器链。
+     *
+     * 4.返回方法执行结果
+
+     */
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		MethodInvocation invocation;
@@ -183,12 +192,9 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				// There is only getDecoratedClass() declared -> dispatch to proxy config.
 				return AopProxyUtils.ultimateTargetClass(this.advised);
 			}
-            /**
-             * Spring AOP不会增强直接实现Advised接口的目标对象，再重复一次，也就是说如果目标对象实现的Advised接口，则不会对其应用切面进行方法的增强
-             */
+            //如果被代理的目标对象实现了Advised接口，直接用反射执行目标对象的方法。不做增强处理
 			else if (!this.advised.opaque && method.getDeclaringClass().isInterface() &&
 					method.getDeclaringClass().isAssignableFrom(Advised.class)) {
-                //这个方法是一个对Java通过反射调用方法的封装
                 return AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
 			}
 
@@ -214,7 +220,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			// Check whether we have any advice. If we don't, we can fallback on direct
 			// reflective invocation of the target, and avoid creating a MethodInvocation.
 			if (chain.isEmpty()) {
-				// 拦截器为空则直接调用切点方法
+				// 拦截器为空则直接调用切点方法,即反射调用目标方法
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
 				Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);

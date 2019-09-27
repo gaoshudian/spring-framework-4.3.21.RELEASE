@@ -178,15 +178,16 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
-	 * Check whether this pointcut is ready to match,
-	 * lazily building the underlying AspectJ pointcut expression.
+	 * 检查这个切入点是否准备好匹配，延迟地构建底层AspectJ切入点表达式
 	 */
 	private void checkReadyToMatch() {
 		if (getExpression() == null) {
 			throw new IllegalStateException("Must set property 'expression' before attempting to match");
 		}
 		if (this.pointcutExpression == null) {
+			// 获取切点表达式类加载器，默认和Spring使用的类加载器是同一加载器
 			this.pointcutClassLoader = determinePointcutClassLoader();
+            // 对切点表达式进行解析
 			this.pointcutExpression = buildPointcutExpression(this.pointcutClassLoader);
 		}
 	}
@@ -205,17 +206,18 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	}
 
 	/**
-	 * Build the underlying AspectJ pointcut expression.
+	 * 构建底层AspectJ切入点表达式
 	 */
 	private PointcutExpression buildPointcutExpression(ClassLoader classLoader) {
+        // 使用类加载器实例化一个PointcutParser对象，用于对切点表达式进行解析
 		PointcutParser parser = initializePointcutParser(classLoader);
+        // 将切点表达式中使用args属性指定的参数封装为PointcutParameter类型的对象
 		PointcutParameter[] pointcutParameters = new PointcutParameter[this.pointcutParameterNames.length];
 		for (int i = 0; i < pointcutParameters.length; i++) {
-			pointcutParameters[i] = parser.createPointcutParameter(
-					this.pointcutParameterNames[i], this.pointcutParameterTypes[i]);
+			pointcutParameters[i] = parser.createPointcutParameter(this.pointcutParameterNames[i], this.pointcutParameterTypes[i]);
 		}
-		return parser.parsePointcutExpression(replaceBooleanOperators(getExpression()),
-				this.pointcutDeclarationScope, pointcutParameters);
+        // 使用PointcutParser对切点表达式进行转化，这里replaceBooleanOperators()只是做了一个简单的字符串转换，将and、or和not转换为&&、||和!
+		return parser.parsePointcutExpression(replaceBooleanOperators(getExpression()), this.pointcutDeclarationScope, pointcutParameters);
 	}
 
 	/**
@@ -274,20 +276,28 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 		return false;
 	}
 
+    /**
+     * 匹配目标方法
+     */
 	@Override
 	public boolean matches(Method method, Class<?> targetClass, boolean beanHasIntroductions) {
 		checkReadyToMatch();
+        // 获取目标方法最接近的方法，比如如果method是接口方法，那么就找到该接口方法的实现类的方法
 		Method targetMethod = AopUtils.getMostSpecificMethod(method, targetClass);
+        /**
+         * 将对切点表达式解析后的结果与要匹配的目标方法封装为一个ShadowMatch对象，并且对目标方法进行匹配，
+         * 匹配的结果将存储在ShadowMatch.match参数中，该参数是FuzzyBoolean类型的，其保存了当前方法与切点表达式的匹配结果
+         */
 		ShadowMatch shadowMatch = getShadowMatch(targetMethod, method);
 
 		// Special handling for this, target, @this, @target, @annotation
 		// in Spring - we can optimize since we know we have exactly this class,
 		// and there will never be matching subclass at runtime.
 		if (shadowMatch.alwaysMatches()) {
-			return true;
+			return true;// 如果匹配上了则返回true
 		}
 		else if (shadowMatch.neverMatches()) {
-			return false;
+			return false;// 如果没匹配上则返回false
 		}
 		else {
 			// the maybe case
@@ -423,14 +433,17 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 				if (shadowMatch == null) {
 					try {
 						try {
+                            //这里将解析后的切点表达式与当前方法进行匹配，并将匹配结果封装为一个ShadowMatch对象
 							shadowMatch = this.pointcutExpression.matchesMethodExecution(methodToMatch);
 						}
 						catch (ReflectionWorldException ex) {
 							// Failed to introspect target method, probably because it has been loaded
 							// in a special ClassLoader. Let's try the declaring ClassLoader instead...
 							try {
+							    //如果匹配失败，则在目标方法上找切点表达式，组装成为一个回调切点表达式，并且对回调切点表达式进行解析
 								fallbackExpression = getFallbackPointcutExpression(methodToMatch.getDeclaringClass());
 								if (fallbackExpression != null) {
+                                    // 使用回调切点表达与目标方法进行匹配
 									shadowMatch = fallbackExpression.matchesMethodExecution(methodToMatch);
 								}
 							}
@@ -441,14 +454,17 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 						if (shadowMatch == null && targetMethod != originalMethod) {
 							methodToMatch = originalMethod;
 							try {
+                                // 如果目标方法与当前切点表达式匹配失败，则判断其原始方法与切点表达式匹配是否成功
 								shadowMatch = this.pointcutExpression.matchesMethodExecution(methodToMatch);
 							}
 							catch (ReflectionWorldException ex3) {
 								// Could neither introspect the target class nor the proxy class ->
 								// let's try the original method's declaring class before we give up...
 								try {
+                                    // 获取原始方法上标注的切点表达式，作为回调切点表达式，并且对该切点表达式进行解析
 									fallbackExpression = getFallbackPointcutExpression(methodToMatch.getDeclaringClass());
 									if (fallbackExpression != null) {
+                                        //使用解析得到的回调切点表达式与原始方法进行匹配
 										shadowMatch = fallbackExpression.matchesMethodExecution(methodToMatch);
 									}
 								}
@@ -463,12 +479,13 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 						logger.debug("PointcutExpression matching rejected target method", ex);
 						fallbackExpression = null;
 					}
+                    // 这里如果目标方法和原始方法都无法与切点表达式匹配，就直接封装一个不匹配的结果到ShadowMatch中，并且返回
 					if (shadowMatch == null) {
 						shadowMatch = new ShadowMatchImpl(org.aspectj.util.FuzzyBoolean.NO, null, null, null);
 					}
 					else if (shadowMatch.maybeMatches() && fallbackExpression != null) {
-						shadowMatch = new DefensiveShadowMatch(shadowMatch,
-								fallbackExpression.matchesMethodExecution(methodToMatch));
+                        // 如果通过匹配结果无法立即判断当前方法是否与目标方法匹配，就将匹配得到的ShadowMatch和回调的ShadowMatch封装到DefensiveShadowMatch中
+						shadowMatch = new DefensiveShadowMatch(shadowMatch, fallbackExpression.matchesMethodExecution(methodToMatch));
 					}
 					this.shadowMatchCache.put(targetMethod, shadowMatch);
 				}

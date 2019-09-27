@@ -79,6 +79,10 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		throw new UnknownAdviceTypeException(advice);
 	}
 
+    /**
+     * 返回一个MethodInterceptors数组，以允许在基于拦截的框架中使用给定的Advisor,说白了就是讲advisor中的advice
+     * 统一转化为MethodInterceptor,统一处理
+     */
 	@Override
 	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
 		List<MethodInterceptor> interceptors = new ArrayList<MethodInterceptor>(3);
