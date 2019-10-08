@@ -67,14 +67,11 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 	@Override
 	@SuppressWarnings("unchecked")
 	protected List<Advisor> sortAdvisors(List<Advisor> advisors) {
-		List<PartiallyComparableAdvisorHolder> partiallyComparableAdvisors =
-				new ArrayList<PartiallyComparableAdvisorHolder>(advisors.size());
+		List<PartiallyComparableAdvisorHolder> partiallyComparableAdvisors = new ArrayList<PartiallyComparableAdvisorHolder>(advisors.size());
 		for (Advisor element : advisors) {
-			partiallyComparableAdvisors.add(
-					new PartiallyComparableAdvisorHolder(element, DEFAULT_PRECEDENCE_COMPARATOR));
+			partiallyComparableAdvisors.add(new PartiallyComparableAdvisorHolder(element, DEFAULT_PRECEDENCE_COMPARATOR));
 		}
-		List<PartiallyComparableAdvisorHolder> sorted =
-				PartialOrder.sort(partiallyComparableAdvisors);
+		List<PartiallyComparableAdvisorHolder> sorted = PartialOrder.sort(partiallyComparableAdvisors);
 		if (sorted != null) {
 			List<Advisor> result = new ArrayList<Advisor>(advisors.size());
 			for (PartiallyComparableAdvisorHolder pcAdvisor : sorted) {

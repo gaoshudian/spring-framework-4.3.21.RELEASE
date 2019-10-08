@@ -479,8 +479,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			//给BeanPostProcessors一个机会返回代理来替代真正的实例
-            //AOP 的功能就是基于这个地方(关于 Bean 的增强处理在aop部分应重点关注)
-            //todo 待研究(和aop结合起来)
+            //AOP 的功能就是基于这个地方(如果存在自定义的targetSource，则直接创建bean的代理返回)
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;

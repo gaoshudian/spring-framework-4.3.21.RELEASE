@@ -167,7 +167,6 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
      * 3.得到该方法的拦截链，创建一个方法调用器，并将拦截器链传入其中， 执行拦截器链。
      *
      * 4.返回方法执行结果
-
      */
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -235,8 +234,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 			// Massage return value if necessary.
 			Class<?> returnType = method.getReturnType();
-			if (retVal != null && retVal == target &&
-					returnType != Object.class && returnType.isInstance(proxy) &&
+			if (retVal != null && retVal == target && returnType != Object.class && returnType.isInstance(proxy) &&
 					!RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) {
 				// Special case: it returned "this" and the return type of the method
 				// is type-compatible. Note that we can't help if the target sets
@@ -244,8 +242,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 				retVal = proxy;
 			}
 			else if (retVal == null && returnType != Void.TYPE && returnType.isPrimitive()) {
-				throw new AopInvocationException(
-						"Null return value from advice does not match primitive return type for: " + method);
+				throw new AopInvocationException("Null return value from advice does not match primitive return type for: " + method);
 			}
 			return retVal;
 		}

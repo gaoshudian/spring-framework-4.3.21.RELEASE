@@ -57,8 +57,7 @@ public class ExposeInvocationInterceptor implements MethodInterceptor, PriorityO
 		}
 	};
 
-	private static final ThreadLocal<MethodInvocation> invocation =
-			new NamedThreadLocal<MethodInvocation>("Current AOP method invocation");
+	private static final ThreadLocal<MethodInvocation> invocation = new NamedThreadLocal<MethodInvocation>("Current AOP method invocation");
 
 
 	/**

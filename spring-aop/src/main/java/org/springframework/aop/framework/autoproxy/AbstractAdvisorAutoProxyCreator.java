@@ -54,8 +54,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	public void setBeanFactory(BeanFactory beanFactory) {
 		super.setBeanFactory(beanFactory);
 		if (!(beanFactory instanceof ConfigurableListableBeanFactory)) {
-			throw new IllegalArgumentException(
-					"AdvisorAutoProxyCreator requires a ConfigurableListableBeanFactory: " + beanFactory);
+			throw new IllegalArgumentException("AdvisorAutoProxyCreator requires a ConfigurableListableBeanFactory: " + beanFactory);
 		}
 		initBeanFactory((ConfigurableListableBeanFactory) beanFactory);
 	}
@@ -65,6 +64,9 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	}
 
 
+    /**
+     * 得到需要应用到给定bean上的所有advice和advisor
+     */
 	@Override
 	protected Object[] getAdvicesAndAdvisorsForBean(Class<?> beanClass, String beanName, TargetSource targetSource) {
 		//找到符合条件的advisors
@@ -95,8 +97,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	}
 
 	/**
-	 * Find all candidate Advisors to use in auto-proxying.
-	 * @return the List of candidate Advisors
+	 * 获取所有的增强
 	 */
 	protected List<Advisor> findCandidateAdvisors() {
 		return this.advisorRetrievalHelper.findAdvisorBeans();
@@ -104,10 +105,6 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
     /**
      * 从candidateAdvisors中筛选出所有可以对目标bean进行增强的切面
-     * @param candidateAdvisors
-     * @param beanClass
-     * @param beanName
-     * @return
      */
 	protected List<Advisor> findAdvisorsThatCanApply(List<Advisor> candidateAdvisors, Class<?> beanClass, String beanName) {
 
