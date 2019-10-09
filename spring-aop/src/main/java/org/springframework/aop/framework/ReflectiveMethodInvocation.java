@@ -152,7 +152,7 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 
 	@Override
 	public Object proceed() throws Throwable {
-		//	We start with an index of -1 and increment early.
+		//我们从索引为-1开始，并提前递增
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
 			return invokeJoinpoint();
 		}

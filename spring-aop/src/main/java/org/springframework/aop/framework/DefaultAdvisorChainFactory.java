@@ -53,13 +53,11 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
      * 2.如果是Advisor是PointcutAdvisor类型：得到该Advisor的Pointcut，判断要执行的目标对象的方法是否被这个Advisor增强。
      *   如果运行时需要做一些检测，则往返回列表中加入InterceptorAndDynamicMethodMatcher封装后的拦截器。否则直接加入拦截器到返回列表。
      * 3.如果Advisor是IntroducationAdvisor类型的，用该Advisor的classFilter判断目标对象的类是否被这个Advisor增强，是则得到拦截器，加入到返回列表
-     * 4.如果 Advisor既不是PointcutAdvisor类型也不是IntroducationAdvisor类型，则不用匹配，直接生成拦截器，加入到返回列表。
+     * 4.如果Advisor既不是PointcutAdvisor类型也不是IntroducationAdvisor类型，则不用匹配，直接生成拦截器，加入到返回列表。
      */
 	@Override
 	public List<Object> getInterceptorsAndDynamicInterceptionAdvice(Advised config, Method method, Class<?> targetClass) {
 
-		// This is somewhat tricky... We have to process introductions first,
-		// but we need to preserve order in the ultimate list.
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
 		boolean hasIntroductions = hasMatchingIntroductions(config, actualClass);
