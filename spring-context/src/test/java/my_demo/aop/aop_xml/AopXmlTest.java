@@ -10,7 +10,7 @@ public class AopXmlTest {
     public void testAop(){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:my-demo/aop/aop-xml.xml");
         ArithmeticCalculator arithmeticCalculator = (ArithmeticCalculator) ctx.getBean("arithmeticCalculator");
-        System.out.println(arithmeticCalculator.getClass().getName());
+        System.out.println("获取的是代理类..."+arithmeticCalculator.getClass().getName());
         arithmeticCalculator.add(11, 12);
 //        arithmeticCalculator.div(21, 0);
     }
