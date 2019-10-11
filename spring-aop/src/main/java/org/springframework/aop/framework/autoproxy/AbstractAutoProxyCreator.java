@@ -415,7 +415,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		ProxyFactory proxyFactory = new ProxyFactory();
 		proxyFactory.copyFrom(this);//获取当前类中相关属性
 
-        /*
+        /**
         下面这个if里面的核心逻辑:
         当 xml 中没有配置 proxyTargetClass 属性，默认为 false
         1.如果被代理 bean 对应的 bean definition ，它的 attributes 属性中，存在key为"org.springframework.aop.framework.autoproxy.AutoProxyUtils.preserveTargetClass"
