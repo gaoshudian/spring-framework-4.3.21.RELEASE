@@ -64,7 +64,7 @@ public abstract class AopNamespaceUtils {
 	public static void registerAspectJAutoProxyCreatorIfNecessary(ParserContext parserContext, Element sourceElement) {
 
         /**
-         * 注册一个bean(自动代理创建器),key=org.springframework.aop.config.internalAutoProxyCreator,类是AspectJAwareAdvisorAutoProxyCreator.class
+         * 注册一个bean(自动代理创建器),key=org.springframework.aop.config.internalAutoProxyCreator,类是AspectJAwareAdvisorAutoProxyCreator
          */
 		BeanDefinition beanDefinition = AopConfigUtils.registerAspectJAutoProxyCreatorIfNecessary(
 		        parserContext.getRegistry(), parserContext.extractSource(sourceElement));
@@ -84,9 +84,18 @@ public abstract class AopNamespaceUtils {
 	public static void registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 			ParserContext parserContext, Element sourceElement) {
 
+        /**
+         * 注册一个bean(自动代理创建器),key=org.springframework.aop.config.internalAutoProxyCreator,类是AnnotationAwareAspectJAutoProxyCreator
+         */
 		BeanDefinition beanDefinition = AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
+
+        /**
+         * 将proxy-target-class和expose-proxy两个属性设置到beanDefinition的属性(propertyValues)中
+         */
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);
+
+		//注册组件并通知，便于监听器做进一步处理
 		registerComponentIfNecessary(beanDefinition, parserContext);
 	}
 

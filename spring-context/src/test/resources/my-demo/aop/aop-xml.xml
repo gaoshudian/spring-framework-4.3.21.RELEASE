@@ -14,6 +14,7 @@
 	<bean id="vlidationAspect" class="my_demo.aop.aop_xml.VlidationAspect"></bean>
 
 	<!-- 配置 AOP -->
+	<!--使用cglib动态代理配置，<aop:config proxy-target-class="true">-->
 	<aop:config>
 		<!-- 配置切点表达式 -->
 		<aop:pointcut  id="pointcut" expression="execution(* my_demo.aop.aop_xml.ArithmeticCalculator.*(int, int))"/>

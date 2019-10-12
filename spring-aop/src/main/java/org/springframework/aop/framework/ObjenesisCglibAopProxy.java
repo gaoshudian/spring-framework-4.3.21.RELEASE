@@ -49,12 +49,14 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 	}
 
 
+	// 创建一个代理的实例
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Object createProxyClassAndInstance(Enhancer enhancer, Callback[] callbacks) {
 		Class<?> proxyClass = enhancer.createClass();
 		Object proxyInstance = null;
 
+        // 如果为true，那我们就采用objenesis去new一个实例~~~
 		if (objenesis.isWorthTrying()) {
 			try {
 				proxyInstance = objenesis.newInstance(proxyClass, enhancer.getUseCache());
@@ -64,10 +66,11 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 						"falling back to regular proxy construction", ex);
 			}
 		}
-
+        // 若果还为null，就再去拿到构造函数（指定参数的）
 		if (proxyInstance == null) {
 			// Regular instantiation via default constructor...
 			try {
+                // 通过此构造函数  去new一个实例
 				proxyInstance = (this.constructorArgs != null ?
 						proxyClass.getConstructor(this.constructorArgTypes).newInstance(this.constructorArgs) :
 						proxyClass.newInstance());
