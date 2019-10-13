@@ -188,6 +188,7 @@ public abstract class AopUtils {
 	 * @see org.springframework.util.ClassUtils#getMostSpecificMethod
 	 */
 	public static Method getMostSpecificMethod(Method method, Class<?> targetClass) {
+        // 获取最为准确的方法，即如果传入的method只是一个接口方法，则会去找其实现类的同一方法进行解析,如果找不到返回null
 		Method resolvedMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
 		// If we are dealing with method with generic parameters, find the original method.
 		return BridgeMethodResolver.findBridgedMethod(resolvedMethod);

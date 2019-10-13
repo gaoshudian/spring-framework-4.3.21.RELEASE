@@ -476,6 +476,7 @@ project("spring-context") {
 		compile(project(":spring-beans"))
 		compile(project(":spring-core"))
 		compile(project(":spring-expression"))
+		compile(project(":spring-beans-groovy"))//自己添加的
 		compile(files(project(":spring-core").cglibRepackJar))
 		optional(project(":spring-instrument"))
 		optional("javax.inject:javax.inject:1")
@@ -613,6 +614,13 @@ project("spring-jdbc") {
 		compile(project(":spring-core"))
 		compile(project(":spring-tx"))
 		optional(project(":spring-context"))  // for JndiDataSourceLookup
+
+        //===自己添加开始===下面两个jar是为了测试事务时使用
+        compile(project(":spring-aop"))
+        optional("org.aspectj:aspectjweaver:${aspectjVersion}")
+		optional("mysql:mysql-connector-java:8.0.11")
+        //===自己添加结束===============================
+
 		optional("javax.transaction:javax.transaction-api:${jtaVersion}")
 		optional("com.mchange:c3p0:0.9.5.2")
 		optional("org.hsqldb:hsqldb:${hsqldbVersion}")
