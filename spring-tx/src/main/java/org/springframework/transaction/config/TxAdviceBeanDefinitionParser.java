@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.transaction.config;
 
 import java.util.LinkedList;
@@ -36,14 +35,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
- * {@link org.springframework.beans.factory.xml.BeanDefinitionParser
- * BeanDefinitionParser} for the {@code <tx:advice/>} tag.
- *
- * @author Rob Harrop
- * @author Juergen Hoeller
- * @author Adrian Colyer
- * @author Chris Beams
- * @since 2.0
+ * 解析<tx:advice/>标签
  */
 class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
@@ -66,11 +58,17 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 	private static final String NO_ROLLBACK_FOR_ATTRIBUTE = "no-rollback-for";
 
 
+    /**
+     * <tx:advice/>标签对应的类是TransactionInterceptor
+     */
 	@Override
 	protected Class<?> getBeanClass(Element element) {
 		return TransactionInterceptor.class;
 	}
 
+    /**
+     * 通过解析element来填充{@link BeanDefinitionBuilder}
+     */
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
 		builder.addPropertyReference("transactionManager", TxNamespaceHandler.getTransactionManagerName(element));
