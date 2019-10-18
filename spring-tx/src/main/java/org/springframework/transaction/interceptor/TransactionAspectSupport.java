@@ -264,14 +264,16 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	 * @return the return value of the method, if any
 	 * @throws Throwable propagated from the target invocation
 	 */
-	protected Object invokeWithinTransaction(Method method, Class<?> targetClass, final InvocationCallback invocation)
-			throws Throwable {
+	protected Object invokeWithinTransaction(Method method, Class<?> targetClass, final InvocationCallback invocation) throws Throwable {
 
-		// If the transaction attribute is null, the method is non-transactional.
+		// 获取事务属性
 		final TransactionAttribute txAttr = getTransactionAttributeSource().getTransactionAttribute(method, targetClass);
+		// 获取事务管理器
 		final PlatformTransactionManager tm = determineTransactionManager(txAttr);
+		// 构造方法唯一标示(全类名+方法名;如:"my_demo.tx.xml.service.impl.BookShopServiceImpl.purchase")
 		final String joinpointIdentification = methodIdentification(method, targetClass, txAttr);
 
+		// 声明式事务处理
 		if (txAttr == null || !(tm instanceof CallbackPreferringPlatformTransactionManager)) {
 			// Standard transaction demarcation with getTransaction and commit/rollback calls.
 			TransactionInfo txInfo = createTransactionIfNecessary(tm, txAttr, joinpointIdentification);
@@ -292,7 +294,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 			commitTransactionAfterReturning(txInfo);
 			return retVal;
 		}
-
+        //编程式事务处理
 		else {
 			final ThrowableHolder throwableHolder = new ThrowableHolder();
 
@@ -430,22 +432,12 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	}
 
 	/**
-	 * Create a transaction if necessary based on the given TransactionAttribute.
-	 * <p>Allows callers to perform custom TransactionAttribute lookups through
-	 * the TransactionAttributeSource.
-	 * @param txAttr the TransactionAttribute (may be {@code null})
-	 * @param joinpointIdentification the fully qualified method name
-	 * (used for monitoring and logging purposes)
-	 * @return a TransactionInfo object, whether or not a transaction was created.
-	 * The {@code hasTransaction()} method on TransactionInfo can be used to
-	 * tell if there was a transaction created.
-	 * @see #getTransactionAttributeSource()
+     * 创建事务
 	 */
 	@SuppressWarnings("serial")
-	protected TransactionInfo createTransactionIfNecessary(
-			PlatformTransactionManager tm, TransactionAttribute txAttr, final String joinpointIdentification) {
+	protected TransactionInfo createTransactionIfNecessary(PlatformTransactionManager tm, TransactionAttribute txAttr, final String joinpointIdentification) {
 
-		// If no name specified, apply method identification as transaction name.
+		// 如果txAttr没有指定名称，则使用方法唯一标示joinpointIdentification，并且用DelegatingTransactionAttribute封装txAttr
 		if (txAttr != null && txAttr.getName() == null) {
 			txAttr = new DelegatingTransactionAttribute(txAttr) {
 				@Override
@@ -458,6 +450,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		TransactionStatus status = null;
 		if (txAttr != null) {
 			if (tm != null) {
+			    //获取事务
 				status = tm.getTransaction(txAttr);
 			}
 			else {
@@ -467,6 +460,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 				}
 			}
 		}
+		//构建事务信息，返回TransactionInfo对象
 		return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);
 	}
 

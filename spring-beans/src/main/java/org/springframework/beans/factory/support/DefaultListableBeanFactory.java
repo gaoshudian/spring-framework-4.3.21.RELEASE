@@ -1359,25 +1359,37 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     /**
-     * Determine the autowire candidate in the given set of beans.
-     * <p>Looks for {@code @Primary} and {@code @Priority} (in that order).
+     * 当有多个候选者时，确定出正确的候选者，示例:
+     * @Autowired
+     * private IUserDao userDao1;
      *
-     * @param candidates a Map of candidate names and candidate instances
-     *                   that match the required type, as returned by {@link #findAutowireCandidates}
-     * @param descriptor the target dependency to match against
-     * @return the name of the autowire candidate, or {@code null} if none found
+     * @Repository("userDao1")
+     * public class UserDao1 implements IUserDao{}
+     *
+     * @Repository("userDao2")
+     * public class UserDao2 implements IUserDao{}
+     *
+     * 1.处理@Primary注解
+     * 2.处理@Priority注解
+     * 3.属性名等于哪个bean的id就选用哪个bean
      */
     protected String determineAutowireCandidate(Map<String, Object> candidates, DependencyDescriptor descriptor) {
         Class<?> requiredType = descriptor.getDependencyType();
+        //确定给定候选者集合中的主要候选对象，即哪个bean加了@Primary注解
         String primaryCandidate = determinePrimaryCandidate(candidates, requiredType);
         if (primaryCandidate != null) {
             return primaryCandidate;
         }
+        //确定给定候选者集合中优先级最高的，即比较@Priority里的值
         String priorityCandidate = determineHighestPriorityCandidate(candidates, requiredType);
         if (priorityCandidate != null) {
             return priorityCandidate;
         }
-        // Fallback
+        /**
+         * 如上面注释中的例子，此时就看下面这个属性名，属性名等于哪个bean的id就选用哪个bean
+         * @Autowired
+         * private IUserDao userDao1;
+         */
         for (Map.Entry<String, Object> entry : candidates.entrySet()) {
             String candidateName = entry.getKey();
             Object beanInstance = entry.getValue();
@@ -1390,13 +1402,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     /**
-     * Determine the primary candidate in the given set of beans.
-     *
-     * @param candidates   a Map of candidate names and candidate instances
-     *                     (or candidate classes if not created yet) that match the required type
-     * @param requiredType the target dependency type to match against
-     * @return the name of the primary candidate, or {@code null} if none found
-     * @see #isPrimary(String, Object)
+     * 确定给定候选者集合中的主要候选对象，即哪个bean加了@Primary注解
      */
     protected String determinePrimaryCandidate(Map<String, Object> candidates, Class<?> requiredType) {
         String primaryBeanName = null;
@@ -1422,17 +1428,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     /**
-     * Determine the candidate with the highest priority in the given set of beans.
-     * <p>Based on {@code @javax.annotation.Priority}. As defined by the related
-     * {@link org.springframework.core.Ordered} interface, the lowest value has
-     * the highest priority.
-     *
-     * @param candidates   a Map of candidate names and candidate instances
-     *                     (or candidate classes if not created yet) that match the required type
-     * @param requiredType the target dependency type to match against
-     * @return the name of the candidate with the highest priority,
-     * or {@code null} if none found
-     * @see #getPriority(Object)
+     * 确定给定候选者集合中优先级最高的，即比较@Priority里的值
      */
     protected String determineHighestPriorityCandidate(Map<String, Object> candidates, Class<?> requiredType) {
         String highestPriorityBeanName = null;

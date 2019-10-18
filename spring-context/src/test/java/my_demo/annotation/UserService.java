@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 public class UserService{
 
     @Autowired
-    private UserDao dao;
+    private IUserDao userDao1;
 
     public void addNew(User entity){
-        System.out.println("addNew by " + dao);
-        dao.save(entity);
+        System.out.println("addNew by " + userDao1);
+        userDao1.save(entity);
     }
 }

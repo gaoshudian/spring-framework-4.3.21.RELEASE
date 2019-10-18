@@ -71,16 +71,18 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
      */
 	@Override
 	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
+        //配置transactionManager属性，默认就是"transactionManager"
 		builder.addPropertyReference("transactionManager", TxNamespaceHandler.getTransactionManagerName(element));
 
+		//设置transactionAttributeSource属性
 		List<Element> txAttributes = DomUtils.getChildElementsByTagName(element, ATTRIBUTES_ELEMENT);
 		if (txAttributes.size() > 1) {
 			parserContext.getReaderContext().error(
 					"Element <attributes> is allowed at most once inside element <advice>", element);
 		}
 		else if (txAttributes.size() == 1) {
-			// Using attributes source.
 			Element attributeSourceElement = txAttributes.get(0);
+			//解析事务属性，即子元素<tx:attributes>
 			RootBeanDefinition attributeSourceDefinition = parseAttributeSource(attributeSourceElement, parserContext);
 			builder.addPropertyValue("transactionAttributeSource", attributeSourceDefinition);
 		}
@@ -91,10 +93,14 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 		}
 	}
 
+    /**
+     * 解析<tx:attributes>元素
+     */
 	private RootBeanDefinition parseAttributeSource(Element attrEle, ParserContext parserContext) {
+	    //解析出所有的<tx:method>元素
 		List<Element> methods = DomUtils.getChildElementsByTagName(attrEle, METHOD_ELEMENT);
-		ManagedMap<TypedStringValue, RuleBasedTransactionAttribute> transactionAttributeMap =
-			new ManagedMap<TypedStringValue, RuleBasedTransactionAttribute>(methods.size());
+
+		ManagedMap<TypedStringValue, RuleBasedTransactionAttribute> transactionAttributeMap = new ManagedMap<TypedStringValue, RuleBasedTransactionAttribute>(methods.size());
 		transactionAttributeMap.setSource(parserContext.extractSource(attrEle));
 
 		for (Element methodEle : methods) {
@@ -125,6 +131,7 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 				attribute.setReadOnly(Boolean.valueOf(methodEle.getAttribute(READ_ONLY_ATTRIBUTE)));
 			}
 
+			//设置rollback-for属性和no-rollback-for属性
 			List<RollbackRuleAttribute> rollbackRules = new LinkedList<RollbackRuleAttribute>();
 			if (methodEle.hasAttribute(ROLLBACK_FOR_ATTRIBUTE)) {
 				String rollbackForValue = methodEle.getAttribute(ROLLBACK_FOR_ATTRIBUTE);
@@ -138,13 +145,14 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 
 			transactionAttributeMap.put(nameHolder, attribute);
 		}
-
+        //将事务属性封装在NameMatchTransactionAttributeSource类中
 		RootBeanDefinition attributeSourceDefinition = new RootBeanDefinition(NameMatchTransactionAttributeSource.class);
 		attributeSourceDefinition.setSource(parserContext.extractSource(attrEle));
 		attributeSourceDefinition.getPropertyValues().add("nameMap", transactionAttributeMap);
 		return attributeSourceDefinition;
 	}
 
+	//添加rollback-for属性
 	private void addRollbackRuleAttributesTo(List<RollbackRuleAttribute> rollbackRules, String rollbackForValue) {
 		String[] exceptionTypeNames = StringUtils.commaDelimitedListToStringArray(rollbackForValue);
 		for (String typeName : exceptionTypeNames) {
@@ -152,6 +160,7 @@ class TxAdviceBeanDefinitionParser extends AbstractSingleBeanDefinitionParser {
 		}
 	}
 
+	//添加no-rollback-for属性
 	private void addNoRollbackRuleAttributesTo(List<RollbackRuleAttribute> rollbackRules, String noRollbackForValue) {
 		String[] exceptionTypeNames = StringUtils.commaDelimitedListToStringArray(noRollbackForValue);
 		for (String typeName : exceptionTypeNames) {

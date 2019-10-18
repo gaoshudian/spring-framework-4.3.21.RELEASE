@@ -216,12 +216,15 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		return getDataSource();
 	}
 
+    /**
+     * 这段代码中主要是根据this.dataSource来获取ConnectionHolder，这个ConnectionHolder是放在TransactionSynchronizationManager的ThreadLocal中持有的，
+     * 如果是第一次来获取，肯定得到是null
+     */
 	@Override
 	protected Object doGetTransaction() {
 		DataSourceTransactionObject txObject = new DataSourceTransactionObject();
 		txObject.setSavepointAllowed(isNestedTransactionAllowed());
-		ConnectionHolder conHolder =
-				(ConnectionHolder) TransactionSynchronizationManager.getResource(this.dataSource);
+		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(this.dataSource);
 		txObject.setConnectionHolder(conHolder, false);
 		return txObject;
 	}
@@ -233,7 +236,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	}
 
 	/**
-	 * This implementation sets the isolation level but ignores the timeout.
+	 * 开启事务
 	 */
 	@Override
 	protected void doBegin(Object transaction, TransactionDefinition definition) {
@@ -241,24 +244,24 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		Connection con = null;
 
 		try {
-			if (!txObject.hasConnectionHolder() ||
-					txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+			if (!txObject.hasConnectionHolder() || txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+                //从dataSource中获取一个Connection
 				Connection newCon = this.dataSource.getConnection();
 				if (logger.isDebugEnabled()) {
 					logger.debug("Acquired Connection [" + newCon + "] for JDBC transaction");
 				}
+                //为当前Transaction设置ConnectionHolder，并且设置newConnectionHolder为true
 				txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
 			}
 
 			txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
 			con = txObject.getConnectionHolder().getConnection();
 
+			//设置隔离级别以及readOnly属性，主要是对底层数据库连接的设置
 			Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
 			txObject.setPreviousIsolationLevel(previousIsolationLevel);
 
-			// Switch to manual commit if necessary. This is very expensive in some JDBC drivers,
-			// so we don't want to do it unnecessarily (for example if we've explicitly
-			// configured the connection pool to set it already).
+			//更改自动提交设置，由spring控制提交
 			if (con.getAutoCommit()) {
 				txObject.setMustRestoreAutoCommit(true);
 				if (logger.isDebugEnabled()) {
@@ -268,14 +271,16 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			}
 
 			prepareTransactionalConnection(con, definition);
+            //这里设置transactionActive为true,transactionActive是判断当前线程是否存在事务的依据
 			txObject.getConnectionHolder().setTransactionActive(true);
 
+			//设置超时时间
 			int timeout = determineTimeout(definition);
 			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
 				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
 			}
 
-			// Bind the connection holder to the thread.
+            //这里将当前的connection放入TransactionSynchronizationManager中持有，如果下次调用可以判断为已有的事务
 			if (txObject.isNewConnectionHolder()) {
 				TransactionSynchronizationManager.bindResource(getDataSource(), txObject.getConnectionHolder());
 			}

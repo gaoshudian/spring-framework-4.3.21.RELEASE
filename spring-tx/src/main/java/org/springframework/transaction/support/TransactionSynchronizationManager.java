@@ -127,13 +127,14 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Retrieve a resource for the given key that is bound to the current thread.
+	 * 检索绑定到当前线程的给定key的资源
 	 * @param key the key to check (usually the resource factory)
 	 * @return a value bound to the current thread (usually the active
 	 * resource object), or {@code null} if none
 	 * @see ResourceTransactionManager#getResourceFactory()
 	 */
 	public static Object getResource(Object key) {
+		//如果key是InfrastructureProxy或者ScopedObject包装的，则获取里面真实key,否则返回key本身，对于dataSource就是返回本身
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
 		Object value = doGetResource(actualKey);
 		if (value != null && logger.isTraceEnabled()) {
@@ -144,7 +145,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Actually check the value of the resource that is bound for the given key.
+	 * 获取绑定到当前线程的资源
 	 */
 	private static Object doGetResource(Object actualKey) {
 		Map<Object, Object> map = resources.get();
@@ -165,11 +166,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Bind the given resource for the given key to the current thread.
-	 * @param key the key to bind the value to (usually the resource factory)
-	 * @param value the value to bind (usually the active resource object)
-	 * @throws IllegalStateException if there is already a value bound to the thread
-	 * @see ResourceTransactionManager#getResourceFactory()
+	 * 绑定给定资源到当前线程
 	 */
 	public static void bindResource(Object key, Object value) throws IllegalStateException {
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);

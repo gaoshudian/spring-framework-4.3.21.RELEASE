@@ -46,15 +46,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
 	/**
-	 * Creates a {@link BeanDefinitionBuilder} instance for the
-	 * {@link #getBeanClass bean Class} and passes it to the
-	 * {@link #doParse} strategy method.
-	 * @param element the element that is to be parsed into a single BeanDefinition
-	 * @param parserContext the object encapsulating the current state of the parsing process
-	 * @return the BeanDefinition resulting from the parsing of the supplied {@link Element}
-	 * @throws IllegalStateException if the bean {@link Class} returned from
-	 * {@link #getBeanClass(org.w3c.dom.Element)} is {@code null}
-	 * @see #doParse
+	 * 为{@link #getBeanClass bean类}创建一个{@link BeanDefinitionBuilder}实例，并将其传递给{@link #doParse}方法
 	 */
 	@Override
 	protected final AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
@@ -63,6 +55,7 @@ public abstract class AbstractSingleBeanDefinitionParser extends AbstractBeanDef
 		if (parentName != null) {
 			builder.getRawBeanDefinition().setParentName(parentName);
 		}
+		//设置beanDefinition的beanClass属性或者beanClassName属性
 		Class<?> beanClass = getBeanClass(element);
 		if (beanClass != null) {
 			builder.getRawBeanDefinition().setBeanClass(beanClass);

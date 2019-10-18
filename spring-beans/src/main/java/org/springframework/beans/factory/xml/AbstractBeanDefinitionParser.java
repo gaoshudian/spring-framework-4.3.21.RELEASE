@@ -56,8 +56,12 @@ public abstract class AbstractBeanDefinitionParser implements BeanDefinitionPars
 	public static final String NAME_ATTRIBUTE = "name";
 
 
+    /**
+     * 解析自定义标签，内部会调用parseInternal模板方法
+     */
 	@Override
 	public final BeanDefinition parse(Element element, ParserContext parserContext) {
+	    //调用子类方法parseInternal解析标签元素
 		AbstractBeanDefinition definition = parseInternal(element, parserContext);
 		if (definition != null && !parserContext.isNested()) {
 			try {

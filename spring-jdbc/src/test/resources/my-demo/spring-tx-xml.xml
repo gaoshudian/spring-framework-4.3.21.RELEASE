@@ -40,16 +40,15 @@
 	<!-- 1. 配置事务管理器 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
+		<property name="nestedTransactionAllowed" value="false"/>
 	</bean>
 	
 	<!-- 2. 配置事务属性 -->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<!-- 根据方法名指定事务的属性 -->
-			<tx:method name="purchase" propagation="REQUIRES_NEW"/>
-			<tx:method name="get*" read-only="true"/>
-			<tx:method name="find*" read-only="true"/>
-			<tx:method name="*"/>
+			<tx:method name="checkout" propagation="REQUIRED"/>
+			<tx:method name="purchase" propagation="REQUIRES_NEW" rollback-for="Exception" isolation="DEFAULT"/>
 		</tx:attributes>
 	</tx:advice>
 	
