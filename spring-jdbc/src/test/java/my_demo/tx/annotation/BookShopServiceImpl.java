@@ -1,9 +1,11 @@
-package my_demo.tx;
+package my_demo.tx.annotation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service("bookShopService")
 public class BookShopServiceImpl implements BookShopService {
@@ -38,6 +40,30 @@ public class BookShopServiceImpl implements BookShopService {
 
         //3. 更新用户余额
         bookShopDao.updateUserAccount(username, price);
+
+        /**
+         * 添加事务同步回调接口，这样在事务执行的各个阶段，spring会控制回调对应的方法
+         */
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void beforeCompletion() {
+                        System.out.println("beforeCompletion========");
+                    }
+                    @Override
+                    public void afterCompletion(int status) {
+                        System.out.println("afterCompletion========");
+                    }
+                    @Override
+                    public void beforeCommit(boolean readOnly) {
+                        System.out.println("beforeCommit========");
+                    }
+                    @Override
+                    public void afterCommit() {
+                        System.out.println("afterCommit========");
+                    }
+                }
+        );
     }
 
 }

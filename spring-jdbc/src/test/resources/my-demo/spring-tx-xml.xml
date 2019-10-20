@@ -40,22 +40,22 @@
 	<!-- 1. 配置事务管理器 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="nestedTransactionAllowed" value="false"/>
+		<!--<property name="nestedTransactionAllowed" value="true"/>-->
 	</bean>
 	
 	<!-- 2. 配置事务属性 -->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<!-- 根据方法名指定事务的属性 -->
-			<tx:method name="checkout" propagation="REQUIRED"/>
-			<tx:method name="purchase" propagation="REQUIRES_NEW" rollback-for="Exception" isolation="DEFAULT"/>
-		</tx:attributes>
-	</tx:advice>
-	
-	<!-- 3. 配置事务切入点, 以及把事务切入点和事务属性关联起来 -->
-	<aop:config>
-		<aop:pointcut  id="txPointCut" expression="execution(* my_demo.tx.xml.service.*.*(..))"/>
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
-	</aop:config>
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 根据方法名指定事务的属性 -->
+            <tx:method name="checkout" propagation="REQUIRED"/>
+            <tx:method name="purchase" propagation="REQUIRES_NEW" rollback-for="Exception" isolation="DEFAULT"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 3. 配置事务切入点, 以及把事务切入点和事务属性关联起来 -->
+    <aop:config>
+        <aop:pointcut  id="txPointCut" expression="execution(* my_demo.tx.xml.service.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
 	
 </beans>

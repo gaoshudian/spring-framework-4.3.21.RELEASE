@@ -134,12 +134,7 @@ public abstract class DataSourceUtils {
 	}
 
 	/**
-	 * Prepare the given Connection with the given transaction semantics.
-	 * @param con the Connection to prepare
-	 * @param definition the transaction definition to apply
-	 * @return the previous isolation level, if any
-	 * @throws SQLException if thrown by JDBC methods
-	 * @see #resetConnectionAfterTransaction
+	 * 设置数据库连接的readOnly属性和隔离级别，这里可以看出，当数据库和spring事务都设置了隔离级别时，以spirng的为主
 	 */
 	public static Integer prepareConnectionForTransaction(Connection con, TransactionDefinition definition)
 			throws SQLException {

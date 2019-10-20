@@ -1,4 +1,4 @@
-package my_demo.tx;
+package my_demo.tx.annotation;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;

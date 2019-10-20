@@ -120,9 +120,11 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 
 
 	/**
-	 * Winning rule is the shallowest rule (that is, the closest in the
-	 * inheritance hierarchy to the exception). If no rule applies (-1),
-	 * return false.
+     * 判断该异常spring是否要回滚;
+     * 获胜规则是最浅的规则(即继承层次结构中最接近异常的规则)。如果没有应用规则(-1)，则返回false
+     *
+	 * Winning rule is the shallowest rule (that is, the closest in the inheritance hierarchy to the exception).
+	 * If no rule applies (-1),return false.
 	 * @see TransactionAttribute#rollbackOn(java.lang.Throwable)
 	 */
 	@Override

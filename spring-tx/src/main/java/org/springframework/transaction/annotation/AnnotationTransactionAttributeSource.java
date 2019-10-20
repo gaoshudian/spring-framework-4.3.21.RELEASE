@@ -128,18 +128,24 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 	}
 
 
+    /**
+     * 提取类上的事务属性
+     */
 	@Override
 	protected TransactionAttribute findTransactionAttribute(Class<?> clazz) {
 		return determineTransactionAttribute(clazz);
 	}
 
+    /**
+     * 提取方法上的事务属性
+     */
 	@Override
 	protected TransactionAttribute findTransactionAttribute(Method method) {
 		return determineTransactionAttribute(method);
 	}
 
 	/**
-	 * Determine the transaction attribute for the given method or class.
+     * 提取方法或类上的事务属性
 	 * <p>This implementation delegates to configured
 	 * {@link TransactionAnnotationParser TransactionAnnotationParsers}
 	 * for parsing known annotations into Spring's metadata attribute class.

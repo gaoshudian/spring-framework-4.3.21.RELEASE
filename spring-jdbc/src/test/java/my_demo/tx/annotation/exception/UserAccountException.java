@@ -1,4 +1,4 @@
-package my_demo.tx;
+package my_demo.tx.annotation.exception;
 
 public class UserAccountException extends RuntimeException{
 

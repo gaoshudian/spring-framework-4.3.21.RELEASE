@@ -67,6 +67,10 @@ public abstract class AopConfigUtils {
 		return registerAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+    /**
+     * 注册自动代理模式创建器(注解配置事务方式时会调用:<tx:annotation-driven/>);
+     * key=org.springframework.aop.config.internalAutoProxyCreator,类是InfrastructureAdvisorAutoProxyCreator.class
+     */
 	public static BeanDefinition registerAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
 		return registerOrEscalateApcAsRequired(InfrastructureAdvisorAutoProxyCreator.class, registry, source);
 	}
@@ -76,7 +80,8 @@ public abstract class AopConfigUtils {
 	}
 
     /**
-     * 注册一个bean(自动代理模式创建器),key=org.springframework.aop.config.internalAutoProxyCreator,类是AspectJAwareAdvisorAutoProxyCreator.class
+     * 注册自动代理模式创建器(XML配置AOP方式:<aop:config/>);
+	 * key=org.springframework.aop.config.internalAutoProxyCreator,类是AspectJAwareAdvisorAutoProxyCreator.class
      */
 	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
 		return registerOrEscalateApcAsRequired(AspectJAwareAdvisorAutoProxyCreator.class, registry, source);
@@ -87,7 +92,8 @@ public abstract class AopConfigUtils {
 	}
 
 	/**
-	 * 注册一个bean(自动代理创建器),key=org.springframework.aop.config.internalAutoProxyCreator,类是AnnotationAwareAspectJAutoProxyCreator
+	 * 注册自动代理创建器(AOP注解方式:<aop:aspectj-autoproxy />);
+     * key=org.springframework.aop.config.internalAutoProxyCreator,类是AnnotationAwareAspectJAutoProxyCreator
 	 */
 	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
 		return registerOrEscalateApcAsRequired(AnnotationAwareAspectJAutoProxyCreator.class, registry, source);

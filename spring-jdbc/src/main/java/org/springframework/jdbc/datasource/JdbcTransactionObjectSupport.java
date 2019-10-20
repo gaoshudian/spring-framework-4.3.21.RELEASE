@@ -95,7 +95,7 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 	//---------------------------------------------------------------------
 
 	/**
-	 * This implementation creates a JDBC 3.0 Savepoint and returns it.
+	 * 创建事务保存点
 	 * @see java.sql.Connection#setSavepoint
 	 */
 	@Override

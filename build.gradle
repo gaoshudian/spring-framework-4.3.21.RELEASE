@@ -619,6 +619,7 @@ project("spring-jdbc") {
         compile(project(":spring-aop"))
         optional("org.aspectj:aspectjweaver:${aspectjVersion}")
 		optional("mysql:mysql-connector-java:8.0.11")
+		optional("log4j:log4j:${log4jVersion}")//这个jar包是为了在spring-jdbc执行测试代码时可以打印日志
         //===自己添加结束===============================
 
 		optional("javax.transaction:javax.transaction-api:${jtaVersion}")

@@ -167,7 +167,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	}
 
 	/**
-	 * Create a new JDBC 3.0 Savepoint for the current Connection,
+	 * 为当前数据库连接创建事务保存点
 	 * using generated savepoint names that are unique for the Connection.
 	 * @return the new Savepoint
 	 * @throws SQLException if thrown by the JDBC driver

@@ -77,23 +77,17 @@ public abstract class TransactionSynchronizationManager {
 
 	private static final Log logger = LogFactory.getLog(TransactionSynchronizationManager.class);
 
-	private static final ThreadLocal<Map<Object, Object>> resources =
-			new NamedThreadLocal<Map<Object, Object>>("Transactional resources");
+	private static final ThreadLocal<Map<Object, Object>> resources = new NamedThreadLocal<Map<Object, Object>>("Transactional resources");
 
-	private static final ThreadLocal<Set<TransactionSynchronization>> synchronizations =
-			new NamedThreadLocal<Set<TransactionSynchronization>>("Transaction synchronizations");
+	private static final ThreadLocal<Set<TransactionSynchronization>> synchronizations = new NamedThreadLocal<Set<TransactionSynchronization>>("Transaction synchronizations");
 
-	private static final ThreadLocal<String> currentTransactionName =
-			new NamedThreadLocal<String>("Current transaction name");
+	private static final ThreadLocal<String> currentTransactionName = new NamedThreadLocal<String>("Current transaction name");
 
-	private static final ThreadLocal<Boolean> currentTransactionReadOnly =
-			new NamedThreadLocal<Boolean>("Current transaction read-only status");
+	private static final ThreadLocal<Boolean> currentTransactionReadOnly = new NamedThreadLocal<Boolean>("Current transaction read-only status");
 
-	private static final ThreadLocal<Integer> currentTransactionIsolationLevel =
-			new NamedThreadLocal<Integer>("Current transaction isolation level");
+	private static final ThreadLocal<Integer> currentTransactionIsolationLevel = new NamedThreadLocal<Integer>("Current transaction isolation level");
 
-	private static final ThreadLocal<Boolean> actualTransactionActive =
-			new NamedThreadLocal<Boolean>("Actual transaction active");
+	private static final ThreadLocal<Boolean> actualTransactionActive = new NamedThreadLocal<Boolean>("Actual transaction active");
 
 
 	//-------------------------------------------------------------------------
@@ -193,11 +187,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Unbind a resource for the given key from the current thread.
-	 * @param key the key to unbind (usually the resource factory)
-	 * @return the previously bound value (usually the active resource object)
-	 * @throws IllegalStateException if there is no value bound to the thread
-	 * @see ResourceTransactionManager#getResourceFactory()
+	 * 解绑当前线程绑定的资源
 	 */
 	public static Object unbindResource(Object key) throws IllegalStateException {
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
@@ -210,9 +200,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Unbind a resource for the given key from the current thread.
-	 * @param key the key to unbind (usually the resource factory)
-	 * @return the previously bound value, or {@code null} if none bound
+	 * 解绑当前线程绑定的资源
 	 */
 	public static Object unbindResourceIfPossible(Object key) {
 		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
@@ -220,7 +208,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Actually remove the value of the resource that is bound for the given key.
+	 * 删除当前线程绑定的key为"actualKey"的资源
 	 */
 	private static Object doUnbindResource(Object actualKey) {
 		Map<Object, Object> map = resources.get();
@@ -271,17 +259,9 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
-	 * Register a new transaction synchronization for the current thread.
-	 * Typically called by resource management code.
-	 * <p>Note that synchronizations can implement the
-	 * {@link org.springframework.core.Ordered} interface.
-	 * They will be executed in an order according to their order value (if any).
-	 * @param synchronization the synchronization object to register
-	 * @throws IllegalStateException if transaction synchronization is not active
-	 * @see org.springframework.core.Ordered
+	 * 给当前线程注册事务同步回调接口
 	 */
-	public static void registerSynchronization(TransactionSynchronization synchronization)
-			throws IllegalStateException {
+	public static void registerSynchronization(TransactionSynchronization synchronization) throws IllegalStateException {
 
 		Assert.notNull(synchronization, "TransactionSynchronization must not be null");
 		if (!isSynchronizationActive()) {

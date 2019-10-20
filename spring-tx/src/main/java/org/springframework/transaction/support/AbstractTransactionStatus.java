@@ -116,7 +116,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	//---------------------------------------------------------------------
 
 	/**
-	 * Set a savepoint for this transaction. Useful for PROPAGATION_NESTED.
+	 * 创建事务保存点. 嵌套事务中会用到
 	 * @see org.springframework.transaction.TransactionDefinition#PROPAGATION_NESTED
 	 */
 	protected void setSavepoint(Object savepoint) {
@@ -145,8 +145,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
-	 * Roll back to the savepoint that is held for the transaction
-	 * and release the savepoint right afterwards.
+	 * 回滚事务到保存点并且释放数据库连接的保存点
 	 */
 	public void rollbackToHeldSavepoint() throws TransactionException {
 		if (!hasSavepoint()) {
