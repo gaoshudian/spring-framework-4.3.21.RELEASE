@@ -24,7 +24,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 /**
- * CachingMetadataReaderFactory 类在SimpleMetadataReaderFactory的基础上增加了缓存功能，对Resource-MetadataReader的映射做了本地缓存
+ * 描述: CachingMetadataReaderFactory 类在SimpleMetadataReaderFactory的基础上增加了缓存功能，
+ * 对Resource-MetadataReader的映射做了本地缓存
+ *
+ * @Auther: gaoshudian
+ * @Date: 2019/10/21 9:48 PM
  */
 public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 

@@ -52,6 +52,9 @@ public abstract class AbstractTypeHierarchyTraversingFilter implements TypeFilte
 	}
 
 
+	/**
+	 * 判断本过滤器是否匹配给定的metadataReader中描述的类
+	 */
 	@Override
 	public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
 			throws IOException {

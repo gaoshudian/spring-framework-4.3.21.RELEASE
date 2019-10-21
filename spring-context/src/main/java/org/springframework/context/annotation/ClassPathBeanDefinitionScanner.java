@@ -258,8 +258,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	}
 
 	/**
-	 * 扫描相应的包并且返回注册的bean
-	 * 此方法不注册注解配置处理器，而是将此任务留给调用者
+	 * 扫描相应的包并且返回注册的bean，此方法不注册注解配置处理器，而是将此任务留给调用者
 	 */
 	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
 		Assert.notEmpty(basePackages, "At least one base package must be specified");

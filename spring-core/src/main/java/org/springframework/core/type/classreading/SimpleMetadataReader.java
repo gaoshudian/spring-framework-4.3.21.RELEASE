@@ -27,29 +27,35 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.ClassMetadata;
 
 /**
- * {@link MetadataReader} implementation based on an ASM
- * {@link org.springframework.asm.ClassReader}.
+ * 描述: SimpleMetadataReader 为MetadataReader的默认实现，在创建SimpleMetadataReader时
+ * 通过ASM{@link org.springframework.asm.ClassReader}字节码操控框架读取class资源流生成
+ * classMetadata与annotationMetadata
  *
- * <p>Package-visible in order to allow for repackaging the ASM library
- * without effect on users of the {@code core.type} package.
- *
- * @author Juergen Hoeller
- * @author Costin Leau
+ * @Auther: gaoshudian
+ * @Date: 2019/10/21 9:41 PM
  * @since 2.5
  */
 final class SimpleMetadataReader implements MetadataReader {
 
+	//class类IO流资源引用
 	private final Resource resource;
 
+    //class类元数据
 	private final ClassMetadata classMetadata;
 
+    //class类完整注释元数据
 	private final AnnotationMetadata annotationMetadata;
 
 
+    /**
+     * 构建函数，用于通过 ASM字节码操控框架 读取class读取class资源流
+     */
 	SimpleMetadataReader(Resource resource, ClassLoader classLoader) throws IOException {
-		InputStream is = new BufferedInputStream(resource.getInputStream());
+        // 获取class类IO流
+	    InputStream is = new BufferedInputStream(resource.getInputStream());
 		ClassReader classReader;
 		try {
+            //通过ASM字节码操控框架读取class
 			classReader = new ClassReader(is);
 		}
 		catch (IllegalArgumentException ex) {
@@ -59,12 +65,13 @@ final class SimpleMetadataReader implements MetadataReader {
 		finally {
 			is.close();
 		}
-
+        //注解元数据读取访问者读取注解元数据
 		AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor(classLoader);
 		classReader.accept(visitor, ClassReader.SKIP_DEBUG);
 
+        //注解元数据
 		this.annotationMetadata = visitor;
-		// (since AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor)
+		////class元数据 (AnnotationMetadataReadingVisitor类继承ClassMetadataReadingVisitor)
 		this.classMetadata = visitor;
 		this.resource = resource;
 	}
