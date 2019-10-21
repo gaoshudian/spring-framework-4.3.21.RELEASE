@@ -24,13 +24,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 /**
- * Caching implementation of the {@link MetadataReaderFactory} interface,
- * caching a {@link MetadataReader} instance per Spring {@link Resource} handle
- * (i.e. per ".class" file).
- *
- * @author Juergen Hoeller
- * @author Costin Leau
- * @since 2.5
+ * CachingMetadataReaderFactory 类在SimpleMetadataReaderFactory的基础上增加了缓存功能，对Resource-MetadataReader的映射做了本地缓存
  */
 public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 
@@ -40,7 +34,7 @@ public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 
 	private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
-	@SuppressWarnings("serial")
+	//内存缓存列表，Resource-MetadataReader的映射缓存
 	private final Map<Resource, MetadataReader> metadataReaderCache =
 			new LinkedHashMap<Resource, MetadataReader>(DEFAULT_CACHE_LIMIT, 0.75f, true) {
 				@Override
@@ -100,6 +94,7 @@ public class CachingMetadataReaderFactory extends SimpleMetadataReaderFactory {
 			MetadataReader metadataReader = this.metadataReaderCache.get(resource);
 			if (metadataReader == null) {
 				metadataReader = super.getMetadataReader(resource);
+				//缓存到本地缓存
 				this.metadataReaderCache.put(resource, metadataReader);
 			}
 			return metadataReader;

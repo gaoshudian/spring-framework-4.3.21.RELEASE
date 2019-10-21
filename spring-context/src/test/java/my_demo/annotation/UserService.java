@@ -7,6 +7,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService{
 
+    /**
+     * 当有多个候选者时，确定出正确的候选者
+     * 1.处理@Primary注解
+     * 2.处理@Priority注解
+     * 3.属性名等于哪个bean的id就选用哪个bean
+     */
     @Autowired
     private IUserDao userDao1;
 

@@ -187,8 +187,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	static {
 		try {
 			// Detect Equinox OSGi (e.g. on WebSphere 6.1)
-			Class<?> fileLocatorClass = ClassUtils.forName("org.eclipse.core.runtime.FileLocator",
-					PathMatchingResourcePatternResolver.class.getClassLoader());
+			Class<?> fileLocatorClass = ClassUtils.forName("org.eclipse.core.runtime.FileLocator", PathMatchingResourcePatternResolver.class.getClassLoader());
 			equinoxResolveMethod = fileLocatorClass.getMethod("resolve", URL.class);
 			logger.debug("Found Equinox FileLocator for OSGi bundle URL resolution");
 		}
@@ -270,25 +269,26 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		return getResourceLoader().getResource(location);
 	}
 
+    /**
+     * 解析与给定locationPattern匹配的资源
+     */
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
-			// a class path resource (multiple resources for same name possible)
+			// 判断条件是路径中存在"*"或者"?"
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
-				// a class path resource pattern
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
-				// all class path resources with the given name
+				// 寻找给定路径下所有的资源
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
 		}
 		else {
 			// Generally only look for a pattern after a prefix here,
 			// and on Tomcat only after the "*/" separator for its "war:" protocol.
-			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :
-					locationPattern.indexOf(':') + 1);
+			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 : locationPattern.indexOf(':') + 1);
 			if (getPathMatcher().isPattern(locationPattern.substring(prefixEnd))) {
 				// a file pattern
 				return findPathMatchingResources(locationPattern);
@@ -301,13 +301,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Find all class location resources with the given location via the ClassLoader.
-	 * Delegates to {@link #doFindAllClassPathResources(String)}.
-	 * @param location the absolute path within the classpath
-	 * @return the result as Resource array
-	 * @throws IOException in case of I/O errors
-	 * @see java.lang.ClassLoader#getResources
-	 * @see #convertClassLoaderURL
+	 * 通过类加载器查找路径等于给定位置（location）的所有类位置资源
 	 */
 	protected Resource[] findAllClassPathResources(String location) throws IOException {
 		String path = location;
@@ -322,11 +316,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Find all class location resources with the given path via the ClassLoader.
-	 * Called by {@link #findAllClassPathResources(String)}.
-	 * @param path the absolute path within the classpath (never a leading slash)
-	 * @return a mutable Set of matching Resource instances
-	 * @since 4.1.1
+	 * 通过类加载器查找路径等于给定位置（location）的所有类位置资源，内部会构建UrlResource对象，然后以数组形式返回
 	 */
 	protected Set<Resource> doFindAllClassPathResources(String path) throws IOException {
 		Set<Resource> result = new LinkedHashSet<Resource>(16);
@@ -473,15 +463,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Find all resources that match the given location pattern via the
-	 * Ant-style PathMatcher. Supports resources in jar files and zip files
-	 * and in the file system.
-	 * @param locationPattern the location pattern to match
-	 * @return the result as Resource array
-	 * @throws IOException in case of I/O errors
-	 * @see #doFindPathMatchingJarResources
-	 * @see #doFindPathMatchingFileResources
-	 * @see org.springframework.util.PathMatcher
+     * 通过ant风格的PathMatcher查找文件系统中与给定locationPattern匹配的所有资源
 	 */
 	protected Resource[] findPathMatchingResources(String locationPattern) throws IOException {
 		String rootDirPath = determineRootDir(locationPattern);
@@ -504,6 +486,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 				result.addAll(doFindPathMatchingJarResources(rootDirResource, rootDirUrl, subPattern));
 			}
 			else {
+                //查找文件系统中与给定subPattern匹配的所有资源
 				result.addAll(doFindPathMatchingFileResources(rootDirResource, subPattern));
 			}
 		}
@@ -513,18 +496,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		return result.toArray(new Resource[result.size()]);
 	}
 
-	/**
-	 * Determine the root directory for the given location.
-	 * <p>Used for determining the starting point for file matching,
-	 * resolving the root directory location to a {@code java.io.File}
-	 * and passing it into {@code retrieveMatchingFiles}, with the
-	 * remainder of the location as pattern.
-	 * <p>Will return "/WEB-INF/" for the pattern "/WEB-INF/*.xml",
-	 * for example.
-	 * @param location the location to check
-	 * @return the part of the location that denotes the root directory
-	 * @see #retrieveMatchingFiles
-	 */
+    //找出给定location路径的根路径，如:location为"classpath*:my_demo/annotation/**/*.class",则结果为"classpath*:my_demo/annotation/"
 	protected String determineRootDir(String location) {
 		int prefixEnd = location.indexOf(':') + 1;
 		int rootDirEnd = location.length();
@@ -701,17 +673,11 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Find all resources in the file system that match the given location pattern
-	 * via the Ant-style PathMatcher.
-	 * @param rootDirResource the root directory as Resource
+	 * 通过ant风格的PathMatcher查找文件系统中与给定subPattern匹配的所有资源
+	 * @param rootDirResource 资源根路径
 	 * @param subPattern the sub pattern to match (below the root directory)
-	 * @return a mutable Set of matching Resource instances
-	 * @throws IOException in case of I/O errors
-	 * @see #retrieveMatchingFiles
-	 * @see org.springframework.util.PathMatcher
 	 */
-	protected Set<Resource> doFindPathMatchingFileResources(Resource rootDirResource, String subPattern)
-			throws IOException {
+	protected Set<Resource> doFindPathMatchingFileResources(Resource rootDirResource, String subPattern) throws IOException {
 
 		File rootDir;
 		try {
@@ -734,14 +700,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Find all resources in the file system that match the given location pattern
-	 * via the Ant-style PathMatcher.
-	 * @param rootDir the root directory in the file system
-	 * @param subPattern the sub pattern to match (below the root directory)
-	 * @return a mutable Set of matching Resource instances
-	 * @throws IOException in case of I/O errors
-	 * @see #retrieveMatchingFiles
-	 * @see org.springframework.util.PathMatcher
+	 * 通过ant风格的PathMatcher查找文件系统中与给定subPattern匹配的所有资源
 	 */
 	protected Set<Resource> doFindMatchingFileSystemResources(File rootDir, String subPattern) throws IOException {
 		if (logger.isDebugEnabled()) {
@@ -756,24 +715,16 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Retrieve files that match the given path pattern,
-	 * checking the given directory and its subdirectories.
-	 * @param rootDir the directory to start from
-	 * @param pattern the pattern to match against,
-	 * relative to the root directory
-	 * @return a mutable Set of matching Resource instances
-	 * @throws IOException if directory contents could not be retrieved
+	 * 检索根路径下所有与pattern匹配的文件
 	 */
 	protected Set<File> retrieveMatchingFiles(File rootDir, String pattern) throws IOException {
 		if (!rootDir.exists()) {
-			// Silently skip non-existing directories.
 			if (logger.isDebugEnabled()) {
 				logger.debug("Skipping [" + rootDir.getAbsolutePath() + "] because it does not exist");
 			}
 			return Collections.emptySet();
 		}
 		if (!rootDir.isDirectory()) {
-			// Complain louder if it exists but is no directory.
 			if (logger.isWarnEnabled()) {
 				logger.warn("Skipping [" + rootDir.getAbsolutePath() + "] because it does not denote a directory");
 			}
@@ -790,6 +741,7 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 		if (!pattern.startsWith("/")) {
 			fullPattern += "/";
 		}
+		//全路径匹配模式，如/Users/gaoshudian/spring-context/out/test/classes/my_demo/annotation/**/*.class
 		fullPattern = fullPattern + StringUtils.replace(pattern, File.separator, "/");
 		Set<File> result = new LinkedHashSet<File>(8);
 		doRetrieveMatchingFiles(fullPattern, rootDir, result);
@@ -797,13 +749,9 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	}
 
 	/**
-	 * Recursively retrieve files that match the given pattern,
-	 * adding them to the given result list.
-	 * @param fullPattern the pattern to match against,
-	 * with prepended root directory path
-	 * @param dir the current directory
-	 * @param result the Set of matching File instances to add to
-	 * @throws IOException if directory contents could not be retrieved
+	 * 递归检索与给定模式匹配的文件,将它们添加到给定的结果列表中
+	 * @param fullPattern 与预先设置的根目录路径匹配的模式
+	 * @param dir 当前目录
 	 */
 	protected void doRetrieveMatchingFiles(String fullPattern, File dir, Set<File> result) throws IOException {
 		if (logger.isDebugEnabled()) {
@@ -823,14 +771,14 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 			if (content.isDirectory() && getPathMatcher().matchStart(fullPattern, currPath + "/")) {
 				if (!content.canRead()) {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Skipping subdirectory [" + dir.getAbsolutePath() +
-								"] because the application is not allowed to read the directory");
+						logger.debug("Skipping subdirectory [" + dir.getAbsolutePath() + "] because the application is not allowed to read the directory");
 					}
 				}
 				else {
 					doRetrieveMatchingFiles(fullPattern, content, result);
 				}
 			}
+			//判断当前文件路径是否与fullPattern匹配
 			if (getPathMatcher().match(fullPattern, currPath)) {
 				result.add(content);
 			}

@@ -1144,6 +1144,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             String autowiredBeanName;
             Object instanceCandidate;
 
+            /**
+             * 当有多个候选者时，确定出正确的候选者
+             * 1.处理@Primary注解
+             * 2.处理@Priority注解
+             * 3.属性名等于哪个bean的id就选用哪个bean
+             */
             if (matchingBeans.size() > 1) {
                 autowiredBeanName = determineAutowireCandidate(matchingBeans, descriptor);
                 if (autowiredBeanName == null) {
