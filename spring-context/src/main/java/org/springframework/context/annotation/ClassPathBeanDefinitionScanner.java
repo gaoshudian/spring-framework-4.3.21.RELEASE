@@ -270,20 +270,30 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
              */
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
+                //解析一个bean的scope属性，代表作用范围
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
 				candidate.setScope(scopeMetadata.getScopeName());
+                //使用beanName生成器生成
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
+
+                /**
+                 * 对注册的bean进行另外的赋值处理，比如默认属性的配置
+                 */
 				if (candidate instanceof AbstractBeanDefinition) {
+                    //设置lazy-init/autowire-code默认属性，从spring配置的<beans>节点属性读取
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
 				}
 				if (candidate instanceof AnnotatedBeanDefinition) {
+                    //读取bean上的注解，比如`@Lazy`、`@Dependson`的值设置相应的属性
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
+                //查看是否已注册
 				if (checkCandidate(beanName, candidate)) {
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
-					definitionHolder =
-							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+                    //默认采取cglib来做代理
+					definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 					beanDefinitions.add(definitionHolder);
+                    //注册bean信息到工厂中
 					registerBeanDefinition(definitionHolder, this.registry);
 				}
 			}
