@@ -48,14 +48,19 @@ import org.springframework.web.bind.support.SimpleSessionStatus;
  */
 public class ModelAndViewContainer {
 
+    //如果为true则在处理器返回redirect视图时一定不使用defaultModel
 	private boolean ignoreDefaultModelOnRedirect = false;
 
+	//视图，可以是实际视图也可以是string类型的逻辑视图
 	private Object view;
 
+	//默认使用的model
 	private final ModelMap defaultModel = new BindingAwareModelMap();
 
+	//redirect类型的model
 	private ModelMap redirectModel;
 
+	//处理器返回redirect视图的标志
 	private boolean redirectModelScenario = false;
 
 	private HttpStatus status;
@@ -64,8 +69,10 @@ public class ModelAndViewContainer {
 
 	private final Set<String> bindingDisabled = new HashSet<String>(4);
 
+	//用于设置SessionAttribute使用完的标志
 	private final SessionStatus sessionStatus = new SimpleSessionStatus();
 
+	//请求是否已经完成的标志
 	private boolean requestHandled = false;
 
 

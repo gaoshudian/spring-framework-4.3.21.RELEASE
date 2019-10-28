@@ -206,9 +206,7 @@ public class ControllerAdviceBean implements Ordered {
 
 
 	/**
-	 * Find the names of beans annotated with
-	 * {@linkplain ControllerAdvice @ControllerAdvice} in the given
-	 * ApplicationContext and wrap them as {@code ControllerAdviceBean} instances.
+	 * 在ApplicationContext中获取所有带@ControllerAdvice注解的类，并且用ControllerAdviceBean包装
 	 */
 	public static List<ControllerAdviceBean> findAnnotatedBeans(ApplicationContext applicationContext) {
 		List<ControllerAdviceBean> beans = new ArrayList<ControllerAdviceBean>();

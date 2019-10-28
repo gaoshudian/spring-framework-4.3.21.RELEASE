@@ -61,17 +61,9 @@ public class StandardEnvironment extends AbstractEnvironment {
 
 
 	/**
-	 * Customize the set of property sources with those appropriate for any standard
-	 * Java environment:
-	 * <ul>
-	 * <li>{@value #SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME}
-	 * <li>{@value #SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME}
-	 * </ul>
-	 * <p>Properties present in {@value #SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME} will
-	 * take precedence over those in {@value #SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME}.
-	 * @see AbstractEnvironment#customizePropertySources(MutablePropertySources)
-	 * @see #getSystemProperties()
-	 * @see #getSystemEnvironment()
+	 * 主要是往AbstractEnvironment类中的propertySources属性添加一些PropertySource,例如:
+     * systemProperties/systemEnvironment
+     * 该类添加的属性源是标准的java环境所需要的
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {

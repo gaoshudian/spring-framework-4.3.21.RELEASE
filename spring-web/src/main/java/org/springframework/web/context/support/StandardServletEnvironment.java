@@ -54,30 +54,10 @@ public class StandardServletEnvironment extends StandardEnvironment implements C
 
 
 	/**
-	 * Customize the set of property sources with those contributed by superclasses as
-	 * well as those appropriate for standard servlet-based environments:
-	 * <ul>
-	 * <li>{@value #SERVLET_CONFIG_PROPERTY_SOURCE_NAME}
-	 * <li>{@value #SERVLET_CONTEXT_PROPERTY_SOURCE_NAME}
-	 * <li>{@value #JNDI_PROPERTY_SOURCE_NAME}
-	 * </ul>
-	 * <p>Properties present in {@value #SERVLET_CONFIG_PROPERTY_SOURCE_NAME} will
-	 * take precedence over those in {@value #SERVLET_CONTEXT_PROPERTY_SOURCE_NAME}, and
-	 * properties found in either of the above take precedence over those found in
-	 * {@value #JNDI_PROPERTY_SOURCE_NAME}.
-	 * <p>Properties in any of the above will take precedence over system properties and
-	 * environment variables contributed by the {@link StandardEnvironment} superclass.
-	 * <p>The {@code Servlet}-related property sources are added as
-	 * {@link StubPropertySource stubs} at this stage, and will be
-	 * {@linkplain #initPropertySources(ServletContext, ServletConfig) fully initialized}
-	 * once the actual {@link ServletContext} object becomes available.
-	 * @see StandardEnvironment#customizePropertySources
-	 * @see org.springframework.core.env.AbstractEnvironment#customizePropertySources
-	 * @see ServletConfigPropertySource
-	 * @see ServletContextPropertySource
-	 * @see org.springframework.jndi.JndiPropertySource
-	 * @see org.springframework.context.support.AbstractApplicationContext#initPropertySources
-	 * @see #initPropertySources(ServletContext, ServletConfig)
+	 * 1.主要是往AbstractEnvironment类中的propertySources属性中添加标准servlet环境所需要的PropertySource,包括:
+     * servletConfigInitParams/servletContextInitParams/jndiProperties
+     *
+     * 2.并且调用父类StandardEnvironment类的方法来添加标准JAVA环境所需要的propertySource
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
@@ -89,6 +69,7 @@ public class StandardServletEnvironment extends StandardEnvironment implements C
 		super.customizePropertySources(propertySources);
 	}
 
+    //用提供的servletContext和servletConfig对象替换 propertySources 中的key为"servletContextInitParams"和"servletConfigInitParams"的属性值
 	@Override
 	public void initPropertySources(ServletContext servletContext, ServletConfig servletConfig) {
 		WebApplicationContextUtils.initServletPropertySources(getPropertySources(), servletContext, servletConfig);

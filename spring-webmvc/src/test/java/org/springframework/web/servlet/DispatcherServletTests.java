@@ -86,6 +86,9 @@ public class DispatcherServletTests {
 		complexConfig.addInitParameter("publishContext", "false");
 		complexConfig.addInitParameter("class", "notWritable");
 		complexConfig.addInitParameter("unknownParam", "someValue");
+		//######自己添加的############
+        complexConfig.addInitParameter("detectAllHandlerMappings","false");
+        complexConfig.addInitParameter("detectAllHandlerAdapters","false");
 
 		simpleDispatcherServlet = new DispatcherServlet();
 		simpleDispatcherServlet.setContextClass(SimpleWebApplicationContext.class);
@@ -112,23 +115,25 @@ public class DispatcherServletTests {
 
 	@Test
 	public void configuredDispatcherServlets() {
-		assertTrue("Correct namespace",
-				("simple" + FrameworkServlet.DEFAULT_NAMESPACE_SUFFIX).equals(simpleDispatcherServlet.getNamespace()));
-		assertTrue("Correct attribute", (FrameworkServlet.SERVLET_CONTEXT_PREFIX + "simple").equals(
-				simpleDispatcherServlet.getServletContextAttributeName()));
-		assertTrue("Context published", simpleDispatcherServlet.getWebApplicationContext() ==
-				getServletContext().getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "simple"));
+		assertTrue("Correct namespace", ("simple" + FrameworkServlet.DEFAULT_NAMESPACE_SUFFIX).equals(simpleDispatcherServlet.getNamespace()));
+
+		assertTrue("Correct attribute",
+                (FrameworkServlet.SERVLET_CONTEXT_PREFIX + "simple").equals(simpleDispatcherServlet.getServletContextAttributeName()));
+
+		assertTrue("Context published",
+                simpleDispatcherServlet.getWebApplicationContext() == getServletContext().getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "simple"));
 
 		assertTrue("Correct namespace", "test".equals(complexDispatcherServlet.getNamespace()));
-		assertTrue("Correct attribute", (FrameworkServlet.SERVLET_CONTEXT_PREFIX + "complex").equals(
-				complexDispatcherServlet.getServletContextAttributeName()));
-		assertTrue("Context not published",
-				getServletContext().getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "complex") == null);
+		assertTrue("Correct attribute",
+                (FrameworkServlet.SERVLET_CONTEXT_PREFIX + "complex").equals(complexDispatcherServlet.getServletContextAttributeName()));
+
+		assertTrue("Context not published", getServletContext().getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "complex") == null);
 
 		simpleDispatcherServlet.destroy();
 		complexDispatcherServlet.destroy();
 	}
 
+	//测试404请求
 	@Test
 	public void invalidRequest() throws Exception {
 		MockHttpServletRequest request = new MockHttpServletRequest(getServletContext(), "GET", "/invalid.do");

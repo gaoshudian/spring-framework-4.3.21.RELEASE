@@ -66,8 +66,8 @@ public class ContextLoaderTests {
     public void helloworld() {
         MockServletContext sc = new MockServletContext("");
         sc.addInitParameter(ContextLoader.CONFIG_LOCATION_PARAM, "/org/springframework/web/context/WEB-INF/beans-helloworld.xml");
-        ServletContextListener listener = new ContextLoaderListener();
         ServletContextEvent event = new ServletContextEvent(sc);
+        ServletContextListener listener = new ContextLoaderListener();
         listener.contextInitialized(event);
         WebApplicationContext context = (WebApplicationContext) sc.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         assertTrue("Correct WebApplicationContext exposed in ServletContext", context instanceof XmlWebApplicationContext);

@@ -37,18 +37,14 @@ import org.springframework.util.ClassUtils;
 public class AllEncompassingFormHttpMessageConverter extends FormHttpMessageConverter {
 
 	private static final boolean jaxb2Present =
-			ClassUtils.isPresent("javax.xml.bind.Binder",
-					AllEncompassingFormHttpMessageConverter.class.getClassLoader());
+            ClassUtils.isPresent("javax.xml.bind.Binder", AllEncompassingFormHttpMessageConverter.class.getClassLoader());
 
 	private static final boolean jackson2Present =
-			ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper",
-					AllEncompassingFormHttpMessageConverter.class.getClassLoader()) &&
-			ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator",
-					AllEncompassingFormHttpMessageConverter.class.getClassLoader());
+            ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", AllEncompassingFormHttpMessageConverter.class.getClassLoader()) &&
+			ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", AllEncompassingFormHttpMessageConverter.class.getClassLoader());
 
 	private static final boolean jackson2XmlPresent =
-			ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper",
-					AllEncompassingFormHttpMessageConverter.class.getClassLoader());
+			ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper", AllEncompassingFormHttpMessageConverter.class.getClassLoader());
 
 	private static final boolean gsonPresent =
 			ClassUtils.isPresent("com.google.gson.Gson",
@@ -58,17 +54,32 @@ public class AllEncompassingFormHttpMessageConverter extends FormHttpMessageConv
 	public AllEncompassingFormHttpMessageConverter() {
 		addPartConverter(new SourceHttpMessageConverter<Source>());
 
+        /**
+         * 如果Classpath下面有javax.xml.bind.Binder类，没有com.fasterxml.jackson.dataformat.xml.XmlMapper类的话
+         * 则添加Jaxb2RootElementHttpMessageConverter转换器
+         */
 		if (jaxb2Present && !jackson2XmlPresent) {
 			addPartConverter(new Jaxb2RootElementHttpMessageConverter());
 		}
 
+        /**
+         * 如果Classpath下有com.fasterxml.jackson.databind.ObjectMapper和com.fasterxml.jackson.core.JsonGenerator的话，
+         * 则添加MappingJackson2HttpMessageConverter转换器
+         */
 		if (jackson2Present) {
 			addPartConverter(new MappingJackson2HttpMessageConverter());
 		}
+
+        /**
+         * 如果Classpath下面有com.google.gson.Gson类的话，则添加GsonHttpMessageConverter转换器
+         */
 		else if (gsonPresent) {
 			addPartConverter(new GsonHttpMessageConverter());
 		}
 
+        /**
+         * 如果Classpath下有com.fasterxml.jackson.dataformat.xml.XmlMapper类的话,则添加MappingJackson2XmlHttpMessageConverter转换器
+         */
 		if (jackson2XmlPresent) {
 			addPartConverter(new MappingJackson2XmlHttpMessageConverter());
 		}

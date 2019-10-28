@@ -428,8 +428,7 @@ public class AnnotationMethodHandlerAdapter extends WebContentGenerator
 		return invokeHandlerMethod(request, response, handler);
 	}
 
-	protected ModelAndView invokeHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	protected ModelAndView invokeHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 		ServletHandlerMethodResolver methodResolver = getMethodResolver(handler);
 		Method handlerMethod = methodResolver.resolveHandlerMethod(request);

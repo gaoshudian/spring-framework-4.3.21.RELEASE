@@ -1,8 +1,13 @@
+/**
+ * buildScript里的repositories是这个脚本需要的依赖库，与项目无关，在执行脚本时，会从这个库里download对应的jar和插件。
+ */
 buildscript {
 	repositories {
+        mavenLocal()
 		maven { url "https://repo.spring.io/plugins-release" }
 	}
 	dependencies {
+        //可以通过向构建脚本中加入插件的类路径然后再应用插件的方式添加外部jar文件的二进制插件
 		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.2")
 		classpath("io.spring.gradle:docbook-reference-plugin:0.3.1")
@@ -14,6 +19,7 @@ plugins {
 	id "org.sonarqube" version "1.1"
 }
 
+//配置变量
 ext {
 	linkHomepage = 'https://projects.spring.io/spring-framework'
 	linkCi = 'https://build.spring.io/browse/SPR'
@@ -27,6 +33,7 @@ ext {
 	}
 }
 
+//所有模块共有的配置
 configure(allprojects) { project ->
 	group = "org.springframework"
 	version = qualifyVersionIfNecessary(version)
@@ -108,12 +115,14 @@ configure(allprojects) { project ->
 		"-Xlint:try", "-Xlint:-fallthrough", "-Xlint:-rawtypes", "-Xlint:-deprecation",
 		"-Xlint:-unchecked", "-Xlint:-options"]
 
+    //java插件任务：使用 javac 命令编译产生 java源文件
 	compileJava {
 		sourceCompatibility = 1.6
 		targetCompatibility = 1.6
 		options.encoding = 'UTF-8'
 	}
 
+    //java插件任务：使用 javac 命令编译产生 java测试源文件
 	compileTestJava {
 		sourceCompatibility = 1.8
 		targetCompatibility = 1.8
@@ -121,6 +130,7 @@ configure(allprojects) { project ->
 		options.compilerArgs += "-parameters"
 	}
 
+    //java插件任务：进行单元测试
 	test {
 		systemProperty("java.awt.headless", "true")
 		systemProperty("testGroups", project.properties.get("testGroups"))
@@ -133,6 +143,7 @@ configure(allprojects) { project ->
 	}
 
 	repositories {
+        mavenLocal()
 		maven { url "https://repo.spring.io/libs-release" }
 	}
 
@@ -210,6 +221,7 @@ configure(allprojects) { project ->
 	] as String[]
 }
 
+//这里代表所有的子模块(除了spring-build-src模块)共有的配置
 configure(subprojects - project(":spring-build-src")) { subproject ->
 	apply plugin: "merge"
 	apply from: "${gradleScriptDir}/publish-maven.gradle"

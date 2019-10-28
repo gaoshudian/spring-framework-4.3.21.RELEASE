@@ -138,10 +138,8 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	}
 
 	/**
-	 * Map config parameters onto bean properties of this servlet, and
-	 * invoke subclass initialization.
-	 * @throws ServletException if bean properties are invalid (or required
-	 * properties are missing), or if subclass initialization fails.
+     * DispatcherServlet初始化入口；
+	 * 将配置参数映射到此servlet的bean属性，并调用子类初始化
 	 */
 	@Override
 	public final void init() throws ServletException {
@@ -149,14 +147,29 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 			logger.debug("Initializing servlet '" + getServletName() + "'");
 		}
 
-		// Set bean properties from init parameters.
+        /**
+         * 1.加载初始化参数，如：
+         * <servlet>
+         *      <servlet-name>example</servlet-name>
+         *      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+         *      <init-param>
+         *          <param-name>name</param-name>
+         *          <param-value>gaosd</param-value>
+         *      </init-param>
+         *      <load-on-startup>1</load-on-startup>
+         *  </servlet>
+         *  这里会解析init-param列表。
+         */
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
+			    //将当前的这个servlet类转换成一个beanWrapper,从而能够已spring的方式来对init-param的值进行注入
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
+				//空实现，留给子类覆盖
 				initBeanWrapper(bw);
+				//属性注入
 				bw.setPropertyValues(pvs, true);
 			}
 			catch (BeansException ex) {
@@ -167,7 +180,7 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 			}
 		}
 
-		// Let subclasses do whatever initialization they like.
+        // 2.留给子类覆盖的模板方法
 		initServletBean();
 
 		if (logger.isDebugEnabled()) {
@@ -229,11 +242,9 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 		 * we can't accept default values
 		 * @throws ServletException if any required properties are missing
 		 */
-		public ServletConfigPropertyValues(ServletConfig config, Set<String> requiredProperties)
-				throws ServletException {
+		public ServletConfigPropertyValues(ServletConfig config, Set<String> requiredProperties) throws ServletException {
 
-			Set<String> missingProps = (!CollectionUtils.isEmpty(requiredProperties) ?
-					new HashSet<String>(requiredProperties) : null);
+			Set<String> missingProps = (!CollectionUtils.isEmpty(requiredProperties) ? new HashSet<String>(requiredProperties) : null);
 
 			Enumeration<String> paramNames = config.getInitParameterNames();
 			while (paramNames.hasMoreElements()) {
