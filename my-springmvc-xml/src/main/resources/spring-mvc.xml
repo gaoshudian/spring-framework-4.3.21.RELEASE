@@ -31,7 +31,10 @@
 	<!-- 可以直接相应转发的页面, 而无需再经过 Handler 的方法.  -->
 	<!--<mvc:view-controller path="/success" view-name="success"/>-->
 	
-	<!-- 在实际开发中通常都需配置 mvc:annotation-driven 标签 -->
+	<!-- <mvc:annotation-driven/>标签作用:
+	  最主要的作用是注册 HandlerMapping（实现为 RequestMappingHandlerMapping）和 HandlerAdapter（实现为 RequestMappingHandlerAdapter）
+	  两个类型的 Bean，这两个 Bean 为 @Controllers（所有控制器)提供转发请求的功能；
+	  当然该标签默认还会注册一些其它的bean,这里不做介绍(哈哈，其实是我懒的去研究罢了)-->
 	<mvc:annotation-driven />
 
 </beans>
