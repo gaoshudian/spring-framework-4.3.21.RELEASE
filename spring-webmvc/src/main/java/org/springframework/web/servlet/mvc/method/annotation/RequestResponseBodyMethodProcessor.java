@@ -43,19 +43,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 /**
- * Resolves method arguments annotated with {@code @RequestBody} and handles return
- * values from methods annotated with {@code @ResponseBody} by reading and writing
- * to the body of the request or response with an {@link HttpMessageConverter}.
- *
- * <p>An {@code @RequestBody} method argument is also validated if it is annotated
- * with {@code @javax.validation.Valid}. In case of validation failure,
- * {@link MethodArgumentNotValidException} is raised and results in an HTTP 400
- * response status code if {@link DefaultHandlerExceptionResolver} is configured.
- *
- * @author Arjen Poutsma
- * @author Rossen Stoyanchev
- * @author Juergen Hoeller
- * @since 3.1
+ * 解决带@RequestBody注解的方法参数解析和带@ResponseBody注解的方法返回值处理；
+ * 这个类同时实现了HandlerMethodArgumentResolver和HandlerMethodReturnValueHandler两个接口；前者是将请求报文绑定到处理方法形参
+ * 的策略接口，后者则是对处理方法返回值进行处理的策略接口
  */
 public class RequestResponseBodyMethodProcessor extends AbstractMessageConverterMethodProcessor {
 
@@ -74,8 +64,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	 * {@code @ResponseBody} without {@code Request~} or
 	 * {@code ResponseBodyAdvice}.
 	 */
-	public RequestResponseBodyMethodProcessor(List<HttpMessageConverter<?>> converters,
-			ContentNegotiationManager manager) {
+	public RequestResponseBodyMethodProcessor(List<HttpMessageConverter<?>> converters, ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
@@ -86,8 +75,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	 * {@code ContentNegotiationManager}.
 	 * @since 4.2
 	 */
-	public RequestResponseBodyMethodProcessor(List<HttpMessageConverter<?>> converters,
-			List<Object> requestResponseBodyAdvice) {
+	public RequestResponseBodyMethodProcessor(List<HttpMessageConverter<?>> converters, List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}
@@ -115,10 +103,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	}
 
 	/**
-	 * Throws MethodArgumentNotValidException if validation fails.
-	 * @throws HttpMessageNotReadableException if {@link RequestBody#required()}
-	 * is {@code true} and there is no body content or if there is no suitable
-	 * converter to read the content with.
+     * 解析方法参数
 	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
@@ -140,6 +125,9 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		return adaptArgumentIfNecessary(arg, parameter);
 	}
 
+    /**
+     * 通过相应的HttpMessageConverter将请求参数解析为方法参数需要的对象类型
+     */
 	@Override
 	protected <T> Object readWithMessageConverters(NativeWebRequest webRequest, MethodParameter parameter,
 			Type paramType) throws IOException, HttpMediaTypeNotSupportedException, HttpMessageNotReadableException {
@@ -150,8 +138,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		Object arg = readWithMessageConverters(inputMessage, parameter, paramType);
 		if (arg == null) {
 			if (checkRequired(parameter)) {
-				throw new HttpMessageNotReadableException("Required request body is missing: " +
-						parameter.getMethod().toGenericString());
+				throw new HttpMessageNotReadableException("Required request body is missing: " + parameter.getMethod().toGenericString());
 			}
 		}
 		return arg;
@@ -161,6 +148,9 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 		return (parameter.getParameterAnnotation(RequestBody.class).required() && !parameter.isOptional());
 	}
 
+    /**
+     * 处理返回值，主要是将返回值转换为json格式返回
+     */
 	@Override
 	public void handleReturnValue(Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)

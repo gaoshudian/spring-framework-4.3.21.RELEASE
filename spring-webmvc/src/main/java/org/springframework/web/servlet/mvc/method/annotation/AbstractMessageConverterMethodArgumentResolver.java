@@ -146,16 +146,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	}
 
 	/**
-	 * Create the method argument value of the expected parameter type by reading
-	 * from the given HttpInputMessage.
-	 * @param <T> the expected type of the argument value to be created
-	 * @param inputMessage the HTTP input message representing the current request
-	 * @param parameter the method parameter descriptor (may be {@code null})
-	 * @param targetType the target type, not necessarily the same as the method
-	 * parameter type, e.g. for {@code HttpEntity<String>}.
-	 * @return the created method argument value
-	 * @throws IOException if the reading from the request fails
-	 * @throws HttpMediaTypeNotSupportedException if no suitable message converter is found
+	 * 通过相应的HttpMessageConverter将请求参数解析为方法参数需要的对象类型
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> Object readWithMessageConverters(HttpInputMessage inputMessage, MethodParameter parameter,
@@ -177,8 +168,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		Class<?> contextClass = (parameter != null ? parameter.getContainingClass() : null);
 		Class<T> targetClass = (targetType instanceof Class ? (Class<T>) targetType : null);
 		if (targetClass == null) {
-			ResolvableType resolvableType = (parameter != null ?
-					ResolvableType.forMethodParameter(parameter) : ResolvableType.forType(targetType));
+			ResolvableType resolvableType = (parameter != null ? ResolvableType.forMethodParameter(parameter) : ResolvableType.forType(targetType));
 			targetClass = (Class<T>) resolvableType.resolve();
 		}
 
@@ -230,8 +220,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		}
 
 		if (body == NO_VALUE) {
-			if (httpMethod == null || !SUPPORTED_METHODS.contains(httpMethod) ||
-					(noContentType && inputMessage.getBody() == null)) {
+			if (httpMethod == null || !SUPPORTED_METHODS.contains(httpMethod) || (noContentType && inputMessage.getBody() == null)) {
 				return null;
 			}
 			throw new HttpMediaTypeNotSupportedException(contentType, this.allSupportedMediaTypes);

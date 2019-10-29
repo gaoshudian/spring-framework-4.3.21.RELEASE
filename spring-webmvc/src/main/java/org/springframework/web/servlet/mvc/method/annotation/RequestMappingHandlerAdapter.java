@@ -150,6 +150,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 
 	private ContentNegotiationManager contentNegotiationManager = new ContentNegotiationManager();
 
+	//http消息转换器
 	private List<HttpMessageConverter<?>> messageConverters;
 
     //缓存经@ControllerAdvice注解修饰的类中实现了RequestBodyAdvice或者ResponseBodyAdvice接口的类

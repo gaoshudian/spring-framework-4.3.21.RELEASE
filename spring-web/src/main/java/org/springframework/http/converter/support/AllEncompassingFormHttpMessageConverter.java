@@ -47,8 +47,7 @@ public class AllEncompassingFormHttpMessageConverter extends FormHttpMessageConv
 			ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper", AllEncompassingFormHttpMessageConverter.class.getClassLoader());
 
 	private static final boolean gsonPresent =
-			ClassUtils.isPresent("com.google.gson.Gson",
-					AllEncompassingFormHttpMessageConverter.class.getClassLoader());
+			ClassUtils.isPresent("com.google.gson.Gson", AllEncompassingFormHttpMessageConverter.class.getClassLoader());
 
 
 	public AllEncompassingFormHttpMessageConverter() {

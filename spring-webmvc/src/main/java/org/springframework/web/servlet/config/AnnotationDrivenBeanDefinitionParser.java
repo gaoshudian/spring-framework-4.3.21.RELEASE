@@ -79,70 +79,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentR
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 /**
- * A {@link BeanDefinitionParser} that provides the configuration for the
- * {@code <annotation-driven/>} MVC namespace element.
- *
- * <p>This class registers the following {@link HandlerMapping}s:</p>
- * <ul>
- * <li>{@link RequestMappingHandlerMapping}
- * ordered at 0 for mapping requests to annotated controller methods.
- * <li>{@link BeanNameUrlHandlerMapping}
- * ordered at 2 to map URL paths to controller bean names.
- * </ul>
- *
- * <p><strong>Note:</strong> Additional HandlerMappings may be registered
- * as a result of using the {@code <view-controller>} or the
- * {@code <resources>} MVC namespace elements.
- *
- * <p>This class registers the following {@link HandlerAdapter}s:
- * <ul>
- * <li>{@link RequestMappingHandlerAdapter}
- * for processing requests with annotated controller methods.
- * <li>{@link HttpRequestHandlerAdapter}
- * for processing requests with {@link HttpRequestHandler}s.
- * <li>{@link SimpleControllerHandlerAdapter}
- * for processing requests with interface-based {@link Controller}s.
- * </ul>
- *
- * <p>This class registers the following {@link HandlerExceptionResolver}s:
- * <ul>
- * <li>{@link ExceptionHandlerExceptionResolver} for handling exceptions through
- * {@link org.springframework.web.bind.annotation.ExceptionHandler} methods.
- * <li>{@link ResponseStatusExceptionResolver} for exceptions annotated
- * with {@link org.springframework.web.bind.annotation.ResponseStatus}.
- * <li>{@link DefaultHandlerExceptionResolver} for resolving known Spring
- * exception types
- * </ul>
- *
- * <p>This class registers an {@link org.springframework.util.AntPathMatcher}
- * and a {@link org.springframework.web.util.UrlPathHelper} to be used by:
- * <ul>
- * <li>the {@link RequestMappingHandlerMapping},
- * <li>the {@link HandlerMapping} for ViewControllers
- * <li>and the {@link HandlerMapping} for serving resources
- * </ul>
- * Note that those beans can be configured by using the {@code path-matching}
- * MVC namespace element.
- *
- * <p>Both the {@link RequestMappingHandlerAdapter} and the
- * {@link ExceptionHandlerExceptionResolver} are configured with instances of
- * the following by default:
- * <ul>
- * <li>A {@link ContentNegotiationManager}
- * <li>A {@link DefaultFormattingConversionService}
- * <li>A {@link org.springframework.validation.beanvalidation.LocalValidatorFactoryBean}
- * if a JSR-303 implementation is available on the classpath
- * <li>A range of {@link HttpMessageConverter}s depending on which third-party
- * libraries are available on the classpath.
- * </ul>
- *
- * @author Keith Donald
- * @author Juergen Hoeller
- * @author Arjen Poutsma
- * @author Rossen Stoyanchev
- * @author Brian Clozel
- * @author Agim Emruli
- * @since 3.0
+ * 解析<mvc:annotation-driven />标签
+ * 1.注册HandleMapping(数字是排序值)===== (0:RequestMappingHandlerMapping,2:BeanNameUrlHandlerMapping)
+ * 2.注册HandlerAdapter=====RequestMappingHandlerAdapter、HttpRequestHandlerAdapter、SimpleControllerHandlerAdapter
+ * 3.注册其它默认的组件，包括:
+ *    ExceptionHandlerExceptionResolver
+ *    ResponseStatusExceptionResolver
+ *    DefaultHandlerExceptionResolverßßßß
+ *    CompositeUriComponentsContributorFactoryBean
+ *    ConversionServiceExposingInterceptor
+ *    HandlerMappingIntrospector
  */
 class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
@@ -154,30 +100,23 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
 
 	private static final boolean javaxValidationPresent =
-			ClassUtils.isPresent("javax.validation.Validator",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("javax.validation.Validator", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static boolean romePresent =
-			ClassUtils.isPresent("com.rometools.rome.feed.WireFeed",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("com.rometools.rome.feed.WireFeed", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static final boolean jaxb2Present =
-			ClassUtils.isPresent("javax.xml.bind.Binder",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("javax.xml.bind.Binder", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static final boolean jackson2Present =
-			ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader()) &&
-			ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", AnnotationDrivenBeanDefinitionParser.class.getClassLoader()) &&
+			ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static final boolean jackson2XmlPresent =
-			ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static final boolean gsonPresent =
-			ClassUtils.isPresent("com.google.gson.Gson",
-					AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
+			ClassUtils.isPresent("com.google.gson.Gson", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 
 	@Override
@@ -188,6 +127,10 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		CompositeComponentDefinition compDefinition = new CompositeComponentDefinition(element.getTagName(), source);
 		context.pushContainingComponent(compDefinition);
 
+
+        /**
+         * 默认注册RequestMappingHandlerMapping
+         */
 		RuntimeBeanReference contentNegotiationManager = getContentNegotiationManager(element, source, context);
 
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(RequestMappingHandlerMapping.class);
@@ -211,6 +154,10 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		RuntimeBeanReference corsRef = MvcNamespaceUtils.registerCorsConfigurations(null, context, source);
 		handlerMappingDef.getPropertyValues().add("corsConfigurations", corsRef);
 
+
+        /**
+         * 默认注册RequestMappingHandlerAdapter
+         */
 		RuntimeBeanReference conversionService = getConversionService(element, source, context);
 		RuntimeBeanReference validator = getValidator(element, source, context);
 		RuntimeBeanReference messageCodesResolver = getMessageCodesResolver(element);
@@ -222,6 +169,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		bindingDef.getPropertyValues().add("validator", validator);
 		bindingDef.getPropertyValues().add("messageCodesResolver", messageCodesResolver);
 
+		//检查系统中可以使用的HttpMessageConverter
 		ManagedList<?> messageConverters = getMessageConverters(element, source, context);
 		ManagedList<?> argumentResolvers = getArgumentResolvers(element, context);
 		ManagedList<?> returnValueHandlers = getReturnValueHandlers(element, context);
@@ -266,14 +214,19 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		handlerAdapterDef.getPropertyValues().add("deferredResultInterceptors", deferredResultInterceptors);
 		readerContext.getRegistry().registerBeanDefinition(HANDLER_ADAPTER_BEAN_NAME , handlerAdapterDef);
 
-		RootBeanDefinition uriContributorDef =
-				new RootBeanDefinition(CompositeUriComponentsContributorFactoryBean.class);
+        /**
+         * 注册CompositeUriComponentsContributorFactoryBean
+         */
+		RootBeanDefinition uriContributorDef = new RootBeanDefinition(CompositeUriComponentsContributorFactoryBean.class);
 		uriContributorDef.setSource(source);
 		uriContributorDef.getPropertyValues().addPropertyValue("handlerAdapter", handlerAdapterDef);
 		uriContributorDef.getPropertyValues().addPropertyValue("conversionService", conversionService);
 		String uriContributorName = MvcUriComponentsBuilder.MVC_URI_COMPONENTS_CONTRIBUTOR_BEAN_NAME;
 		readerContext.getRegistry().registerBeanDefinition(uriContributorName, uriContributorDef);
 
+        /**
+         * 注册拦截器，默认添加ConversionServiceExposingInterceptor这一个拦截器
+         */
 		RootBeanDefinition csInterceptorDef = new RootBeanDefinition(ConversionServiceExposingInterceptor.class);
 		csInterceptorDef.setSource(source);
 		csInterceptorDef.getConstructorArgumentValues().addIndexedArgumentValue(0, conversionService);
@@ -284,6 +237,10 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		mappedInterceptorDef.getConstructorArgumentValues().addIndexedArgumentValue(1, csInterceptorDef);
 		String mappedInterceptorName = readerContext.registerWithGeneratedName(mappedInterceptorDef);
 
+
+        /**
+         * 注册ExceptionHandlerExceptionResolver
+         */
 		RootBeanDefinition methodExceptionResolver = new RootBeanDefinition(ExceptionHandlerExceptionResolver.class);
 		methodExceptionResolver.setSource(source);
 		methodExceptionResolver.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
@@ -299,17 +256,24 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		}
 		String methodExResolverName = readerContext.registerWithGeneratedName(methodExceptionResolver);
 
+        /**
+         * 注册ResponseStatusExceptionResolver
+         */
 		RootBeanDefinition statusExceptionResolver = new RootBeanDefinition(ResponseStatusExceptionResolver.class);
 		statusExceptionResolver.setSource(source);
 		statusExceptionResolver.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		statusExceptionResolver.getPropertyValues().add("order", 1);
 		String statusExResolverName = readerContext.registerWithGeneratedName(statusExceptionResolver);
 
+        /**
+         * 注册DefaultHandlerExceptionResolver
+         */
 		RootBeanDefinition defaultExceptionResolver = new RootBeanDefinition(DefaultHandlerExceptionResolver.class);
 		defaultExceptionResolver.setSource(source);
 		defaultExceptionResolver.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		defaultExceptionResolver.getPropertyValues().add("order", 2);
 		String defaultExResolverName = readerContext.registerWithGeneratedName(defaultExceptionResolver);
+
 
 		context.registerComponent(new BeanComponentDefinition(handlerMappingDef, HANDLER_MAPPING_BEAN_NAME));
 		context.registerComponent(new BeanComponentDefinition(handlerAdapterDef, HANDLER_ADAPTER_BEAN_NAME));
@@ -329,15 +293,13 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 
 	protected void addRequestBodyAdvice(RootBeanDefinition beanDef) {
 		if (jackson2Present) {
-			beanDef.getPropertyValues().add("requestBodyAdvice",
-					new RootBeanDefinition(JsonViewRequestBodyAdvice.class));
+			beanDef.getPropertyValues().add("requestBodyAdvice", new RootBeanDefinition(JsonViewRequestBodyAdvice.class));
 		}
 	}
 
 	protected void addResponseBodyAdvice(RootBeanDefinition beanDef) {
 		if (jackson2Present) {
-			beanDef.getPropertyValues().add("responseBodyAdvice",
-					new RootBeanDefinition(JsonViewResponseBodyAdvice.class));
+			beanDef.getPropertyValues().add("responseBodyAdvice", new RootBeanDefinition(JsonViewResponseBodyAdvice.class));
 		}
 	}
 
@@ -534,6 +496,9 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		return (handlers != null ? extractBeanSubElements(handlers, context) : null);
 	}
 
+    /**
+     * 检查系统中可以使用的HttpMessageConverter
+     */
 	private ManagedList<?> getMessageConverters(Element element, Object source, ParserContext context) {
 		Element convertersElement = DomUtils.getChildElementByTagName(element, "message-converters");
 		ManagedList<Object> messageConverters = new ManagedList<Object>();
@@ -562,6 +527,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 				messageConverters.add(createConverterDefinition(RssChannelHttpMessageConverter.class, source));
 			}
 
+            //如果Classpath下有com.fasterxml.jackson.dataformat.xml.XmlMapper类的话,则添加MappingJackson2XmlHttpMessageConverter
 			if (jackson2XmlPresent) {
 				Class<?> type = MappingJackson2XmlHttpMessageConverter.class;
 				RootBeanDefinition jacksonConverterDef = createConverterDefinition(type, source);
@@ -574,6 +540,10 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 				messageConverters.add(createConverterDefinition(Jaxb2RootElementHttpMessageConverter.class, source));
 			}
 
+            /**
+             * 如果Classpath下有com.fasterxml.jackson.databind.ObjectMapper和com.fasterxml.jackson.core.JsonGenerator的话，
+             * 则添加MappingJackson2HttpMessageConverter
+             */
 			if (jackson2Present) {
 				Class<?> type = MappingJackson2HttpMessageConverter.class;
 				RootBeanDefinition jacksonConverterDef = createConverterDefinition(type, source);
@@ -619,8 +589,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	 * HandlerMethodArgumentResolver's configured in RequestMappingHandlerAdapter
 	 * after it is fully initialized.
 	 */
-	static class CompositeUriComponentsContributorFactoryBean
-			implements FactoryBean<CompositeUriComponentsContributor>, InitializingBean {
+	static class CompositeUriComponentsContributorFactoryBean implements FactoryBean<CompositeUriComponentsContributor>, InitializingBean {
 
 		private RequestMappingHandlerAdapter handlerAdapter;
 

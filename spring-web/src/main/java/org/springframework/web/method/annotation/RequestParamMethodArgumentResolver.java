@@ -46,33 +46,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.WebUtils;
 
 /**
- * Resolves method arguments annotated with @{@link RequestParam}, arguments of
- * type {@link MultipartFile} in conjunction with Spring's {@link MultipartResolver}
- * abstraction, and arguments of type {@code javax.servlet.http.Part} in conjunction
- * with Servlet 3.0 multipart requests. This resolver can also be created in default
- * resolution mode in which simple types (int, long, etc.) not annotated with
- * {@link RequestParam @RequestParam} are also treated as request parameters with
- * the parameter name derived from the argument name.
- *
- * <p>If the method parameter type is {@link Map}, the name specified in the
- * annotation is used to resolve the request parameter String value. The value is
- * then converted to a {@link Map} via type conversion assuming a suitable
- * {@link Converter} or {@link PropertyEditor} has been registered.
- * Or if a request parameter name is not specified the
- * {@link RequestParamMapMethodArgumentResolver} is used instead to provide
- * access to all request parameters in the form of a map.
- *
- * <p>A {@link WebDataBinder} is invoked to apply type conversion to resolved request
- * header values that don't yet match the method parameter type.
- *
- * @author Arjen Poutsma
- * @author Rossen Stoyanchev
- * @author Brian Clozel
- * @since 3.1
- * @see RequestParamMapMethodArgumentResolver
+ * 解析被注解 @RequestParam, @RequestPart 修饰的参数
  */
-public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver
-		implements UriComponentsContributor {
+public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver implements UriComponentsContributor {
 
 	private static final TypeDescriptor STRING_TYPE_DESCRIPTOR = TypeDescriptor.valueOf(String.class);
 
@@ -154,8 +130,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	@Override
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
 		HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
-		MultipartHttpServletRequest multipartRequest =
-				WebUtils.getNativeRequest(servletRequest, MultipartHttpServletRequest.class);
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(servletRequest, MultipartHttpServletRequest.class);
 
 		Object mpArg = MultipartResolutionDelegate.resolveMultipartArgument(name, parameter, servletRequest);
 		if (mpArg != MultipartResolutionDelegate.UNRESOLVABLE) {
@@ -179,8 +154,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	}
 
 	@Override
-	protected void handleMissingValue(String name, MethodParameter parameter, NativeWebRequest request)
-			throws Exception {
+	protected void handleMissingValue(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
 
 		HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
 		if (MultipartResolutionDelegate.isMultipartArgument(parameter)) {
