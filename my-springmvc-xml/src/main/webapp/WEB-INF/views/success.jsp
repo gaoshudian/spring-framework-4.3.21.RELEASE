@@ -11,6 +11,6 @@
     <title>index</title>
   </head>
   <body>
-  <a href="testMap">Test Map</a>
+  names: ${requestScope.names }
   </body>
 </html>

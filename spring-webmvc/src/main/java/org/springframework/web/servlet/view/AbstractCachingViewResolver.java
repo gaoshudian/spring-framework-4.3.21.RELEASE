@@ -140,6 +140,9 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	}
 
 
+	/**
+	 * 解析出视图对象
+	 */
 	@Override
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		if (!isCache()) {
@@ -152,7 +155,7 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 				synchronized (this.viewCreationCache) {
 					view = this.viewCreationCache.get(cacheKey);
 					if (view == null) {
-						// Ask the subclass to create the View object.
+						// 调用子类创建视图对象
 						view = createView(viewName, locale);
 						if (view == null && this.cacheUnresolved) {
 							view = UNRESOLVED_VIEW;

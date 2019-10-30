@@ -439,12 +439,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
-	 * Overridden to implement check for "redirect:" prefix.
-	 * <p>Not possible in {@code loadView}, since overridden
-	 * {@code loadView} versions in subclasses might rely on the
-	 * superclass always creating instances of the required view class.
-	 * @see #loadView
-	 * @see #requiredViewClass
+	 * 创建视图对象
 	 */
 	@Override
 	protected View createView(String viewName, Locale locale) throws Exception {
@@ -454,7 +449,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return null;
 		}
 
-		// Check for special "redirect:" prefix.
+		// 处理前缀为"redirect:"的情况
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
 			RedirectView view = new RedirectView(redirectUrl,
@@ -463,7 +458,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 			return applyLifecycleMethods(REDIRECT_URL_PREFIX, view);
 		}
 
-		// Check for special "forward:" prefix.
+		// 处理前缀为"forward:"的情况
 		if (viewName.startsWith(FORWARD_URL_PREFIX)) {
 			String forwardUrl = viewName.substring(FORWARD_URL_PREFIX.length());
 			return new InternalResourceView(forwardUrl);
@@ -489,19 +484,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
-	 * Delegates to {@code buildView} for creating a new instance of the
-	 * specified view class. Applies the following Spring lifecycle methods
-	 * (as supported by the generic Spring bean factory):
-	 * <ul>
-	 * <li>ApplicationContextAware's {@code setApplicationContext}
-	 * <li>InitializingBean's {@code afterPropertiesSet}
-	 * </ul>
-	 * @param viewName the name of the view to retrieve
-	 * @return the View instance
-	 * @throws Exception if the view couldn't be resolved
-	 * @see #buildView(String)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
+	 * 根据给定的viewName创建View对象
 	 */
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
@@ -511,18 +494,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
-	 * Creates a new View instance of the specified view class and configures it.
-	 * Does <i>not</i> perform any lookup for pre-defined View instances.
-	 * <p>Spring lifecycle methods as defined by the bean container do not have to
-	 * be called here; those will be applied by the {@code loadView} method
-	 * after this method returns.
-	 * <p>Subclasses will typically call {@code super.buildView(viewName)}
-	 * first, before setting further properties themselves. {@code loadView}
-	 * will then apply Spring lifecycle methods at the end of this process.
-	 * @param viewName the name of the view to build
-	 * @return the View instance
-	 * @throws Exception if the view couldn't be resolved
-	 * @see #loadView(String, java.util.Locale)
+	 * 根据view class构建视图对象并且进行配置
 	 */
 	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 		AbstractUrlBasedView view = (AbstractUrlBasedView) BeanUtils.instantiateClass(getViewClass());

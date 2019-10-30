@@ -287,6 +287,7 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 
 
 	/**
+	 * 渲染视图
 	 * Prepares the view given the specified model, merging it with static
 	 * attributes and a RequestContext attribute, if necessary.
 	 * Delegates to renderMergedOutputModel for the actual rendering.

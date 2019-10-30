@@ -1238,13 +1238,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Render the given ModelAndView.
-	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
-	 * @param mv the ModelAndView to render
-	 * @param request current HTTP servlet request
-	 * @param response current HTTP servlet response
-	 * @throws ServletException if view is missing or cannot be resolved
-	 * @throws Exception if there's a problem rendering the view
+	 * 渲染视图，这是处理请求的最后一个阶段，它可能涉及通过名称解析视图
 	 */
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// Determine locale for request and apply it to the response.
@@ -1253,7 +1247,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		View view;
 		if (mv.isReference()) {
-			// We need to resolve the view name.
+			// 解析视图
 			view = resolveViewName(mv.getViewName(), mv.getModelInternal(), locale, request);
 			if (view == null) {
 				throw new ServletException("Could not resolve view with name '" + mv.getViewName() +
@@ -1277,6 +1271,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+			//渲染视图
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
@@ -1299,21 +1294,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Resolve the given view name into a View object (to be rendered).
+	 * 解析出视图对象View
 	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
 	 * Can be overridden for custom resolution strategies, potentially based on
 	 * specific model attributes or request parameters.
-	 * @param viewName the name of the view to resolve
-	 * @param model the model to be passed to the view
-	 * @param locale the current locale
-	 * @param request current HTTP servlet request
-	 * @return the View object, or {@code null} if none found
-	 * @throws Exception if the view cannot be resolved
-	 * (typically in case of problems creating an actual View object)
-	 * @see ViewResolver#resolveViewName
 	 */
-	protected View resolveViewName(String viewName, Map<String, Object> model, Locale locale,
-			HttpServletRequest request) throws Exception {
+	protected View resolveViewName(String viewName, Map<String, Object> model, Locale locale, HttpServletRequest request) throws Exception {
 
 		for (ViewResolver viewResolver : this.viewResolvers) {
 			View view = viewResolver.resolveViewName(viewName, locale);

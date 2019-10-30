@@ -627,6 +627,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
          */
         //解析被注解 @RequestParam, @RequestPart 修饰的参数, 数据的获取通过 HttpServletRequest.getParameterValues
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), false));
+
 		//解析被注解 @RequestParam 修饰, 且类型是 Map 的参数, 数据的获取通过 HttpServletRequest.getParameterMap
 		resolvers.add(new RequestParamMapMethodArgumentResolver());
 		//解析被注解 @PathVariable 修饰, 数据的获取通过 uriTemplateVars, 而 uriTemplateVars 却是通过
@@ -641,10 +642,12 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 		resolvers.add(new MatrixVariableMapMethodArgumentResolver());
         // 解析被注解 @ModelAttribute 修饰, 且类型是 Map 的参数, 数据的获取通过 ModelAndViewContainer 获取, 通过 DataBinder 进行绑定
 		resolvers.add(new ServletModelAttributeMethodProcessor(false));
+
         // 解析被注解 @RequestBody 修饰的参数, 以及被@ResponseBody修饰的返回值, 数据的获取通过 HttpServletRequest 获取,
         // 根据 MediaType通过HttpMessageConverter转换成对应的格式, 在处理返回值时 也是通过 MediaType 选择合适
         // HttpMessageConverter, 进行转换格式, 并输出
 		resolvers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.requestResponseBodyAdvice));
+
         // 解析被注解 @RequestPart 修饰, 数据的获取通过 HttpServletRequest.getParts()
 		resolvers.add(new RequestPartMethodArgumentResolver(getMessageConverters(), this.requestResponseBodyAdvice));
         // 解析被注解 @RequestHeader 修饰, 数据的获取通过 HttpServletRequest.getHeaderValues()
@@ -673,8 +676,10 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 		resolvers.add(new RedirectAttributesMethodArgumentResolver());
         //解析固定类型参数(比如: Model等), 参数的数据获取通过 ModelAndViewContainer
 		resolvers.add(new ModelMethodProcessor());
-        // 解析固定类型参数(比如: Model等), 参数的数据获取通过 ModelAndViewContainer
+
+        // 解析Map参数, 参数的数据获取通过 ModelAndViewContainer
 		resolvers.add(new MapMethodProcessor());
+
         // 解析固定类型参数(比如: Errors), 参数的数据获取通过 ModelAndViewContainer
 		resolvers.add(new ErrorsMethodArgumentResolver());
         // 解析固定类型参数(比如: SessionStatus), 参数的数据获取通过 ModelAndViewContainer
@@ -761,8 +766,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
         // 返回值被 ResponseBody 修饰的返回值, 并且根据 MediaType 通过 HttpMessageConverter 转化后进行写入数据流中
 		handlers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.contentNegotiationManager, this.requestResponseBodyAdvice));
 
-		// Multi-purpose return value types
-        // 支持返回值为 CharSequence 类型, 设置 ModelAndViewContainer.setViewName
+        // 支持返回值为 字符串 类型, 设置 ModelAndViewContainer.setViewName
 		handlers.add(new ViewNameMethodReturnValueHandler());
         // 支持返回值为 Map, 并将结果设置到 ModelAndViewContainer
 		handlers.add(new MapMethodProcessor());
