@@ -127,6 +127,9 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 		return (ann != null ? new RequestParamNamedValueInfo(ann) : new RequestParamNamedValueInfo());
 	}
 
+	/**
+	 * 解析参数值，内部调用request.getParameterValues(name);
+	 */
 	@Override
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
 		HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);

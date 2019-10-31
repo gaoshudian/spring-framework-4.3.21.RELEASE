@@ -14,6 +14,7 @@
       names: ${requestScope.names }
       <br/>user requestScope:${requestScope.user}
       <br/>user sessionScope:${sessionScope.user}
+      <br/>date requestScope:${requestScope.date}
       <br/>
   </body>
 </html>

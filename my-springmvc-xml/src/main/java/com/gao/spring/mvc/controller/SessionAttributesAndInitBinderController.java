@@ -3,6 +3,7 @@ package com.gao.spring.mvc.controller;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.PropertiesEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 @SessionAttributes(value={"user"}, types={String.class})
 @Controller
-public class SessionAttributesController {
+public class SessionAttributesAndInitBinderController {
 
     /**
      * 测试@SessionAttributes的用法
@@ -42,13 +43,10 @@ public class SessionAttributesController {
     }
 
     @RequestMapping(value="/testInitBinderparam",method= RequestMethod.GET)
-    @ResponseBody
-    public Map<String,Object> getFormatData(Date date) throws ParseException{
-        Map<String,Object> map = new HashMap<String, Object>();
-        map.put("name", "zhangsan");
-        map.put("age", 22);
+    public String getFormatData(Date date, ModelMap map) throws ParseException{
+        map.put("user", "gaosd");
         map.put("date",date);
-        return map;
+        return "success";
     }
 
 

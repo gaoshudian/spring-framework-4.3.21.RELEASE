@@ -1025,6 +1025,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 		return createDataBinderFactory(initBinderMethods);
 	}
 
+	//将@InitBinder注解的方法封装为InvocableHandlerMethod对象，后期调用其它方法再参数解析时会先调用这个方法
 	private InvocableHandlerMethod createInitBinderMethod(Object bean, Method method) {
 		InvocableHandlerMethod binderMethod = new InvocableHandlerMethod(bean, method);
 		binderMethod.setHandlerMethodArgumentResolvers(this.initBinderArgumentResolvers);

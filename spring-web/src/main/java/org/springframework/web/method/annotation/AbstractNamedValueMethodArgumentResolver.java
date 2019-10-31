@@ -87,6 +87,9 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	}
 
 
+	/**
+	 * 从给定的的request对象(webRequest)中取出参数值
+	 */
 	@Override
 	public final Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
@@ -99,7 +102,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			throw new IllegalArgumentException(
 					"Specified name must not resolve to null: [" + namedValueInfo.name + "]");
 		}
-
+        //调用子类解析出参数值
 		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {
@@ -113,7 +116,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 		else if ("".equals(arg) && namedValueInfo.defaultValue != null) {
 			arg = resolveStringValue(namedValueInfo.defaultValue);
 		}
-
+        //如果存在@InitBinder注解的方法，则先执行@InitBinder方法，然后调用binder.convertIfNecessary()方法转换参数值
 		if (binderFactory != null) {
 			WebDataBinder binder = binderFactory.createBinder(webRequest, null, namedValueInfo.name);
 			try {

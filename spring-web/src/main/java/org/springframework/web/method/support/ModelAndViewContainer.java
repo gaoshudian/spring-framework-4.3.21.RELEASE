@@ -72,7 +72,15 @@ public class ModelAndViewContainer {
 	//用于设置SessionAttribute使用完的标志
 	private final SessionStatus sessionStatus = new SimpleSessionStatus();
 
-	//请求是否已经完成的标志
+    /**
+     * 请求是否已经完成的标志,一般如果方法上加@ResponseBody注解时，在HandlerAdapter处理返回值时，会将此标志设置为true,然后
+     * 后续渲染页面时看到这个标志就不会做渲染页面处理了，源码表现在RequestMappingHandlerAdapter#getModelAndView方法里:
+     *  if (mavContainer.isRequestHandled()) {
+     *     return null;
+     *  }
+     *  然后外围DispatcherServlet#processDispatchResult方法中发现mv为空就不渲染页面
+     *
+     */
 	private boolean requestHandled = false;
 
 

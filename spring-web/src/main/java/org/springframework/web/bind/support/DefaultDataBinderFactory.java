@@ -52,8 +52,10 @@ public class DefaultDataBinderFactory implements WebDataBinderFactory {
 
 		WebDataBinder dataBinder = createBinderInstance(target, objectName, webRequest);
 		if (this.initializer != null) {
+            //设置dataBinder(ExtendedServletRequestDataBinder)的一些属性，比如:conversionService
 			this.initializer.initBinder(dataBinder, webRequest);
 		}
+        //调用@InitBinder注解的方法
 		initBinder(dataBinder, webRequest);
 		return dataBinder;
 	}

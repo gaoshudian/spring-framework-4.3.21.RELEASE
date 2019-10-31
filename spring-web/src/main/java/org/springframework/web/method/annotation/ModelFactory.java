@@ -103,7 +103,7 @@ public final class ModelFactory {
 	 */
 	public void initModel(NativeWebRequest request, ModelAndViewContainer container, HandlerMethod handlerMethod) throws Exception {
 
-		//从SessionAttributes中取出保存的参数合并到container中
+		//从request中取出在@SessionAttributes中设置的参数，合并到container中
 		Map<String, ?> sessionAttributes = this.sessionAttributesHandler.retrieveAttributes(request);
 		container.mergeAttributes(sessionAttributes);
 
@@ -188,11 +188,10 @@ public final class ModelFactory {
 	}
 
 	/**
-	 * 将model中的属性复制到session中一份
-	 * Add {@link BindingResult} attributes where necessary.
-	 * @param request the current request
-	 * @param container contains the model to update
-	 * @throws Exception if creating BindingResult attributes fails
+	 * 1.如果需要将model中的属性复制到session中一份
+	 * 2.如果需要添加{@link BindingResult}属性(比如:
+     * org.springframework.validation.BindingResult.user->org.springframework.validation.BeanPropertyBindingResult)
+     * BeanPropertyBindingResult对象实在DataBinder#getTypeConverter()方法中得来的
 	 */
 	public void updateModel(NativeWebRequest request, ModelAndViewContainer container) throws Exception {
 		ModelMap defaultModel = container.getDefaultModel();
