@@ -157,6 +157,9 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 		}
 	}
 
+    /**
+     * 向reqeust或者session里保存属性
+     */
 	@Override
 	public void setAttribute(String name, Object value, int scope) {
 		if (scope == SCOPE_REQUEST) {

@@ -763,11 +763,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 		// Annotation-based return value types
         // 将数据加入 ModelAndViewContainer 的 HandlerMethodReturnValueHandler
 		handlers.add(new ModelAttributeMethodProcessor(false));
-        // 返回值被 ResponseBody 修饰的返回值, 并且根据 MediaType 通过 HttpMessageConverter 转化后进行写入数据流中
-		handlers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.contentNegotiationManager, this.requestResponseBodyAdvice));
 
-        // 支持返回值为 字符串 类型, 设置 ModelAndViewContainer.setViewName
+        // 返回值被 ResponseBody 修饰的返回值, 并且根据 MediaType 通过 HttpMessageConverter 转化后进行写入数据流中
+		handlers.add(new RequestResponseBodyMethodProcessor(getMessageConverters(), this.contentNegotiationManager,
+                this.requestResponseBodyAdvice));
+
+        // 支持返回值为"字符串"类型, 内部主要是设置 ModelAndViewContainer的"view"属性，如果是冲定向，则还会设置"redirectModelScenario"属性
 		handlers.add(new ViewNameMethodReturnValueHandler());
+
         // 支持返回值为 Map, 并将结果设置到 ModelAndViewContainer
 		handlers.add(new MapMethodProcessor());
 
@@ -1039,7 +1042,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
 
     /**
      * 处理完请求的后置处理，这个方法一共做了三件事:
-     * 1.调用model的updateModel方法更新model(包括设置了SessionAttributes和给model设置BindingResult)
+     * 1.调用model的updateModel方法更新model(包括设置SessionAttributes和给model设置BindingResult)
      * 2.根据mavContainer创建ModelAndView
      * 3.如果mavContainer里的model是RedirectAttributes类型，则将其值设置到FlashMap
      */

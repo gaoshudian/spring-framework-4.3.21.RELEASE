@@ -11,11 +11,16 @@ import java.util.Map;
 public class DemoController {
 
 	@RequestMapping("/helloworld")
-	@ResponseBody
 	public String hello(){
 		System.out.println("hello world");
 		return "success";
 	}
+
+    @RequestMapping("/redirect")
+    public String redirect(){
+        System.out.println("重定向测试");
+        return "redirect:/helloworld";
+    }
 
 	/**
 	 * @RequestParam 来映射请求参数. value 值即请求参数的参数名 required 该参数是否必须. 默认为 true
@@ -59,5 +64,7 @@ public class DemoController {
         modelMap.put("names", Arrays.asList("Tom", "Jerry", "Mike"));
 		return "success";
 	}
+
+
 
 }

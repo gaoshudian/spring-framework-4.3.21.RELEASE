@@ -452,8 +452,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 		// 处理前缀为"redirect:"的情况
 		if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
 			String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
-			RedirectView view = new RedirectView(redirectUrl,
-					isRedirectContextRelative(), isRedirectHttp10Compatible());
+			RedirectView view = new RedirectView(redirectUrl, isRedirectContextRelative(), isRedirectHttp10Compatible());
 			view.setHosts(getRedirectHosts());
 			return applyLifecycleMethods(REDIRECT_URL_PREFIX, view);
 		}

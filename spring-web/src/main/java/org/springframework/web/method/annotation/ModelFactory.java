@@ -188,7 +188,7 @@ public final class ModelFactory {
 	}
 
 	/**
-	 * Promote model attributes listed as {@code @SessionAttributes} to the session.
+	 * 将model中的属性复制到session中一份
 	 * Add {@link BindingResult} attributes where necessary.
 	 * @param request the current request
 	 * @param container contains the model to update

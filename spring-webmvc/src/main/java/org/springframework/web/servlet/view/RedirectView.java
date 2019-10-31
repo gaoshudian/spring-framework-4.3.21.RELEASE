@@ -294,9 +294,8 @@ public class RedirectView extends AbstractUrlBasedView implements SmartView {
 
 
 	/**
-	 * Convert model to request parameters and redirect to the given URL.
-	 * @see #appendQueryProperties
-	 * @see #sendRedirect
+	 * 将model中的属性设置到request的属性中并跳转指定URL
+	 * 其实这里渲染视图内部还是调动servlet的处理方法，例如:response.sendRedirect("/helloworld");
 	 */
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,

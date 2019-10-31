@@ -11,6 +11,9 @@
     <title>index</title>
   </head>
   <body>
-  names: ${requestScope.names }
+      names: ${requestScope.names }
+      <br/>user requestScope:${requestScope.user}
+      <br/>user sessionScope:${sessionScope.user}
+      <br/>
   </body>
 </html>

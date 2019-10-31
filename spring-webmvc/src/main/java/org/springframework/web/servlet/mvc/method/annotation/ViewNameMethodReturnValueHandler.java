@@ -73,6 +73,9 @@ public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValu
 		return (void.class == paramType || CharSequence.class.isAssignableFrom(paramType));
 	}
 
+	/**
+	 * 内部主要是设置 ModelAndViewContainer的"view"属性，如果是冲定向，则还会设置"redirectModelScenario"属性
+	 */
 	@Override
 	public void handleReturnValue(Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
