@@ -37,4 +37,12 @@
 	  当然该标签默认还会注册一些其它的bean,这里不做介绍(哈哈，其实是我懒的去研究罢了)-->
 	<mvc:annotation-driven />
 
+    <!-- 定义spring mvc拦截器 -->
+	<mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.gao.spring.mvc.controller.MyInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

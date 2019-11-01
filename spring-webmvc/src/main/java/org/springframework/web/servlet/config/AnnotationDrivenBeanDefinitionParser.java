@@ -158,6 +158,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
         /**
          * 默认注册RequestMappingHandlerAdapter
          */
+        //默认的conversionService,这里是一个factoryBean(FormattingConversionServiceFactoryBean)
 		RuntimeBeanReference conversionService = getConversionService(element, source, context);
 		RuntimeBeanReference validator = getValidator(element, source, context);
 		RuntimeBeanReference messageCodesResolver = getMessageCodesResolver(element);

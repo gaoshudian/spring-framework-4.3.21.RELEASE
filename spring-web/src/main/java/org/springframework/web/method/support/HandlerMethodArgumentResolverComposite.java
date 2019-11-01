@@ -105,8 +105,7 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	}
 
 	/**
-	 * Iterate over registered {@link HandlerMethodArgumentResolver}s and invoke the one that supports it.
-	 * @throws IllegalStateException if no suitable {@link HandlerMethodArgumentResolver} is found.
+	 * 解析参数值，从注册的所有参数解析器中找到支持这个参数解析的解析器
 	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,

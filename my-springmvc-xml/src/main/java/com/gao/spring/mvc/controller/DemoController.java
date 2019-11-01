@@ -60,7 +60,7 @@ public class DemoController {
 	 */
 	@RequestMapping("/testMap")
 	public String testMap(ModelMap modelMap){
-		System.out.println(modelMap.getClass().getName());
+		System.out.println("DemoController#testMap..."+modelMap.getClass().getName());
         modelMap.put("names", Arrays.asList("Tom", "Jerry", "Mike"));
 		return "success";
 	}

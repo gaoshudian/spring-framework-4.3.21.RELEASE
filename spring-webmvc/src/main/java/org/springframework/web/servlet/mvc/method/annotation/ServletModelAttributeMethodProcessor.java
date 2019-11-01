@@ -72,8 +72,7 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 
 		String value = getRequestValueForAttribute(attributeName, request);
 		if (value != null) {
-			Object attribute = createAttributeFromRequestValue(
-					value, attributeName, parameter, binderFactory, request);
+			Object attribute = createAttributeFromRequestValue(value, attributeName, parameter, binderFactory, request);
 			if (attribute != null) {
 				return attribute;
 			}

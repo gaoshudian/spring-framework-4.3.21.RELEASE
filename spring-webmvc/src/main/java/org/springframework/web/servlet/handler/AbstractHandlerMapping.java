@@ -244,7 +244,9 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		extendInterceptors(this.interceptors);
+		//检查系统中的拦截器(MappedInterceptor类型的)，存入adaptedInterceptors属性中
 		detectMappedInterceptors(this.adaptedInterceptors);
+		//如果该HandlerMapping的interceptors中有值，则取出来放到adaptedInterceptors属性中
 		initInterceptors();
 	}
 
@@ -358,7 +360,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			String handlerName = (String) handler;
 			handler = getApplicationContext().getBean(handlerName);
 		}
-        //将返回的handler封装为HandlerExecutionChain对象
+        //将返回的handler封装为HandlerExecutionChain对象，这一步会取出HandlerMapping中的拦截器封装起来
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.globalCorsConfigSource.getCorsConfiguration(request);

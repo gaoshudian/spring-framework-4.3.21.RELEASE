@@ -110,6 +110,8 @@ public final class ModelFactory {
 		//执行注释了@ModelAttribute的方法并将结果设置到model
 		invokeModelAttributeMethods(request, container);
 
+		//该方法如果某个参数是需要放在session里的属性而且此时container中没有该属性；这里校验，如果session里也没有该属性对应的value,
+        //则报错；否则将该属性从session中取出放到container的model里
 		for (String name : findSessionAttributeArguments(handlerMethod)) {
 			if (!container.containsAttribute(name)) {
 				Object value = this.sessionAttributesHandler.retrieveAttribute(request, name);
@@ -130,14 +132,15 @@ public final class ModelFactory {
 
 		while (!this.modelMethods.isEmpty()) {
 			InvocableHandlerMethod modelMethod = getNextModelMethod(container).getHandlerMethod();
-			ModelAttribute ann = modelMethod.getMethodAnnotation(ModelAttribute.class);
+            //判断方法是否被@ModelAttribute注解
+            ModelAttribute ann = modelMethod.getMethodAnnotation(ModelAttribute.class);
 			if (container.containsAttribute(ann.name())) {
 				if (!ann.binding()) {
 					container.setBindingDisabled(ann.name());
 				}
 				continue;
 			}
-
+            //执行被@ModelAttribute注解的方法
 			Object returnValue = modelMethod.invokeForRequest(request, container);
 			if (!modelMethod.isVoid()){
 				String returnValueName = getNameForReturnValue(returnValue, modelMethod.getReturnType());
