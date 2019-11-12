@@ -91,11 +91,12 @@ public abstract class MultipartResolutionDelegate {
 						isPartCollection(parameter) || isPartArray(parameter))));
 	}
 
-	public static Object resolveMultipartArgument(String name, MethodParameter parameter, HttpServletRequest request)
-			throws Exception {
+	/**
+	 * 解析出multipart类型的参数，即文件上传的类型参数MultipartFile
+	 */
+	public static Object resolveMultipartArgument(String name, MethodParameter parameter, HttpServletRequest request) throws Exception {
 
-		MultipartHttpServletRequest multipartRequest =
-				WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
+		MultipartHttpServletRequest multipartRequest = WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
 		boolean isMultipart = (multipartRequest != null || isMultipartContent(request));
 
 		if (MultipartFile.class == parameter.getNestedParameterType()) {

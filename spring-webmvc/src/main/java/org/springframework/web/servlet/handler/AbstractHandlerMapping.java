@@ -362,6 +362,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		}
         //将返回的handler封装为HandlerExecutionChain对象，这一步会取出HandlerMapping中的拦截器封装起来
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
+		//处理跨域请求，（跨域请求时request会带上"Origin"头）
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.globalCorsConfigSource.getCorsConfiguration(request);
 			CorsConfiguration handlerConfig = getCorsConfiguration(handler, request);

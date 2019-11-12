@@ -244,6 +244,9 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 		}
 	}
 
+	/**
+	 * 将返回值对象进行json格式化并输出
+	 */
 	@Override
 	protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
@@ -269,8 +272,8 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 				javaType = getJavaType(type, null);
 			}
 
-			ObjectWriter objectWriter = (serializationView != null ?
-					this.objectMapper.writerWithView(serializationView) : this.objectMapper.writer());
+			ObjectWriter objectWriter = (serializationView != null ? this.objectMapper.writerWithView(serializationView) : this.objectMapper.writer());
+
 			if (filters != null) {
 				objectWriter = objectWriter.with(filters);
 			}
@@ -278,8 +281,7 @@ public abstract class AbstractJackson2HttpMessageConverter extends AbstractGener
 				objectWriter = objectWriter.forType(javaType);
 			}
 			SerializationConfig config = objectWriter.getConfig();
-			if (contentType != null && contentType.isCompatibleWith(TEXT_EVENT_STREAM) &&
-					config.isEnabled(SerializationFeature.INDENT_OUTPUT)) {
+			if (contentType != null && contentType.isCompatibleWith(TEXT_EVENT_STREAM) && config.isEnabled(SerializationFeature.INDENT_OUTPUT)) {
 				objectWriter = objectWriter.with(this.ssePrettyPrinter);
 			}
 			objectWriter.writeValue(generator, value);

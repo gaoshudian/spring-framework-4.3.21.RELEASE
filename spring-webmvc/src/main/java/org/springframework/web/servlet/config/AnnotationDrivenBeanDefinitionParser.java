@@ -85,7 +85,7 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
  * 3.注册其它默认的组件，包括:
  *    ExceptionHandlerExceptionResolver
  *    ResponseStatusExceptionResolver
- *    DefaultHandlerExceptionResolverßßßß
+ *    DefaultHandlerExceptionResolver
  *    CompositeUriComponentsContributorFactoryBean
  *    ConversionServiceExposingInterceptor
  *    HandlerMappingIntrospector

@@ -3,7 +3,10 @@ package com.gao.spring.mvc.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -43,6 +46,7 @@ public class DemoController {
     public User testRequestResonseBody(@RequestBody User user) {
         System.out.println(user);
         user.setName("高2");
+        user.setMyDate(LocalDateTime.now());
         return user;
     }
 
@@ -62,9 +66,19 @@ public class DemoController {
 	public String testMap(ModelMap modelMap){
 		System.out.println("DemoController#testMap..."+modelMap.getClass().getName());
         modelMap.put("names", Arrays.asList("Tom", "Jerry", "Mike"));
+        if(true){
+        	throw new RuntimeException("测试springmvc异常处理机制");
+		}
 		return "success";
 	}
 
+//	@ExceptionHandler(RuntimeException.class)
+//	public ModelAndView error(RuntimeException error, HttpServletRequest request) {
+//		ModelAndView mav = new ModelAndView();
+//		mav.setViewName("error");
+//		mav.addObject("param", "Runtime error");
+//		return mav;
+//	}
 
 
 }

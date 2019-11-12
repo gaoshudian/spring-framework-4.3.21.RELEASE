@@ -58,16 +58,13 @@ public class ExceptionHandlerMethodResolver {
 	private static final Method NO_METHOD_FOUND = ClassUtils.getMethodIfAvailable(System.class, "currentTimeMillis");
 
 
-	private final Map<Class<? extends Throwable>, Method> mappedMethods =
-			new ConcurrentHashMap<Class<? extends Throwable>, Method>(16);
+	private final Map<Class<? extends Throwable>, Method> mappedMethods = new ConcurrentHashMap<Class<? extends Throwable>, Method>(16);
 
-	private final Map<Class<? extends Throwable>, Method> exceptionLookupCache =
-			new ConcurrentHashMap<Class<? extends Throwable>, Method>(16);
+	private final Map<Class<? extends Throwable>, Method> exceptionLookupCache = new ConcurrentHashMap<Class<? extends Throwable>, Method>(16);
 
 
 	/**
-	 * A constructor that finds {@link ExceptionHandler} methods in the given type.
-	 * @param handlerType the type to introspect
+	 * 该构造方法会找出给定handlerType中带@ExceptionHandler注解的方法
 	 */
 	public ExceptionHandlerMethodResolver(Class<?> handlerType) {
 		for (Method method : MethodIntrospector.selectMethods(handlerType, EXCEPTION_HANDLER_METHODS)) {

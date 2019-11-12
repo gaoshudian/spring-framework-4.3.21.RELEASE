@@ -905,13 +905,6 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * 处理将请求转发到实际的处理器:
-     *
-	 * 1.The handler will be obtained by applying the servlet's HandlerMappings in order.
-	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
-	 * to find the first that supports the handler class.
-     *
-	 * 2.All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
-	 * themselves to decide which methods are acceptable.
 	 */
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
@@ -1198,14 +1191,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Determine an error ModelAndView via the registered HandlerExceptionResolvers.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
-	 * @param handler the executed handler, or {@code null} if none chosen at the time of the exception
-	 * (for example, if multipart resolution failed)
-	 * @param ex the exception that got thrown during handler execution
-	 * @return a corresponding ModelAndView to forward to
-	 * @throws Exception if no error ModelAndView found
+	 * 通过已注册的HandlerExceptionResolvers确定一个错误模型和视图
 	 */
 	protected ModelAndView processHandlerException(HttpServletRequest request, HttpServletResponse response,
 			Object handler, Exception ex) throws Exception {
@@ -1233,7 +1219,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			WebUtils.exposeErrorRequestAttributes(request, ex, getServletName());
 			return exMv;
 		}
-
+		//所有的HandlerExceptionResolver都没有处理成功的话，抛出到页面
 		throw ex;
 	}
 

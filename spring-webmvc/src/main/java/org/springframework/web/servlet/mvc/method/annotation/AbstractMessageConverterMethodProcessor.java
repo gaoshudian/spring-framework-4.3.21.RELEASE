@@ -220,16 +220,18 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 		if (selectedMediaType != null) {
 			selectedMediaType = selectedMediaType.removeQualityValue();
 			for (HttpMessageConverter<?> messageConverter : this.messageConverters) {
+
 				if (messageConverter instanceof GenericHttpMessageConverter) {
-					if (((GenericHttpMessageConverter) messageConverter).canWrite(
-							declaredType, valueType, selectedMediaType)) {
+					if (((GenericHttpMessageConverter) messageConverter).canWrite(declaredType, valueType, selectedMediaType)) {
+
+						//返回结果之前对返回值进一步处理，即处理自定义的ResponseBodyAdvice
 						outputValue = (T) getAdvice().beforeBodyWrite(outputValue, returnType, selectedMediaType,
-								(Class<? extends HttpMessageConverter<?>>) messageConverter.getClass(),
-								inputMessage, outputMessage);
+								(Class<? extends HttpMessageConverter<?>>) messageConverter.getClass(), inputMessage, outputMessage);
+
 						if (outputValue != null) {
 							addContentDispositionHeader(inputMessage, outputMessage);
-							((GenericHttpMessageConverter) messageConverter).write(
-									outputValue, declaredType, selectedMediaType, outputMessage);
+							//常用的messageConverter是MappingJackson2HttpMessageConverter，这里就是将返回的对象转换成json字符串返回
+							((GenericHttpMessageConverter) messageConverter).write(outputValue, declaredType, selectedMediaType, outputMessage);
 							if (logger.isDebugEnabled()) {
 								logger.debug("Written [" + outputValue + "] as \"" + selectedMediaType +
 										"\" using [" + messageConverter + "]");
@@ -239,9 +241,9 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 					}
 				}
 				else if (messageConverter.canWrite(valueType, selectedMediaType)) {
+					//返回结果之前对返回值进一步处理，即处理自定义的ResponseBodyAdvice
 					outputValue = (T) getAdvice().beforeBodyWrite(outputValue, returnType, selectedMediaType,
-							(Class<? extends HttpMessageConverter<?>>) messageConverter.getClass(),
-							inputMessage, outputMessage);
+							(Class<? extends HttpMessageConverter<?>>) messageConverter.getClass(), inputMessage, outputMessage);
 					if (outputValue != null) {
 						addContentDispositionHeader(inputMessage, outputMessage);
 						((HttpMessageConverter) messageConverter).write(outputValue, selectedMediaType, outputMessage);
