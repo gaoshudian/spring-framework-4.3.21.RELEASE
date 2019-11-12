@@ -96,7 +96,9 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 	}
 
 	private void registerCacheAdvisor(Element element, ParserContext parserContext) {
+		//注册AOP入口类
 		AopNamespaceUtils.registerAutoProxyCreatorIfNecessary(parserContext, element);
+		//注册缓存切面
 		SpringCachingConfigurer.registerCacheAdvisor(element, parserContext);
 		if (jsr107Present && jcacheImplPresent) {
 			JCacheCachingConfigurer.registerCacheAdvisor(element, parserContext);
@@ -137,13 +139,13 @@ class AnnotationDrivenCacheBeanDefinitionParser implements BeanDefinitionParser 
 			if (!parserContext.getRegistry().containsBeanDefinition(CacheManagementConfigUtils.CACHE_ADVISOR_BEAN_NAME)) {
 				Object eleSource = parserContext.extractSource(element);
 
-				// Create the CacheOperationSource definition.
+				// Create the CacheOperationSource definition.保存缓存注解里的信息
 				RootBeanDefinition sourceDef = new RootBeanDefinition("org.springframework.cache.annotation.AnnotationCacheOperationSource");
 				sourceDef.setSource(eleSource);
 				sourceDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 				String sourceName = parserContext.getReaderContext().registerWithGeneratedName(sourceDef);
 
-				// Create the CacheInterceptor definition.
+				// 缓存切面，类似事务切面TransactionInterceptor
 				RootBeanDefinition interceptorDef = new RootBeanDefinition(CacheInterceptor.class);
 				interceptorDef.setSource(eleSource);
 				interceptorDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
