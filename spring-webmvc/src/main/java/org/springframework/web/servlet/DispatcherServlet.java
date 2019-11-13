@@ -1196,7 +1196,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	protected ModelAndView processHandlerException(HttpServletRequest request, HttpServletResponse response,
 			Object handler, Exception ex) throws Exception {
 
-		// Check registered HandlerExceptionResolvers...
+		// 通过注册的异常处理器处理异常
 		ModelAndView exMv = null;
 		for (HandlerExceptionResolver handlerExceptionResolver : this.handlerExceptionResolvers) {
 			exMv = handlerExceptionResolver.resolveException(request, response, handler, ex);

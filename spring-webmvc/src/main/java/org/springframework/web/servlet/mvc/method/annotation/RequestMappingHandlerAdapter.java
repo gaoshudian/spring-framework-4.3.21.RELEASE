@@ -54,11 +54,7 @@ import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.support.DefaultDataBinderFactory;
-import org.springframework.web.bind.support.DefaultSessionAttributeStore;
-import org.springframework.web.bind.support.SessionAttributeStore;
-import org.springframework.web.bind.support.WebBindingInitializer;
-import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.bind.support.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
@@ -156,6 +152,8 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter i
     //缓存经@ControllerAdvice注解修饰的类中实现了RequestBodyAdvice或者ResponseBodyAdvice接口的类
 	private List<Object> requestResponseBodyAdvice = new ArrayList<Object>();
 
+	//默认类型是ConfigurableWebBindingInitializer：
+    //其主要作用就是 初始化WebDataBinder；将请求的参数转化为对应的JavaBean
 	private WebBindingInitializer webBindingInitializer;
 
 	private AsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor("MvcAsync");
