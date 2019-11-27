@@ -881,7 +881,7 @@ The preceding JSP assumes that the variable name of the form backing object is
 This tag renders an HTML 'input' tag using the bound value and type='text' by default.
 For an example of this tag, see <<view-jsp-formtaglib-formtag>>. Starting with Spring
 3.1 you can use other types such HTML5-specific types like 'email', 'tel', 'date', and
-others.
+com.gao.servlet3.others2.
 
 
 [[view-jsp-formtaglib-checkboxtag]]
@@ -1501,7 +1501,7 @@ which means you can enter any HTML5 specific attributes.
 
 In Spring 3.1, the form input tag supports entering a type attribute other than 'text'.
 This is intended to allow rendering new HTML5 specific input types such as 'email',
-'date', 'range', and others. Note that entering type='text' is not required since 'text'
+'date', 'range', and com.gao.servlet3.others2. Note that entering type='text' is not required since 'text'
 is the default type.
 
 

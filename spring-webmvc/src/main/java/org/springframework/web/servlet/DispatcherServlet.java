@@ -1255,15 +1255,14 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		try {
 			if (mv.getStatus() != null) {
-				response.setStatus(mv.getStatus().value());
+				reponse.setStatus(mv.getStatus().value());
 			}
 			//渲染视图
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Error rendering view [" + view + "] in DispatcherServlet with name '" +
-						getServletName() + "'", ex);
+				logger.debug("Error rendering view [" + view + "] in DispatcherServlet with name '" + getServletName() + "'", ex);
 			}
 			throw ex;
 		}

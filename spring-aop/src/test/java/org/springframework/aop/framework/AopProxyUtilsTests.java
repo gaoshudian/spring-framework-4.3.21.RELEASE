@@ -60,7 +60,7 @@ public class AopProxyUtilsTests {
 		Class<?>[] completedInterfaces = AopProxyUtils.completeProxiedInterfaces(as);
 		assertEquals(4, completedInterfaces.length);
 
-		// Can't assume ordering for others, so use a list
+		// Can't assume ordering for com.gao.servlet3.others2, so use a list
 		List<?> l = Arrays.asList(completedInterfaces);
 		assertTrue(l.contains(Advised.class));
 		assertTrue(l.contains(ITestBean.class));
@@ -76,7 +76,7 @@ public class AopProxyUtilsTests {
 		Class<?>[] completedInterfaces = AopProxyUtils.completeProxiedInterfaces(as);
 		assertEquals(4, completedInterfaces.length);
 
-		// Can't assume ordering for others, so use a list
+		// Can't assume ordering for com.gao.servlet3.others2, so use a list
 		List<?> l = Arrays.asList(completedInterfaces);
 		assertTrue(l.contains(Advised.class));
 		assertTrue(l.contains(ITestBean.class));
@@ -92,7 +92,7 @@ public class AopProxyUtilsTests {
 		Class<?>[] completedInterfaces = AopProxyUtils.completeProxiedInterfaces(as);
 		assertEquals(3, completedInterfaces.length);
 
-		// Can't assume ordering for others, so use a list
+		// Can't assume ordering for com.gao.servlet3.others2, so use a list
 		List<?> l = Arrays.asList(completedInterfaces);
 		assertFalse(l.contains(Advised.class));
 		assertTrue(l.contains(ITestBean.class));

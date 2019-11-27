@@ -36,7 +36,7 @@ import org.springframework.web.socket.sockjs.transport.session.AbstractHttpSockJ
  * A {@link TransportHandler} that receives messages over HTTP.
  *
  * @author Rossen Stoyanchev
- * @deprecated Will be removed as of Spring Framework 5.1, use others transports instead.
+ * @deprecated Will be removed as of Spring Framework 5.1, use com.gao.servlet3.others2 transports instead.
  */
 @Deprecated
 public class JsonpReceivingTransportHandler extends AbstractHttpReceivingTransportHandler {

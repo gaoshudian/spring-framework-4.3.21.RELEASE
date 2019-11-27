@@ -225,7 +225,7 @@ public class FreeMarkerConfigurationFactory {
 	 * <p>Default is "true". Turn this off to always load via SpringTemplateLoader
 	 * (i.e. as stream, without hot detection of template changes), which might
 	 * be necessary if some of your templates reside in an expanded classes
-	 * directory while others reside in jar files.
+	 * directory while com.gao.servlet3.others2 reside in jar files.
 	 * @see #setTemplateLoaderPath
 	 */
 	public void setPreferFileSystemAccess(boolean preferFileSystemAccess) {

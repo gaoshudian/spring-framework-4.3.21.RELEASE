@@ -66,7 +66,7 @@ public class PathResourceResolver extends AbstractResourceResolver {
 	 * However sometimes that may not be the case, e.g. when
 	 * {@link org.springframework.web.servlet.resource.CssLinkResourceTransformer}
 	 * resolves public URLs of links it contains, the CSS file is the location
-	 * and the resources being resolved are css files, images, fonts and others
+	 * and the resources being resolved are css files, images, fonts and com.gao.servlet3.others2
 	 * located in adjacent or parent directories.
 	 * <p>This property allows configuring a complete list of locations under
 	 * which resources must be so that if a resource is not under the location

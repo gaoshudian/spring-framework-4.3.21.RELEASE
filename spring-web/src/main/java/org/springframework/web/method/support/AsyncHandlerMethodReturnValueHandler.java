@@ -23,7 +23,7 @@ import org.springframework.core.MethodParameter;
  * need to be handled with priority so the async value can be "unwrapped".
  *
  * <p><strong>Note: </strong> implementing this contract is not required but it
- * should be implemented when the handler needs to be prioritized ahead of others.
+ * should be implemented when the handler needs to be prioritized ahead of com.gao.servlet3.others2.
  * For example custom (async) handlers, by default ordered after built-in
  * handlers, should take precedence over {@code @ResponseBody} or
  * {@code @ModelAttribute} handling, which should occur once the async value is

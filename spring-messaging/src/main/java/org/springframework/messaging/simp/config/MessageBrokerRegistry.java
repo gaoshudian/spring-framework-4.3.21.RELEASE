@@ -131,7 +131,7 @@ public class MessageBrokerRegistry {
 	/**
 	 * Configure the prefix used to identify user destinations. User destinations
 	 * provide the ability for a user to subscribe to queue names unique to their
-	 * session as well as for others to send messages to those unique,
+	 * session as well as for com.gao.servlet3.others2 to send messages to those unique,
 	 * user-specific queues.
 	 * <p>For example when a user attempts to subscribe to "/user/queue/position-updates",
 	 * the destination may be translated to "/queue/position-updatesi9oqdfzo" yielding a

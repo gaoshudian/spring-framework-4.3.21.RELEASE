@@ -31,7 +31,7 @@ The WebSocket protocol http://tools.ietf.org/html/rfc6455[RFC 6455] defines an i
 new capability for web applications: full-duplex, two-way communication between client
 and server. It is an exciting new capability on the heels of a long history of
 techniques to make the web more interactive including Java Applets, XMLHttpRequest,
-Adobe Flash, ActiveXObject, various Comet techniques, server-sent events, and others.
+Adobe Flash, ActiveXObject, various Comet techniques, server-sent events, and com.gao.servlet3.others2.
 
 A proper introduction to the WebSocket protocol is beyond the scope of this
 document. At a minimum however it's important to understand that HTTP is used only for
@@ -89,7 +89,7 @@ to traditional messaging applications (e.g. JMS, AMQP).
 Spring Framework 4 includes a new `spring-messaging` module with key
 abstractions from the
 http://projects.spring.io/spring-integration/[Spring Integration] project
-such as `Message`, `MessageChannel`, `MessageHandler`, and others that can serve as
+such as `Message`, `MessageChannel`, `MessageHandler`, and com.gao.servlet3.others2 that can serve as
 a foundation for such a messaging architecture. The module also includes a
 set of annotations for mapping messages to methods, similar to the Spring MVC
 annotation based programming model.
@@ -139,7 +139,7 @@ reasonable to ask, "When is it appropriate to use?".
 The best fit for WebSocket is in web applications where the client and
 server need to exchange events at high frequency and with low latency. Prime
 candidates include, but are not limited to, applications in finance, games,
-collaboration, and others. Such applications are both very sensitive to time
+collaboration, and com.gao.servlet3.others2. Such applications are both very sensitive to time
 delays and also need to exchange a wide variety of messages at a high
 frequency.
 
@@ -332,7 +332,7 @@ And the XML configuration equivalent:
 
 A more advanced option is to extend the `DefaultHandshakeHandler` that performs
 the steps of the WebSocket handshake, including validating the client origin,
-negotiating a sub-protocol, and others. An application may also need to use this
+negotiating a sub-protocol, and com.gao.servlet3.others2. An application may also need to use this
 option if it needs to configure a custom `RequestUpgradeStrategy` in order to
 adapt to a WebSocket server engine and version that is not yet supported
 (also see <<websocket-server-deployment>> for more on this subject).
@@ -434,7 +434,7 @@ Java initialization API, if required:
 
 Each underlying WebSocket engine exposes configuration properties that control
 runtime characteristics such as the size of message buffer sizes, idle timeout,
-and others.
+and com.gao.servlet3.others2.
 
 For Tomcat, WildFly, and GlassFish add a `ServletServerContainerFactoryBean` to your
 WebSocket Java config:
@@ -1131,7 +1131,7 @@ to provide rich functionality. The following is a list of benefits:
 * No need to invent a custom messaging protocol and message format.
 * STOMP clients are available including a <<websocket-stomp-client,Java client>>
 in the Spring Framework.
-* Message brokers such as RabbitMQ, ActiveMQ, and others can be used (optionally) to
+* Message brokers such as RabbitMQ, ActiveMQ, and com.gao.servlet3.others2 can be used (optionally) to
 manage subscriptions and broadcast messages.
 * Application logic can be organized in any number of ``@Controller``'s and messages
 routed to them based on the STOMP destination header vs handling raw WebSocket messages
@@ -2342,7 +2342,7 @@ shown in the examples above.
 There is no silver bullet when it comes to performance. Many factors may
 affect it including the size of messages, the volume, whether application
 methods perform work that requires blocking, as well as external factors
-such as network speed and others. The goal of this section is to provide
+such as network speed and com.gao.servlet3.others2. The goal of this section is to provide
 an overview of the available configuration options along with some thoughts
 on how to reason about scaling.
 

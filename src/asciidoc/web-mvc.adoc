@@ -25,7 +25,7 @@ you cannot override these methods to supply your own behavior. This has not been
 arbitrarily, but specifically with this principle in mind.
 
 For an explanation of this principle, refer to __Expert Spring Web MVC and Web Flow__ by
-Seth Ladd and others; specifically see the section "A Look At Design," on page 117 of
+Seth Ladd and com.gao.servlet3.others2; specifically see the section "A Look At Design," on page 117 of
 the first edition. Alternatively, see
 
 * https://www.cs.duke.edu/courses/fall07/cps108/papers/ocp.pdf[Bob Martin, The Open-Closed
@@ -489,7 +489,7 @@ Portlet facilities.
 Available in the https://github.com/spring-projects/[spring-projects Org on Github],
 a number of web applications leverage the annotation support described in this section
 including __MvcShowcase__, __MvcAjax__, __MvcBasic__, __PetClinic__, __PetCare__,
-and others.
+and com.gao.servlet3.others2.
 ====
 
 [source,java,indent=0]
@@ -2482,7 +2482,7 @@ requires simply returning a value of type `SseEmitter`.
 
 Note however that Internet Explorer does not support Server-Sent Events and
 that for more advanced web application messaging scenarios such as online games,
-collaboration, financial applicatinos, and others it's better to consider
+collaboration, financial applicatinos, and com.gao.servlet3.others2 it's better to consider
 Spring's WebSocket support that includes SockJS-style WebSocket emulation
 falling back to a very wide range of browsers (including Internet Explorer)
 and also higher-level messaging patterns for interacting with clients through
@@ -2928,7 +2928,7 @@ indicate the view could not be found. Not all view resolvers do this, however, b
 in some cases, the resolver simply cannot detect whether or not the view exists. For
 example, the `InternalResourceViewResolver` uses the `RequestDispatcher` internally, and
 dispatching is the only way to figure out if a JSP exists, but this action can only
-execute once. The same holds for the `VelocityViewResolver` and some others. Check the
+execute once. The same holds for the `VelocityViewResolver` and some com.gao.servlet3.others2. Check the
 javadocs of the specific view resolver to see whether it reports non-existing views.
 Thus, putting an `InternalResourceViewResolver` in the chain in a place other than
 the last results in the chain not being fully inspected, because the
@@ -4863,9 +4863,9 @@ context defined):
 ----
 
 The above registers a `RequestMappingHandlerMapping`, a `RequestMappingHandlerAdapter`,
-and an `ExceptionHandlerExceptionResolver` (among others) in support of processing
+and an `ExceptionHandlerExceptionResolver` (among com.gao.servlet3.others2) in support of processing
 requests with annotated controller methods using annotations such as `@RequestMapping`,
-`@ExceptionHandler`, and others.
+`@ExceptionHandler`, and com.gao.servlet3.others2.
 
 It also enables the following:
 

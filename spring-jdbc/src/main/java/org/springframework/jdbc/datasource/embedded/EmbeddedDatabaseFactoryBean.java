@@ -48,7 +48,7 @@ public class EmbeddedDatabaseFactoryBean extends EmbeddedDatabaseFactory
 
 	/**
 	 * Set a script execution to be run in the bean destruction callback,
-	 * cleaning up the database and leaving it in a known state for others.
+	 * cleaning up the database and leaving it in a known state for com.gao.servlet3.others2.
 	 * @param databaseCleaner the database script executor to run on destroy
 	 * @see #setDatabasePopulator
 	 * @see org.springframework.jdbc.datasource.init.DataSourceInitializer#setDatabaseCleaner

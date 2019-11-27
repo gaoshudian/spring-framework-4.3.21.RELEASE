@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  * (e.g. "java:") is given.
  *
  * <p>Subclasses may invoke the {@link #lookup()} method whenever it is appropriate.
- * Some classes might do this on initialization, while others might do it
+ * Some classes might do this on initialization, while com.gao.servlet3.others2 might do it
  * on demand. The latter strategy is more flexible in that it allows for
  * initialization of the locator before the JNDI object is available.
  *

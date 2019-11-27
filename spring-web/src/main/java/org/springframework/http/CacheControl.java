@@ -157,7 +157,7 @@ public class CacheControl {
 
 	/**
 	 * Add a "no-transform" directive.
-	 * <p>This directive indicates that intermediaries (caches and others) should
+	 * <p>This directive indicates that intermediaries (caches and com.gao.servlet3.others2) should
 	 * not transform the response content. This can be useful to force caches and
 	 * CDNs not to automatically gzip or optimize the response content.
 	 * @return {@code this}, to facilitate method chaining

@@ -196,7 +196,7 @@ submitted against the Spring Individual Contributor License Agreement (ICLA):
     Author: First Last <user@mail.com>
 
 This helps ensure traceability against the ICLA and also goes a long way to
-ensuring useful output from tools like `git shortlog` and others.
+ensuring useful output from tools like `git shortlog` and com.gao.servlet3.others2.
 
 You can configure this via the account admin area in GitHub (useful for
 fork-and-edit cases); _globally_ on your machine with

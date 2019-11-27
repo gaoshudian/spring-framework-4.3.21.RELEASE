@@ -207,7 +207,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	 * Assert that the target bean class is an instance of the class where the given
 	 * method is declared. In some cases the actual endpoint instance at request-
 	 * processing time may be a JDK dynamic proxy (lazy initialization, prototype
-	 * beans, and others). Endpoint classes that require proxying should prefer
+	 * beans, and com.gao.servlet3.others2). Endpoint classes that require proxying should prefer
 	 * class-based proxy mechanisms.
 	 */
 	private void assertTargetBean(Method method, Object targetBean, Object[] args) {

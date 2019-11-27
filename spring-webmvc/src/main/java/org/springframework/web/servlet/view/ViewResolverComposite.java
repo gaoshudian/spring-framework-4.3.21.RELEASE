@@ -33,7 +33,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
- * A {@link org.springframework.web.servlet.ViewResolver} that delegates to others.
+ * A {@link org.springframework.web.servlet.ViewResolver} that delegates to com.gao.servlet3.others2.
  *
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev

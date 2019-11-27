@@ -181,7 +181,7 @@ public abstract class OncePerRequestFilter extends GenericFilterBean {
 	 * The dispatcher type {@code javax.servlet.DispatcherType.ASYNC} introduced
 	 * in Servlet 3.0 means a filter can be invoked in more than one thread
 	 * over the course of a single request. Some filters only need to filter
-	 * the initial thread (e.g. request wrapping) while others may need
+	 * the initial thread (e.g. request wrapping) while com.gao.servlet3.others2 may need
 	 * to be invoked at least once in each additional thread for example for
 	 * setting up thread locals or to perform final processing at the very end.
 	 * <p>Note that although a filter can be mapped to handle specific dispatcher

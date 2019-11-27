@@ -38,7 +38,7 @@ import org.springframework.util.IdGenerator;
  * The headers for a {@link Message}.
  *
  * <p><b>IMPORTANT</b>: This class is immutable. Any mutating operation such as
- * {@code put(..)}, {@code putAll(..)} and others will throw
+ * {@code put(..)}, {@code putAll(..)} and com.gao.servlet3.others2 will throw
  * {@link UnsupportedOperationException}.
  * <p>Subclasses do have access to the raw headers, however, via {@link #getRawHeaders()}.
  *

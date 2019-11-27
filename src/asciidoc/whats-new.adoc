@@ -212,7 +212,7 @@ can now contain both `@RequestMapping` and `@MessageMapping` methods for handlin
 HTTP requests and messages from WebSocket-connected clients. The new `spring-messaging`
 module also contains key abstractions formerly from the
 http://projects.spring.io/spring-integration/[Spring Integration] project such as
-`Message`, `MessageChannel`, `MessageHandler`, and others to serve as a foundation
+`Message`, `MessageChannel`, `MessageHandler`, and com.gao.servlet3.others2 to serve as a foundation
 for messaging-based applications.
 
 For further details, including a more thorough introduction, see the <<websocket>> section.

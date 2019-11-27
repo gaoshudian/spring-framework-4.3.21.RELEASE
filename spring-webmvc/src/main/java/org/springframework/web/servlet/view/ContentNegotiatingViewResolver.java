@@ -58,7 +58,7 @@ import org.springframework.web.servlet.ViewResolver;
  * from the application context, though they can also be set explicitly by using the
  * {@link #setViewResolvers viewResolvers} property. <strong>Note</strong> that in order for this
  * view resolver to work properly, the {@link #setOrder order} property needs to be set to a higher
- * precedence than the others (the default is {@link Ordered#HIGHEST_PRECEDENCE}).
+ * precedence than the com.gao.servlet3.others2 (the default is {@link Ordered#HIGHEST_PRECEDENCE}).
  *
  * <p>This view resolver uses the requested {@linkplain MediaType media type} to select a suitable
  * {@link View} for a request. The requested media type is determined through the configured

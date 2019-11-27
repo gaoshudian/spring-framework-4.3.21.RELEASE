@@ -64,7 +64,7 @@ public class DataSourceInitializer implements InitializingBean, DisposableBean {
 
 	/**
 	 * Set the {@link DatabasePopulator} to execute during the bean destruction
-	 * phase, cleaning up the database and leaving it in a known state for others.
+	 * phase, cleaning up the database and leaving it in a known state for com.gao.servlet3.others2.
 	 * @param databaseCleaner the {@code DatabasePopulator} to use during destruction
 	 * @see #setDatabasePopulator
 	 */

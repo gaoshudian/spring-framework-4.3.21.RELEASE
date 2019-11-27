@@ -3648,7 +3648,7 @@ A bean definition can contain a lot of configuration information, including cons
 arguments, property values, and container-specific information such as initialization
 method, static factory method name, and so on. A child bean definition inherits
 configuration data from a parent definition. The child definition can override some
-values, or add others, as needed. Using parent and child bean definitions can save a lot
+values, or add com.gao.servlet3.others2, as needed. Using parent and child bean definitions can save a lot
 of typing. Effectively, this is a form of templating.
 
 If you work with an `ApplicationContext` interface programmatically, child bean
@@ -4220,7 +4220,7 @@ decide which strategy suits them better. Due to the way they are defined, annota
 provide a lot of context in their declaration, leading to shorter and more concise
 configuration. However, XML excels at wiring up components without touching their source
 code or recompiling them. Some developers prefer having the wiring close to the source
-while others argue that annotated classes are no longer POJOs and, furthermore, that the
+while com.gao.servlet3.others2 argue that annotated classes are no longer POJOs and, furthermore, that the
 configuration becomes decentralized and harder to control.
 
 No matter the choice, Spring can accommodate both styles and even mix them together.
@@ -7031,7 +7031,7 @@ the configuration model, in that references to other beans must be valid Java sy
 Fortunately, solving this problem is simple. As <<beans-java-dependencies,we already discussed>>,
 `@Bean` method can have an arbitrary number of parameters describing the bean
 dependencies. Let's consider a more real-world scenario with several `@Configuration`
-classes, each depending on beans declared in the others:
+classes, each depending on beans declared in the com.gao.servlet3.others2:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -7563,7 +7563,7 @@ solution to this problem.
 
 If we generalize the example use case above of environment-specific bean
 definitions, we end up with the need to register certain bean definitions in
-certain contexts, while not in others. You could say that you want to register a
+certain contexts, while not in com.gao.servlet3.others2. You could say that you want to register a
 certain profile of bean definitions in situation A, and a different profile in
 situation B. Let's first see how we can update our configuration to reflect
 this need.

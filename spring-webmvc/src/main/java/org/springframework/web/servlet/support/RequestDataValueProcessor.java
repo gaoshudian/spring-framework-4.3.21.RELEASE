@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * <p>Implementations may use this contract for example as part of a solution
  * to provide data integrity, confidentiality, protection against cross-site
- * request forgery (CSRF), and others or for other tasks such as automatically
+ * request forgery (CSRF), and com.gao.servlet3.others2 or for other tasks such as automatically
  * adding a hidden field to all forms and URLs.
  *
  * <p>View technologies that support this contract can obtain an instance to

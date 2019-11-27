@@ -1044,7 +1044,7 @@ RestTemplate has an asynchronous counter-part: see <<rest-async-resttemplate>>.
 | {api-spring-framework}/web/client/RestTemplate.html#put(String,%20Object,%20Object...)[put(String
   url, Object request, String...uriVariables)]
 
-| PATCH and others
+| PATCH and com.gao.servlet3.others2
 | {api-spring-framework}/web/client/RestTemplate.html#exchange(java.lang.String,%20org.springframework.http.HttpMethod,%20org.springframework.http.HttpEntity,%20java.lang.Class,%20java.lang.Object...)[exchange]
   {api-spring-framework}/web/client/RestTemplate.html#execute(java.lang.String,%20org.springframework.http.HttpMethod,%20org.springframework.web.client.RequestCallback,%20org.springframework.web.client.ResponseExtractor,%20java.lang.Object...)[execute]
 |===
@@ -4204,7 +4204,7 @@ and the server. The examples above are using the mandatory RMI-based implementat
 required by the JSR-160 specification (IIOP and JRMP) and the (optional) JMXMP. By using
 other providers or JMX implementations (such as http://mx4j.sourceforge.net[MX4J]) you
 can take advantage of protocols like SOAP, Hessian, Burlap over simple HTTP or SSL and
-others:
+com.gao.servlet3.others2:
 
 [source,xml,indent=0]
 [subs="verbatim,quotes"]
@@ -5770,7 +5770,7 @@ level resource handling on behalf of the client.
 The `org.springframework.mail` package is the root level package for the Spring
 Framework's email support. The central interface for sending emails is the `MailSender`
 interface; a simple value object encapsulating the properties of a simple mail such as
-__from__ and __to__ (plus many others) is the `SimpleMailMessage` class. This package
+__from__ and __to__ (plus many com.gao.servlet3.others2) is the `SimpleMailMessage` class. This package
 also contains a hierarchy of checked exceptions which provide a higher level of
 abstraction over the lower level mail system exceptions with the root exception being
 `MailException`. Please refer to the javadocs for more information on the rich mail
@@ -8426,7 +8426,7 @@ of caching.
 
 For those particular cases, the `sync` attribute can be used to instruct the underlying
 cache provider to _lock_ the cache entry while the value is being computed. As a result,
-only one thread will be busy computing the value while the others are blocked until the
+only one thread will be busy computing the value while the com.gao.servlet3.others2 are blocked until the
 entry is updated in the cache.
 
 [source,java,indent=0]
@@ -9011,7 +9011,7 @@ the classpath.
 [NOTE]
 ====
 Depending of your use case, the choice is basically yours. You can even mix
-and match services using the JSR-107 API and others using Spring's own
+and match services using the JSR-107 API and com.gao.servlet3.others2 using Spring's own
 annotations. Be aware however that if these services are impacting the same
 caches, a consistent and identical key generation implementation should be used.
 ====

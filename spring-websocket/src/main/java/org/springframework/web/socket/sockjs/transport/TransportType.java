@@ -27,7 +27,7 @@ import org.springframework.http.HttpMethod;
 /**
  * SockJS transport types.
  *
- * <p>JSONP support will be removed as of Spring Framework 5.1, use others transports instead.
+ * <p>JSONP support will be removed as of Spring Framework 5.1, use com.gao.servlet3.others2 transports instead.
  *
  * @author Rossen Stoyanchev
  * @author Sebastien Deleuze

@@ -72,7 +72,7 @@ import org.springframework.web.util.UrlPathHelper;
  * {@link Resource} locations from which static resources are allowed to be served
  * by this handler. Resources could be served from a classpath location, e.g.
  * "classpath:/META-INF/public-web-resources/", allowing convenient packaging
- * and serving of resources such as .js, .css, and others in jar files.
+ * and serving of resources such as .js, .css, and com.gao.servlet3.others2 in jar files.
  *
  * <p>This request handler may also be configured with a
  * {@link #setResourceResolvers(List) resourcesResolver} and

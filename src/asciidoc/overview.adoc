@@ -175,7 +175,7 @@ module contains Spring's instrumentation agent for Tomcat.
 ==== Messaging
 Spring Framework 4 includes a `spring-messaging` module with key abstractions from the
 _Spring Integration_ project such as `Message`, `MessageChannel`, `MessageHandler`, and
-others to serve as a foundation for messaging-based applications. The module also
+com.gao.servlet3.others2 to serve as a foundation for messaging-based applications. The module also
 includes a set of annotations for mapping messages to methods, similar to the Spring MVC
 annotation based programming model.
 

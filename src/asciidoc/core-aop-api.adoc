@@ -122,7 +122,7 @@ See the previous chapter for a discussion of supported AspectJ pointcut primitiv
 [[aop-api-pointcuts-impls]]
 === Convenience pointcut implementations
 Spring provides several convenient pointcut implementations. Some can be used out of the
-box; others are intended to be subclassed in application-specific pointcuts.
+box; com.gao.servlet3.others2 are intended to be subclassed in application-specific pointcuts.
 
 
 [[aop-api-pointcuts-static]]

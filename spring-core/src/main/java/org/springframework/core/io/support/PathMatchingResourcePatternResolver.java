@@ -114,7 +114,7 @@ import org.springframework.util.StringUtils;
  * must be able to get a {@code java.net.JarURLConnection} from it, or
  * manually parse the jar URL, to be able to walk the contents of the jar,
  * and resolve the wildcard. This will work in most environments, but will
- * fail in others, and it is strongly recommended that the wildcard
+ * fail in com.gao.servlet3.others2, and it is strongly recommended that the wildcard
  * resolution of resources coming from jars be thoroughly tested in your
  * specific environment before you rely on it.
  *

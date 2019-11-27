@@ -36,9 +36,9 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.UrlPathHelper;
 
 /**
- * Stores registrations of resource handlers for serving static resources such as images, css files and others
+ * Stores registrations of resource handlers for serving static resources such as images, css files and com.gao.servlet3.others2
  * through Spring MVC including setting cache headers optimized for efficient loading in a web browser.
- * Resources can be served out of locations under web application root, from the classpath, and others.
+ * Resources can be served out of locations under web application root, from the classpath, and com.gao.servlet3.others2.
  *
  * <p>To create a resource handler, use {@link #addResourceHandler(String...)} providing the URL path patterns
  * for which the handler should be invoked to serve static resources (e.g. {@code "/resources/**"}).

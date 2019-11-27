@@ -40,7 +40,7 @@ import org.springframework.web.util.JavaScriptUtils;
  *
  * @author Rossen Stoyanchev
  * @since 4.0
- * @deprecated Will be removed as of Spring Framework 5.1, use others transports instead.
+ * @deprecated Will be removed as of Spring Framework 5.1, use com.gao.servlet3.others2 transports instead.
  */
 @Deprecated
 public class JsonpPollingTransportHandler extends AbstractHttpSendingTransportHandler {

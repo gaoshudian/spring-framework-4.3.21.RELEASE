@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.annotation.ModelAndViewResolver;
 
 /**
- * This return value handler is intended to be ordered after all others as it
+ * This return value handler is intended to be ordered after all com.gao.servlet3.others2 as it
  * attempts to handle _any_ return value type (i.e. returns {@code true} for
  * all return types).
  *

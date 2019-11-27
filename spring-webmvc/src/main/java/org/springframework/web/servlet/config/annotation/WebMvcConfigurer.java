@@ -100,7 +100,7 @@ public interface WebMvcConfigurer {
 	/**
 	 * Add handlers to serve static resources such as images, js, and, css
 	 * files from specific locations under web application root, the classpath,
-	 * and others.
+	 * and com.gao.servlet3.others2.
 	 */
 	void addResourceHandlers(ResourceHandlerRegistry registry);
 

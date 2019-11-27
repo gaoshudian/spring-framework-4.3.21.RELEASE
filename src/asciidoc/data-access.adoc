@@ -2279,7 +2279,7 @@ different approach. All approaches require a JDBC 2.0-compliant driver, and some
 advanced features require a JDBC 3.0 driver.
 
 * __JdbcTemplate__ is the classic Spring JDBC approach and the most popular. This
-  "lowest level" approach and all others use a JdbcTemplate under the covers.
+  "lowest level" approach and all com.gao.servlet3.others2 use a JdbcTemplate under the covers.
 * __NamedParameterJdbcTemplate__ wraps a `JdbcTemplate` to provide named parameters
   instead of the traditional JDBC "?" placeholders. This approach provides better
   documentation and ease of use when you have multiple parameters for an SQL statement.
@@ -3719,7 +3719,7 @@ with that of the parameter name declared in the stored procedure. The case does 
 to match because you use metadata to determine how database objects should be referred to
 in a stored procedure. What is specified in the source for the stored procedure is not
 necessarily the way it is stored in the database. Some databases transform names to all
-upper case while others use lower case or use the case as specified.
+upper case while com.gao.servlet3.others2 use lower case or use the case as specified.
 
 The `execute` method takes the IN parameters and returns a Map containing any `out`
 parameters keyed by the name as specified in the stored procedure. In this case they are
@@ -3919,7 +3919,7 @@ call.
 ==== Returning ResultSet/REF Cursor from a SimpleJdbcCall
 
 Calling a stored procedure or function that returns a result set is a bit tricky. Some
-databases return result sets during the JDBC results processing while others require an
+databases return result sets during the JDBC results processing while com.gao.servlet3.others2 require an
 explicitly registered `out` parameter of a specific type. Both approaches need
 additional processing to loop over the result set and process the returned rows. With
 the `SimpleJdbcCall` you use the `returningResultSet` method and declare a `RowMapper`

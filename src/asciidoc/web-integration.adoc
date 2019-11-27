@@ -30,7 +30,7 @@ http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html[JSF].
 One of the core value propositions of the Spring Framework is that of enabling
 __choice__. In a general sense, Spring does not force one to use or buy into any
 particular architecture, technology, or methodology (although it certainly recommends
-some over others). This freedom to pick and choose the architecture, technology, or
+some over com.gao.servlet3.others2). This freedom to pick and choose the architecture, technology, or
 methodology that is most relevant to a developer and their development team is
 arguably most evident in the web area, where Spring provides its own web framework
 (<<mvc,Spring MVC>>), while at the same time providing integration with a number of
