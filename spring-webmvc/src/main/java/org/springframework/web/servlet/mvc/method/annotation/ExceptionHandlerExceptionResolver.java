@@ -240,9 +240,12 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	}
 
 
+    /**
+     * 初始化方法
+     */
 	@Override
 	public void afterPropertiesSet() {
-		// Do this first, it may add ResponseBodyAdvice beans
+		// 找到项目中带@ControllerAdvice注解的类并且类中带@ExceptionHandler注解的方法，并建立缓存
 		initExceptionHandlerAdviceCache();
 
 		if (this.argumentResolvers == null) {
@@ -255,6 +258,9 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 		}
 	}
 
+    /**
+     * 初始化缓存
+     */
 	private void initExceptionHandlerAdviceCache() {
 		if (getApplicationContext() == null) {
 			return;

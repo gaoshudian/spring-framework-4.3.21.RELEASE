@@ -124,8 +124,7 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 * to the {@link #doResolveException} template method.
 	 */
 	@Override
-	public ModelAndView resolveException(
-			HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
 		if (shouldApplyTo(request, handler)) {
 			prepareResponse(ex, response);
