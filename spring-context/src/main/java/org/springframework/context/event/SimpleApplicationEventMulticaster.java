@@ -122,6 +122,7 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 		multicastEvent(event, resolveDefaultEventType(event));
 	}
 
+	//ApplicationEvent事件广播，内部会调用所有监听ApplicationEvent事件的listener的onApplicationEvent方法
 	@Override
 	public void multicastEvent(final ApplicationEvent event, ResolvableType eventType) {
 		ResolvableType type = (eventType != null ? eventType : resolveDefaultEventType(event));

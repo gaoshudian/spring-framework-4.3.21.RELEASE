@@ -62,8 +62,7 @@ public abstract class AbstractApplicationEventMulticaster
 
 	private final ListenerRetriever defaultRetriever = new ListenerRetriever(false);
 
-	final Map<ListenerCacheKey, ListenerRetriever> retrieverCache =
-			new ConcurrentHashMap<ListenerCacheKey, ListenerRetriever>(64);
+	final Map<ListenerCacheKey, ListenerRetriever> retrieverCache = new ConcurrentHashMap<ListenerCacheKey, ListenerRetriever>(64);
 
 	private ClassLoader beanClassLoader;
 
@@ -98,6 +97,7 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 
+	//添加ApplicationListener
 	@Override
 	public void addApplicationListener(ApplicationListener<?> listener) {
 		synchronized (this.retrievalMutex) {
@@ -158,13 +158,7 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
-	 * Return a Collection of ApplicationListeners matching the given
-	 * event type. Non-matching listeners get excluded early.
-	 * @param event the event to be propagated. Allows for excluding
-	 * non-matching listeners early, based on cached matching information.
-	 * @param eventType the event type
-	 * @return a Collection of ApplicationListeners
-	 * @see org.springframework.context.ApplicationListener
+	 * 获取符合条件(event、eventType)的ApplicationListeners
 	 */
 	protected Collection<ApplicationListener<?>> getApplicationListeners(
 			ApplicationEvent event, ResolvableType eventType) {
@@ -173,7 +167,7 @@ public abstract class AbstractApplicationEventMulticaster
 		Class<?> sourceType = (source != null ? source.getClass() : null);
 		ListenerCacheKey cacheKey = new ListenerCacheKey(eventType, sourceType);
 
-		// Quick check for existing entry on ConcurrentHashMap...
+		// 从缓存中获取
 		ListenerRetriever retriever = this.retrieverCache.get(cacheKey);
 		if (retriever != null) {
 			return retriever.getApplicationListeners();
@@ -189,8 +183,8 @@ public abstract class AbstractApplicationEventMulticaster
 					return retriever.getApplicationListeners();
 				}
 				retriever = new ListenerRetriever(true);
-				Collection<ApplicationListener<?>> listeners =
-						retrieveApplicationListeners(eventType, sourceType, retriever);
+				Collection<ApplicationListener<?>> listeners = retrieveApplicationListeners(eventType, sourceType, retriever);
+				//放入缓存
 				this.retrieverCache.put(cacheKey, retriever);
 				return listeners;
 			}
@@ -202,11 +196,7 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
-	 * Actually retrieve the application listeners for the given event and source type.
-	 * @param eventType the event type
-	 * @param sourceType the event source type
-	 * @param retriever the ListenerRetriever, if supposed to populate one (for caching purposes)
-	 * @return the pre-filtered list of application listeners for the given event and source type
+	 * 通过给定的eventType和sourceType检索出所有符合的listeners
 	 */
 	private Collection<ApplicationListener<?>> retrieveApplicationListeners(
 			ResolvableType eventType, Class<?> sourceType, ListenerRetriever retriever) {

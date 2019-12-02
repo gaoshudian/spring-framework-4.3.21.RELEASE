@@ -33,7 +33,9 @@ import java.util.Set;
  */
 class CommandLineArgs {
 
+	//添加命令行中以--开头的参数
 	private final Map<String, List<String>> optionArgs = new HashMap<String, List<String>>();
+	//添加命令行中不是以--开头的参数
 	private final List<String> nonOptionArgs = new ArrayList<String>();
 
 	/**
