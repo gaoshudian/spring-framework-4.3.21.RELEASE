@@ -67,16 +67,7 @@ public abstract class SpringFactoriesLoader {
 
 
 	/**
-	 * Load and instantiate the factory implementations of the given type from
-	 * {@value #FACTORIES_RESOURCE_LOCATION}, using the given class loader.
-	 * <p>The returned factories are sorted through {@link AnnotationAwareOrderComparator}.
-	 * <p>If a custom instantiation strategy is required, use {@link #loadFactoryNames}
-	 * to obtain all registered factory names.
-	 * @param factoryClass the interface or abstract class representing the factory
-	 * @param classLoader the ClassLoader to use for loading (can be {@code null} to use the default)
-	 * @throws IllegalArgumentException if any factory implementation class cannot
-	 * be loaded or if an error occurs while instantiating any factory
-	 * @see #loadFactoryNames
+	 * 加载并实例化所有的classpath下META-INF/spring.factories文件中的给定类的实现类
 	 */
 	public static <T> List<T> loadFactories(Class<T> factoryClass, ClassLoader classLoader) {
 		Assert.notNull(factoryClass, "'factoryClass' must not be null");
