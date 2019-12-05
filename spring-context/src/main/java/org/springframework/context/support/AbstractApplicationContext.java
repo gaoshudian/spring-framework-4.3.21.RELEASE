@@ -591,7 +591,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			logger.info("Refreshing " + this);
 		}
 
-		// Initialize any placeholder property sources in the context environment
         /**
          * 初始化一些属性设置;子类自定义个性化的属性设置方法
          * 该方法正符合spring的开放式结构设计，给用户最大扩展spring的能力。用户可以根据自身的需要重写initPropertySources()方法，
@@ -603,7 +602,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
          }
          此时程序走到getEnvironment().validateRequiredProperties();代码的时候，如果系统没有检测到对应VAR的环境变量，那么将抛出异常
          */
-
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable
