@@ -158,6 +158,7 @@ class ConfigurationClassParser {
 	}
 
 
+	//解析配置类
 	public void parse(Set<BeanDefinitionHolder> configCandidates) {
 		this.deferredImportSelectors = new LinkedList<DeferredImportSelectorHolder>();
 
@@ -214,6 +215,7 @@ class ConfigurationClassParser {
 	}
 
 
+	//解析配置类
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
@@ -263,13 +265,12 @@ class ConfigurationClassParser {
 	 */
 	protected final SourceClass doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass) throws IOException {
 
-		// Recursively process any member (nested) classes first
+		// 处理内部类
 		processMemberClasses(configClass, sourceClass);
 
 		// 处理所有的@PropertySource注解
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
-				sourceClass.getMetadata(), PropertySources.class,
-				org.springframework.context.annotation.PropertySource.class)) {
+				sourceClass.getMetadata(), PropertySources.class, org.springframework.context.annotation.PropertySource.class)) {
 
 			if (this.environment instanceof ConfigurableEnvironment) {
 				processPropertySource(propertySource);
@@ -704,8 +705,7 @@ class ConfigurationClassParser {
 	@SuppressWarnings("serial")
 	private static class ImportStack extends ArrayDeque<ConfigurationClass> implements ImportRegistry {
 
-		private final MultiValueMap<String, AnnotationMetadata> imports =
-				new LinkedMultiValueMap<String, AnnotationMetadata>();
+		private final MultiValueMap<String, AnnotationMetadata> imports = new LinkedMultiValueMap<String, AnnotationMetadata>();
 
 		public void registerImport(AnnotationMetadata importingClass, String importedClass) {
 			this.imports.add(importedClass, importingClass);

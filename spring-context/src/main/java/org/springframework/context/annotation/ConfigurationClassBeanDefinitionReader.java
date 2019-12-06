@@ -167,8 +167,7 @@ class ConfigurationClassBeanDefinitionReader {
 	}
 
 	/**
-	 * Read the given {@link BeanMethod}, registering bean definitions
-	 * with the BeanDefinitionRegistry based on its contents.
+	 * 注册@Bean注解的方法为一个bean
 	 */
 	private void loadBeanDefinitionsForBeanMethod(BeanMethod beanMethod) {
 		ConfigurationClass configClass = beanMethod.getConfigurationClass();
