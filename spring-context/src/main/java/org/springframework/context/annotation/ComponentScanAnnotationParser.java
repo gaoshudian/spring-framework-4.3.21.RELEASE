@@ -123,6 +123,7 @@ class ComponentScanAnnotationParser {
 			basePackages.add(ClassUtils.getPackageName(clazz));
 		}
 		if (basePackages.isEmpty()) {
+			//默认情况下@Component注解写在哪个类上，就扫描该类所在的包路径
 			basePackages.add(ClassUtils.getPackageName(declaringClass));
 		}
 

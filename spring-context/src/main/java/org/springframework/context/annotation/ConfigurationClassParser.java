@@ -268,7 +268,7 @@ class ConfigurationClassParser {
 		// 处理内部类
 		processMemberClasses(configClass, sourceClass);
 
-		// 处理所有的@PropertySource注解
+		// 处理所有的@PropertySource注解,将该注解中的value值（即配置文件）解析后封装成ResourcePropertySource存入到environment中
 		for (AnnotationAttributes propertySource : AnnotationConfigUtils.attributesForRepeatable(
 				sourceClass.getMetadata(), PropertySources.class, org.springframework.context.annotation.PropertySource.class)) {
 
@@ -302,10 +302,18 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// 处理所有的 @Import注解
+		/**
+		 * 处理所有的 @Import注解,最终将要导入的类存在this.configurationClasses中
+		 *  Import的作用:
+		 *     1.用来导入@Configuration注解的配置类
+		 *     2.导入ImportSelector的实现类
+		 *     3.导入ImportBeanDefinitionRegistrar的实现类。
+		 *     4.声明一个bean(即普通的JAVA类)
+		 * 执行完该方法后，会将1，2，4直接放入this.configurationClasses中，将3放入ConfigurationClass的importBeanDefinitionRegistrars属性中
+ 		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
-		// 处理所有的@ImportResource注解
+		// 处理所有的@ImportResource注解,通过获得其@ImportResource,获得locations值后, 遍历配置的locations,加入到configClass中的ImportedResource
 		if (sourceClass.getMetadata().isAnnotated(ImportResource.class.getName())) {
 			AnnotationAttributes importResource = AnnotationConfigUtils.attributesFor(sourceClass.getMetadata(), ImportResource.class);
 			String[] resources = importResource.getStringArray("locations");
@@ -316,7 +324,7 @@ class ConfigurationClassParser {
 			}
 		}
 
-		// 检测出所有的@Bean方法
+		// 检测出所有的@Bean方法，将声明@Bean注解的bean方法存入ConfigurationClass的beanMethods属性中
 		Set<MethodMetadata> beanMethods = retrieveBeanMethodMetadata(sourceClass);
 		for (MethodMetadata methodMetadata : beanMethods) {
 			configClass.addBeanMethod(new BeanMethod(methodMetadata, configClass));
@@ -389,8 +397,7 @@ class ConfigurationClassParser {
 			// Unfortunately, the JVM's standard reflection returns methods in arbitrary
 			// order, even between different runs of the same application on the same JVM.
 			try {
-				AnnotationMetadata asm =
-						this.metadataReaderFactory.getMetadataReader(original.getClassName()).getAnnotationMetadata();
+				AnnotationMetadata asm = this.metadataReaderFactory.getMetadataReader(original.getClassName()).getAnnotationMetadata();
 				Set<MethodMetadata> asmMethods = asm.getAnnotatedMethods(Bean.class.getName());
 				if (asmMethods.size() >= beanMethods.size()) {
 					Set<MethodMetadata> selectedMethods = new LinkedHashSet<MethodMetadata>(asmMethods.size());
@@ -418,9 +425,7 @@ class ConfigurationClassParser {
 
 
 	/**
-	 * Process the given <code>@PropertySource</code> annotation metadata.
-	 * @param propertySource metadata for the <code>@PropertySource</code> annotation found
-	 * @throws IOException if loading a property source failed
+	 * 处理@PropertySource注解，即封装成ResourcePropertySource存入到environment中
 	 */
 	private void processPropertySource(AnnotationAttributes propertySource) throws IOException {
 		String name = propertySource.getString("name");
@@ -441,6 +446,8 @@ class ConfigurationClassParser {
 
 		for (String location : locations) {
 			try {
+				//对location进行SPEL表达式的解析。比如当前的配置环境中有一个属性为app=小高，我们配置的location为${app}最终值为小高。
+				// 通过这里的处理逻辑可以知道location支持多环境的切换以及表达式的配置
 				String resolvedLocation = this.environment.resolveRequiredPlaceholders(location);
 				Resource resource = this.resourceLoader.getResource(resolvedLocation);
 				addPropertySource(factory.createPropertySource(name, new EncodedResource(resource, encoding)));
