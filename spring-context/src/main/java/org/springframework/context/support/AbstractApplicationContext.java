@@ -539,7 +539,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
                 //初始化上下文事件广播器
 				initApplicationEventMulticaster();
 
-				// Initialize other special beans in specific context subclasses.
+				//扩展点,onRefresh,留个子类来初始化其他的bean;比如springboot就会扩展这个方法来初始化tomcat
 				onRefresh();
 
                 //注册所有的监听器
