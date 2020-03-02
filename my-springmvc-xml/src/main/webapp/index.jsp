@@ -13,6 +13,7 @@
   <br/>
   <form action="/fileUpload" enctype="multipart/form-data" method="post">
     选择文件:<input type="file" name="file">
+    <input type="input" name="name" value="小高"><br>
     <input type="submit" value="提交">
   </form>
 
