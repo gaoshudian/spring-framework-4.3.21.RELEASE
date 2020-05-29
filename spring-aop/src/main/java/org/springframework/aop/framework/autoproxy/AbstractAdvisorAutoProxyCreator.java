@@ -83,7 +83,8 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
      * 2.寻找所有增强中适用于bean的增强
      */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
-	    //获取所有的增强
+	    //获取所有的增强,AOP实现方式中 "xml文件配置方式"和"注解方式"的区别就在这里，也就是获取通知拦截器的方式不一样，其它都一样；
+		//对于注解方式，该方法会调到AnnotationAwareAspectJAutoProxyCreator#findCandidateAdvisors
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
         //寻找所有增强中适用于bean的增强
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);

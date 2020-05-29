@@ -1,5 +1,7 @@
-package my_demo.tx.annotation;
+package my_demo.tx.annotation.service.impl;
 
+import my_demo.tx.annotation.dao.BookShopDao;
+import my_demo.tx.annotation.service.BookShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -34,16 +36,11 @@ public class BookShopServiceImpl implements BookShopService {
 
         //1. 获取书的单价
         int price = bookShopDao.findBookPriceByIsbn(isbn);
-
         //2. 更新数的库存
         bookShopDao.updateBookStock(isbn);
-
         //3. 更新用户余额
         bookShopDao.updateUserAccount(username, price);
-
-        /**
-         * 添加事务同步回调接口，这样在事务执行的各个阶段，spring会控制回调对应的方法
-         */
+        //添加事务同步回调接口，这样在事务执行的各个阶段，spring会控制回调对应的方法
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronizationAdapter() {
                     @Override
@@ -64,6 +61,11 @@ public class BookShopServiceImpl implements BookShopService {
                     }
                 }
         );
+    }
+
+    @Override
+    public void purchase2(String username, String isbn) {
+        System.out.println("该方法没有事务");
     }
 
 }

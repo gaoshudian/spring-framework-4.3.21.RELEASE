@@ -1318,7 +1318,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				for (BeanPostProcessor bp : getBeanPostProcessors()) {
 					if (bp instanceof InstantiationAwareBeanPostProcessor) {
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
-                        // 对所有需要依赖检查的属性进行后处理(例如:这里处理@Autowired的BeanPostProcessor是AutowiredAnnotationBeanPostProcessor)
+                        // 对所有需要依赖检查的属性进行后处理
+						// 例如:1.这里处理@Autowired的BeanPostProcessor是AutowiredAnnotationBeanPostProcessor
+						// 2.dubbo处理@Reference注解的字段是通过ReferenceAnnotationBeanPostProcessor来处理的
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
 						if (pvs == null) {
 							return;

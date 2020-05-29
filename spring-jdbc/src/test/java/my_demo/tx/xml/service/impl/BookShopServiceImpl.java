@@ -1,7 +1,7 @@
 package my_demo.tx.xml.service.impl;
 
 
-import my_demo.tx.xml.BookShopDao;
+import my_demo.tx.xml.dao.BookShopDao;
 import my_demo.tx.xml.service.BookShopService;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;

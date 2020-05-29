@@ -1,4 +1,4 @@
-package my_demo.tx.xml;
+package my_demo.tx.annotation.dao;
 
 public interface BookShopDao {
 

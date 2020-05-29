@@ -1,5 +1,7 @@
-package my_demo.tx.annotation;
+package my_demo.tx.annotation.service.impl;
 
+import my_demo.tx.annotation.service.BookShopService;
+import my_demo.tx.annotation.service.Cashier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

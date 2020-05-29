@@ -25,7 +25,7 @@
 	</bean>
 	
 	<!-- 配置 bean -->
-	<bean id="bookShopDao" class="my_demo.tx.xml.BookShopDaoImpl">
+	<bean id="bookShopDao" class="my_demo.tx.xml.dao.impl.BookShopDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
 	</bean>
 	

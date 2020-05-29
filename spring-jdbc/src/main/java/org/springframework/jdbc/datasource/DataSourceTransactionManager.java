@@ -248,7 +248,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 
 		try {
 			if (!txObject.hasConnectionHolder() || txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
-                //从dataSource中获取一个Connection
+                //从dataSource中获取一个Connection(动态数据源就是在这里实现的)
 				Connection newCon = this.dataSource.getConnection();
 				if (logger.isDebugEnabled()) {
 					logger.debug("Acquired Connection [" + newCon + "] for JDBC transaction");

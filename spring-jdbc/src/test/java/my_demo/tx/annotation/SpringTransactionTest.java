@@ -1,5 +1,8 @@
 package my_demo.tx.annotation;
 
+import my_demo.tx.annotation.dao.BookShopDao;
+import my_demo.tx.annotation.service.BookShopService;
+import my_demo.tx.annotation.service.Cashier;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -8,10 +11,10 @@ import java.util.Arrays;
 
 public class SpringTransactionTest {
 
-	private ApplicationContext ctx = null;
-	private BookShopDao bookShopDao = null;
-	private BookShopService bookShopService = null;
-	private Cashier cashier = null;
+	private ApplicationContext ctx;
+	private BookShopDao bookShopDao;
+	private BookShopService bookShopService;
+	private Cashier cashier;
 	
 	{
 		ctx = new ClassPathXmlApplicationContext("my-demo/spring-tx-annotation.xml");
@@ -19,17 +22,19 @@ public class SpringTransactionTest {
 		bookShopService = ctx.getBean(BookShopService.class);
 		cashier = ctx.getBean(Cashier.class);
 	}
-	
-	@Test
-	public void testTransactionlPropagation(){
-		cashier.checkout("AA", Arrays.asList("1001", "1002"));
-	}
-	
+
+	//普通事务
 	@Test
 	public void testBookShopService(){
 		bookShopService.purchase("AA", "1001");
 	}
-	
+
+	//嵌套事务
+	@Test
+	public void testTransactionlPropagation(){
+		cashier.checkout("AA", Arrays.asList("1001", "1002"));
+	}
+
 	@Test
 	public void testBookShopDaoUpdateUserAccount(){
 		bookShopDao.updateUserAccount("AA", 200);
