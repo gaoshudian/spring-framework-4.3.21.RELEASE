@@ -545,7 +545,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
                 //注册所有的监听器
 				registerListeners();
 
-                //初始化所有的非延迟加载的单例bean
+				/**
+				 * 初始化所有的非延迟加载的单例bean,该方法是spring中最重要的方法，没有之一，着重看:
+				 * 1.bean的实例化过程
+				 * 2.ioc
+				 * 3.注解支持
+				 * 4.BeanPostProcessor的执行
+				 * 5.Aop的入口
+				 */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
