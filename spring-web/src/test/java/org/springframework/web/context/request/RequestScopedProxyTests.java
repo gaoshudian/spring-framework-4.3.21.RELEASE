@@ -65,23 +65,7 @@ import static org.junit.Assert.*;
     2.scope为request的bean，在每个请求到来时，会创建一个实际对象与当前的请求对应。
     而使用bean的代理对象时，会通过某种方式获得当前的请求，再根据当前这个请求，获得对应bean的实际对象。
     使用代理对象间接操控的就是与当前请求对应的bean的实际对象.
-
- * @author gaoshudian
- * @date   2019/9/18 3:34 PM
 */
-
-/*
-    <!-- HTTP session作用域的Bean 作为代理暴露出去-->
-    <bean id="userPreferences" class="com.foo.UserPreferences" scope="session">
-        <!--指示容器代理这个Bean-->
-        <aop:scoped-proxy/>
-    </bean>
-    <!-- 单例Bean注入一个代理Bean-->
-    <bean id="userManager" class="com.foo.UserManager">
-        <!--实际使用的是userPreferences的代理对象
-        <property name="userPreferences" ref="userPreferences"/>
-    </bean>
- */
 public class RequestScopedProxyTests {
 
 	private final DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
